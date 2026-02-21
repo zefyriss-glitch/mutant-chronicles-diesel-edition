@@ -1,0 +1,278 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  <style>
+    /* ================================
+       VEHICLE SHEET – Scoped CSS fixes
+       ================================ */
+
+    /* 1) Tabs: keep them compact and centered */
+    .mcde-vehicle-root .mcde-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      width: 100%;
+      margin: 0 0 14px 0;
+      padding: 0;
+    }
+
+    /* Foundry often gives .tabs .item { flex: 1 } -> override it */
+    .mcde-vehicle-root .mcde-tabs a,
+    .mcde-vehicle-root .mcde-tabs .item {
+      flex: 0 0 auto;
+    }
+
+    /* 2) Content area: avoid overflow outside the sheet */
+    .mcde-vehicle-root .mcde-tab-content {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    /* 3) Locations: force them into a grid (inside the sheet) */
+    .mcde-vehicle-root .mcde-location-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      width: 100%;
+      overflow: hidden;
+      align-items: start;
+    }
+
+    /* Each location card: prevent any absolute/fixed rules from leaking */
+    .mcde-vehicle-root .mcde-loc,
+    .mcde-vehicle-root .mcde-loc-card {
+      position: static !important;
+      min-width: 0;
+    }
+
+    /* Track rows: clean inline layout */
+    .mcde-vehicle-root .mcde-loc-track {
+      position: static !important;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mcde-vehicle-root .mcde-trackboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    /* Boxes */
+    .mcde-vehicle-root .mcde-box {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      box-sizing: border-box;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+    }
+
+    .mcde-vehicle-root .mcde-box.filled {
+      background: rgba(160, 0, 0, 0.75);
+    }
+  </style>
+
+  <div class="mcde-vehicle-root">
+
+    <header class="sheet-header flexrow" style="gap:12px; align-items:center;">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" width="64" height="64" />
+      <div class="flexcol" style="flex:1;">
+        <h1 style="margin:0;">
+          <input name="name" type="text" value="{{actor.name}}" />
+        </h1>
+
+        <div class="flexrow" style="gap:12px; margin-top:6px;">
+          <label style="flex:1; opacity:0.85;">Faction</label>
+          <input name="system.description" type="text" value="{{system.description}}" placeholder="(Faction / Model info)" />
+        </div>
+      </div>
+    </header>
+
+    <nav class="mcde-tabs tabs" data-group="primary">
+      <a class="item" data-tab="tactical">Tactical</a>
+      <a class="item" data-tab="logistics">Logistics</a>
+      <a class="item" data-tab="armaments">Armaments</a>
+      <a class="item" data-tab="notes">Notes</a>
+    </nav>
+
+    <section class="mcde-tab-content">
+
+      <!-- TACTICAL -->
+      <div class="tab" data-group="primary" data-tab="tactical">
+
+        <div class="flexrow" style="gap:12px;">
+          <div class="flexcol" style="flex:1;">
+            <h3>Mobility</h3>
+
+            <div class="form-group">
+              <label>Cruising Speed</label>
+              <input name="system.cruisingspeed" type="text" value="{{system.cruisingspeed}}" placeholder="e.g. 130 km/h" />
+            </div>
+
+            <div class="form-group">
+              <label>Manoeuvrability (Combat)</label>
+              <input name="system.combatmanoeuvrability" type="number" value="{{system.combatmanoeuvrability}}" min="0" />
+            </div>
+
+            <h3 style="margin-top:10px;">Impact Damage</h3>
+
+            <div class="flexrow" style="gap:8px;">
+              <div class="form-group" style="flex:1;">
+                <label>ating="Base</label>
+                <input name="system.impactdamage.base" type="number" value="{{system.impactdamage.base}}" min="0" />
+              </div>
+
+              <div class="form-group" style="flex:1;">
+                <label>DSD</label>
+                <input name="system.impactdamage.dsy" type="number" value="{{system.impactdamage.dsy}}" min="0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="flexcol" style="flex:1;">
+            <h3>Crew</h3>
+
+            <div class="form-group">
+              <label>Pilot</label>
+              <input name="system.crew.pilotName" type="text" value="{{system.crew.pilotName}}" placeholder="Name (link later)" />
+            </div>
+
+            <div class="flexrow" style="gap:8px;">
+              <div class="form-group" style="flex:1;">
+                <label>Passengers</label>
+                <input name="system.crew.passengers" type="number" value="{{system.crew.passengers}}" min="0" />
+              </div>
+
+              <div class="form-group" style="flex:1;">
+                <label>Encumbrance</label>
+                <input name="system.crew.encumbrance" type="number" value="{{system.crew.encumbrance}}" min="0" />
+              </div>
+            </div>
+
+            <h3 style="margin-top:10px;">Fuel Loads</h3>
+
+            <div class="form-group">
+              <label>Fuel</label>
+              <input name="system.fuelLoads" type="number" value="{{system.fuelLoads}}" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <h3>Damage by Location</h3>
+
+        <!-- IMPORTANT: the loop MUST be inside this container -->
+        <div class="mcde-location-grid">
+          {{#each locations as |loc locKey|}}
+            <div class="mcde-loc" style="padding:10px; border:1px solid rgba(255,255,255,0.08); border-radius:8px;">
+
+              <div class="flexrow" style="align-items:center; gap:10px;">
+                <strong style="text-transform:uppercase;">{{locKey}}</strong>
+                <span style="opacity:0.8;">Soak</span>
+                <input name="system.locations.{{locKey}}.soak" type="number" value="{{loc.soak}}" min="0" style="width:70px;" />
+              </div>
+
+              <!-- Surface -->
+              <div class="mcde-loc-track" style="margin-top:8px;">
+                <div class="flexrow" style="gap:10px; align-items:center;">
+                  <span style="width:110px; opacity:0.85;">Surface</span>
+                  <input name="system.locations.{{locKey}}.surfaceMax" type="number" value="{{loc.surfaceMax}}" min="0" style="width:70px;" />
+                  <div class="mcde-trackboxes">
+                    {{#each (range 1 loc.surfaceMax) as |i|}}
+                      <span class="mcde-box {{#if (lte i loc.surfaceCur)}}filled{{/if}}"
+                            data-loc="{{locKey}}" data-track="surfaceCur" data-idx="{{i}}"></span>
+                    {{/each}}
+                  </div>
+                </div>
+              </div>
+
+              <!-- System -->
+              <div class="mcde-loc-track" style="margin-top:6px;">
+                <div class="flexrow" style="gap:10px; align-items:center;">
+                  <span style="width:110px; opacity:0.85;">System</span>
+                  <input name="system.locations.{{locKey}}.systemMax" type="number" value="{{loc.systemMax}}" min="0" style="width:70px;" />
+                  <div class="mcde-trackboxes">
+                    {{#each (range 1 loc.systemMax) as |i|}}
+                      <span class="mcde-box {{#if (lte i loc.systemCur)}}filled{{/if}}"
+                            data-loc="{{locKey}}" data-track="systemCur" data-idx="{{i}}"></span>
+                    {{/each}}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Structural -->
+              <div class="mcde-loc-track" style="margin-top:6px;">
+                <div class="flexrow" style="gap:10px; align-items:center;">
+                  <span style="width:110px; opacity:0.85;">Structural</span>
+                  <input name="system.locations.{{locKey}}.structuralMax" type="number" value="{{loc.structuralMax}}" min="0" style="width:70px;" />
+                  <div class="mcde-trackboxes">
+                    {{#each (range 1 loc.structuralMax) as |i|}}
+                      <span class="mcde-box {{#if (lte i loc.structuralCur)}}filled{{/if}}"
+                            data-loc="{{locKey}}" data-track="structuralCur" data-idx="{{i}}"></span>
+                    {{/each}}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          {{/each}}
+        </div>
+
+      </div>
+
+      <!-- LOGISTICS -->
+      <div class="tab" data-group="primary" data-tab="logistics">
+        <h3>Price & Availability</h3>
+
+        <div class="flexrow" style="gap:10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Restriction</label>
+            <input name="system.restriction" type="number" value="{{system.restriction}}" min="0" />
+          </div>
+
+          <div class="form-group" style="flex:1;">
+            <label>Cost</label>
+            <input name="system.cost" type="number" value="{{system.cost}}" min="0" />
+          </div>
+
+          <div class="form-group" style="flex:1;">
+            <label>Maintenance</label>
+            <input name="system.maintenance" type="number" value="{{system.maintenance}}" min="0" />
+          </div>
+
+          <div class="form-group" style="flex:1;">
+            <label>Reliability</label>
+            <input name="system.reliability" type="number" value="{{system.reliability}}" min="0" />
+          </div>
+        </div>
+
+        <h3>Tags</h3>
+        <input name="system.tags" type="text" value="{{system.tags}}" placeholder="e.g. Heavy, Tracked, Flyer" />
+
+        <h3 style="margin-top:12px;">Qualities</h3>
+        <input name="system.qualities" type="text" value="{{system.qualities}}" placeholder="e.g. Point Defence, Amphibious" />
+      </div>
+
+      <!-- ARMAMENTS -->
+      <div class="tab" data-group="primary" data-tab="armaments">
+        <p>V1: reuse your Weapon Items mounted on the vehicle (to wire up later).</p>
+      </div>
+
+      <!-- NOTES -->
+      <div class="tab" data-group="primary" data-tab="notes">
+        <textarea name="system.notes" rows="16" style="width:100%;">{{system.notes}}</textarea>
+      </div>
+
+    </section>
+  </div>
+
+</form>
