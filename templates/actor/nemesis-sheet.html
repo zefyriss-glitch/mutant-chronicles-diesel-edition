@@ -1,0 +1,344 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+<!-- ================= HEADER ================= -->
+<header class="sheet-header flexrow" style="align-items:flex-start; gap:12px;">
+
+  <div class="mcde-avatar" style="flex:0 0 140px;">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img"
+         style="width:140px; height:140px; object-fit:cover;">
+  </div>
+
+  <div class="header-fields flexcol" style="flex:1; min-width:0; margin-left:0;">
+    <h1>
+      <input name="name" type="text" value="{{actor.name}}" placeholder="Nemesis Name"/>
+    </h1>
+
+    <!-- NPC Type (fixed: Nemesis) -->
+    <div class="npc-type" style="display:flex; align-items:center; gap:8px;">
+      <img src="systems/mutant-chronicles-diesel-edition/assets/npctypes/nemesislogo.png"
+           style="width:20px; height:20px; object-fit:contain; border:none; box-shadow:none; background:transparent; outline:none;">
+
+      <div>
+        <label>Type</label>
+        <input type="text" value="Nemesis" disabled style="width:140px; opacity:0.85;">
+      </div>
+    </div>
+
+    <!-- Soak (global) -->
+    <div class="soak" style="margin-bottom:6px;">
+      <label>Soak</label>
+      <input type="text" name="system.soak" value="{{system.soak}}"/>
+    </div>
+
+    <!-- (Wounds removed: handled by hit locations) -->
+  </div>
+</header>
+
+<!-- ================= TABS ================= -->
+<nav class="sheet-tabs tabs" data-group="primary">
+  <a class="item" data-tab="stats">Stats</a>
+  <a class="item" data-tab="description">Description</a>
+</nav>
+
+<!-- ================= BODY ================= -->
+<section class="sheet-body">
+
+  <!-- ================= STATS TAB ================= -->
+  <div class="tab" data-group="primary" data-tab="stats">
+    <!-- ICI : ton layout Nemesis (différent de NPC) -->
+     <!-- ===== TWO-COLUMN GRID (50/50) ===== -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; align-items:start;">
+
+  <!-- LEFT COLUMN: Localisation -> Weapons -> Special Abilities -->
+  <div style="min-width:0;">
+
+    <!-- LOCALISATION -->
+    <h3 style="margin:0;">Hit Locations</h3>
+    {{> "systems/mutant-chronicles-diesel-edition/templates/partials/combat-locations.html"}}
+
+    <!-- WEAPONS (same as NPC) -->
+    <h3 style="display:flex; align-items:center; justify-content:space-between; margin-top:12px;">
+      <span>Weapons</span>
+      <a class="mcde-weapon-add" title="Add weapon" style="flex:0 0 auto;">+</a>
+    </h3>
+
+    <ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
+      {{#each actor.items as |item|}}
+        {{#if (eq item.type "weapon")}}
+          <li class="item mcde-weapon" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
+            <div class="item-name" style="display:flex; align-items:center; gap:8px;">
+              <h4 style="margin:0;">
+                <strong>
+                  <a class="mcde-roll" data-roll="weapon" data-item-id="{{item._id}}">{{item.name}}</a>
+                  <span style="opacity:0.75; font-weight:normal;">
+                    ({{#if (eq item.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}})
+                  </span>
+                </strong>
+              </h4>
+            </div>
+
+            <div class="item-detail" style="opacity:0.9;">
+              {{#if (eq item.system.weaponType "ranged")}}
+                Range: <strong>{{item.system.stats.range}}</strong> |
+                Mode: <strong>{{item.system.stats.mode}}</strong> |
+              {{/if}}
+              Damage: <strong>{{item.system.damage.base}}</strong> + <strong>{{{dsValue item.system.damage.dsy}}}</strong>
+            </div>
+
+            {{#if item.system.qualities.length}}
+              <div class="item-detail" style="display:flex; flex-wrap:wrap; gap:4px;">
+                {{#each item.system.qualities as |q|}}
+                  <span class="mcde-tag" data-tooltip="{{q.description}}"
+                        style="padding:2px 6px; border:1px solid rgba(120,0,0,0.4); border-radius:10px; font-size:11px;">
+                    {{q.name}}
+                  </span>
+                {{/each}}
+              </div>
+            {{/if}}
+
+            <div class="item-controls">
+              <a class="item-control mcde-weapon-edit" title="Edit"><i class="fas fa-edit"></i></a>
+              <a class="item-control mcde-weapon-delete" title="Delete"><i class="fas fa-trash"></i></a>
+            </div>
+          </li>
+        {{/if}}
+      {{/each}}
+    </ul>
+
+    <!-- SPECIAL ABILITIES (same as NPC) -->
+    <h3 style="display:flex; align-items:center; justify-content:space-between; margin-top:12px;">
+      <span>Special Abilities</span>
+      <a class="mcde-talent-add" title="Add talent" style="flex:0 0 auto;">+</a>
+    </h3>
+
+    <div class="mcde-talent-dropzone" style="border:none; padding:0; margin:0;">
+      <ul class="items-list mcde-talents mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
+        {{#each actor.items as |item|}}
+          {{#if (eq item.type "talent")}}
+            <li class="item mcde-talent" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
+              <details>
+                <summary class="mcde-acc-summary">
+                  <span class="mcde-acc-title">
+                    <span class="mcde-acc-caret" aria-hidden="true">▶</span>
+                    <strong>{{item.name}}</strong>
+                  </span>
+
+                  <span class="item-controls">
+                    <a class="item-control mcde-talent-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a class="item-control mcde-talent-delete" title="Delete"><i class="fas fa-trash"></i></a>
+                  </span>
+                </summary>
+
+                <div style="margin-top:6px;">{{{dsify item.system.description}}}</div>
+              </details>
+            </li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN: Attributes -> Fields of Expertise -> Dark Symmetry Spends -->
+  <div style="min-width:0;">
+
+<!-- ATTRIBUTES (same as NPC) -->
+<h3 style="margin:0;">Attributes</h3>
+<table style="width:100%; margin-top:4px;">
+  <tbody>
+    <tr>
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="strength">STRENGTH</a></small><br>
+        <div class="mcde-attrline" data-attr="strength">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.strength.value"
+                 value="{{system.attributes.strength.value}}">
+
+          {{#if (gt system.attributes.strength.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.strength.auto"
+                   value="{{system.attributes.strength.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="physique">PHYSIQUE</a></small><br>
+        <div class="mcde-attrline" data-attr="physique">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.physique.value"
+                 value="{{system.attributes.physique.value}}">
+
+          {{#if (gt system.attributes.physique.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.physique.auto"
+                   value="{{system.attributes.physique.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="agility">AGILITY</a></small><br>
+        <div class="mcde-attrline" data-attr="agility">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.agility.value"
+                 value="{{system.attributes.agility.value}}">
+
+          {{#if (gt system.attributes.agility.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.agility.auto"
+                   value="{{system.attributes.agility.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="awareness">AWARENESS</a></small><br>
+        <div class="mcde-attrline" data-attr="awareness">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.awareness.value"
+                 value="{{system.attributes.awareness.value}}">
+
+          {{#if (gt system.attributes.awareness.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.awareness.auto"
+                   value="{{system.attributes.awareness.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="coordination">COORDINATION</a></small><br>
+        <div class="mcde-attrline" data-attr="coordination">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.coordination.value"
+                 value="{{system.attributes.coordination.value}}">
+
+          {{#if (gt system.attributes.coordination.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.coordination.auto"
+                   value="{{system.attributes.coordination.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="intelligence">INTELLIGENCE</a></small><br>
+        <div class="mcde-attrline" data-attr="intelligence">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.intelligence.value"
+                 value="{{system.attributes.intelligence.value}}">
+
+          {{#if (gt system.attributes.intelligence.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.intelligence.auto"
+                   value="{{system.attributes.intelligence.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="mental_strength">MENTAL STRENGTH</a></small><br>
+        <div class="mcde-attrline" data-attr="mental_strength">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.mental_strength.value"
+                 value="{{system.attributes.mental_strength.value}}">
+
+          {{#if (gt system.attributes.mental_strength.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.mental_strength.auto"
+                   value="{{system.attributes.mental_strength.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+
+      <td>
+        <small><a class="mcde-roll" data-roll="attribute" data-attribute="personality">PERSONALITY</a></small><br>
+        <div class="mcde-attrline" data-attr="personality">
+          <input class="mcde-attr-val" type="number"
+                 name="system.attributes.personality.value"
+                 value="{{system.attributes.personality.value}}">
+
+          {{#if (gt system.attributes.personality.auto 0)}}
+            <span class="mcde-paren">(</span>
+            <input class="mcde-attr-auto" type="number" min="0"
+                   name="system.attributes.personality.auto"
+                   value="{{system.attributes.personality.auto}}">
+            <span class="mcde-paren">)</span>
+          {{else}}
+            <a class="mcde-attr-auto-add" title="Add supernatural auto-success"><span class="mcde-paren">(</span>+<span class="mcde-paren">)</span></a>
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+    <!-- FIELDS OF EXPERTISE (same as NPC) -->
+    <h3 style="margin-top:12px;">Fields of Expertise</h3>
+    <table style="width:100%; margin-top:4px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;"></th>
+          <th style="width:60px;">EXP</th>
+          <th style="width:60px;">FOC</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each expertiseList as |s|}}
+          <tr>
+            <td><small><a class="mcde-roll" data-roll="npc-skill" data-skill="{{s.key}}">{{s.label}}</a></small></td>
+            <td><input type="number" name="system.skills.{{s.key}}.expertise" value="{{s.exp}}" style="width:55px"></td>
+            <td><input type="number" name="system.skills.{{s.key}}.focus" value="{{s.foc}}" style="width:55px"></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- DARK SYMMETRY SPENDS (same as NPC) -->
+    <h3 style="margin-top:12px;">Dark Symmetry Spends</h3>
+    {{editor enriched.darkSymmetrySpendsText target="system.darkSymmetrySpendsText" button=true owner=owner editable=editable engine="prosemirror"}}
+
+  </div>
+
+</div>
+
+  </div>
+
+  <!-- ================= DESCRIPTION TAB ================= -->
+  <div class="tab" data-group="primary" data-tab="description">
+    {{editor enriched.notes target="system.notes" button=true owner=owner editable=editable engine="prosemirror"}}
+  </div>
+
+</section>
+</form>

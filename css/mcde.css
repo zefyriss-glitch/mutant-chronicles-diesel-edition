@@ -1,0 +1,2530 @@
+/* ===== Foundry Rich Text Editor (global fix) ===== */
+
+.mcde .editor {
+  min-height: 220px;
+}
+
+.mcde .editor .editor-content {
+  min-height: 220px;
+}
+
+.mcde .editor .editor-content.ProseMirror {
+  min-height: 220px;
+}
+
+/* ===== Icone Dark Symmetry dans le texte ===== */
+
+.ds-pack{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  white-space:nowrap;
+}
+
+.ds-icon{
+  width:14px;
+  height:14px;
+  vertical-align:middle;
+  margin-right:2px;
+
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* ===== combat loc ===== */
+
+.mcde-loc-wrap{
+  position: relative;
+  width: 350px;              /* ajuste si besoin */
+  height: 420px;             /* ajuste si besoin */
+  margin: 0 auto;            /* centre l’encart dans la colonne */
+}
+
+.mcde-loc-bg{
+  position: absolute;
+  inset: 0;
+  background: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/locdoll.png")
+              center center / contain no-repeat;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.mcde-loc{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mcde-loc-wounds {
+  display:flex;
+  gap:4px;
+  align-items:center;
+}
+
+.mcde-loc-wounds input {
+  width:38px;
+  text-align:center;
+  font-weight:700;
+  background:rgba(255,255,255,0.7);
+  border:1px solid rgba(0,0,0,0.25);
+  border-radius:4px;
+}
+
+.mcde-loc-frame{
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: max-content; /* garde un cadre compact */
+}
+
+.mcde-loc-soakrow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+}
+
+.mcde-loc-soak{
+  width: 44px;
+  text-align:center;
+  font-weight: 900;
+  color: #fff !important;
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+}
+
+/* Coloring */
+.mcde.sheet {
+  --mcde-copper-1: rgba(105, 60, 20, 0.95);
+  --mcde-copper-2: rgba(150, 90, 35, 0.95);
+  --mcde-copper-3: rgba(125, 75, 25, 0.95);
+
+  --mcde-copper-ink: rgba(255, 245, 220, 0.95); /* texte sur cuivre */
+  --mcde-copper-glow: rgba(210, 150, 70, 0.35);
+}
+
+/* Hit Locations coloring */
+/* Base style for wound box */
+.mcde-loc-wounds {
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+
+.mcde-loc-frame.mcde-wound-ok { border-color:#3f5e54; background:rgba(63,94,84,0.45); box-shadow:0 0 6px rgba(63,94,84,0.6); }
+.mcde-loc-frame.mcde-wound-half { border-color:#a88c2a; background:rgba(168,140,42,0.55); box-shadow:0 0 8px rgba(168,140,42,0.8); }
+.mcde-loc-frame.mcde-wound-crit { border-color:#a52a2a; background:rgba(165,42,42,0.65); box-shadow:0 0 10px rgba(165,42,42,1); }
+
+.mcde-wound-groups{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mcde-wound-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom: 4px;
+}
+
+.mcde-wound-head label{
+  font-weight: 700;
+}
+
+.mcde-wound-max{
+  width: 60px;
+  text-align:center;
+  font-weight: 800;
+}
+
+.mcde-wound-track{
+  display:flex;
+  gap:4px;
+  width:100%;
+  align-items:stretch;
+}
+
+.mcde-wound-box{
+  flex: 1 1 0;                 /* <- chaque case prend sa part */
+  height: 12px;
+  border: 1px solid rgba(165,42,42,0.85); /* #a52a2a */
+  border-radius: 2px;
+  background: rgba(255,255,255,0.18);
+  cursor: pointer;
+  min-width: 8px;              /* évite les “filaments” si grosse jauge */
+}
+
+.mcde-wound-box.filled{
+  background: rgba(165,42,42,0.75);
+}
+
+/* Alignement Supernatural Attributes */
+.mcde-attrline{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.mcde-attr-val{
+  width:44px;
+}
+
+.mcde-attr-auto{
+  width:34px;
+  text-align:center;
+}
+
+.mcde-paren{
+  opacity:0.8;
+}
+
+.mcde-attr-auto-toggle{
+  opacity:0.7;
+  font-weight:900;
+  cursor:pointer;
+  padding:0 2px;
+  user-select:none;
+}
+.mcde-attr-auto-toggle:hover{ opacity:1; }
+
+/* Base tracker */
+#mcde-trackers .mcde-tracker{
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 800;
+  background: rgba(0,0,0,0.25); /* fallback */
+  border: 2px solid rgba(255,255,255,0.12);
+}
+
+/* =========================
+   MCDE Trackers (Theme)
+   DSP = Industrial Red
+   Momentum = Rust / Copper
+   ========================= */
+
+/* Common: metal plate + engraved-ish text */
+#mcde-trackers .mcde-tracker{
+  border-width: 1px !important;
+  border-style: solid !important;
+
+  /* subtle metal depth */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    0 2px 8px rgba(0,0,0,0.25) !important;
+
+  /* engraved-ish text (light top + dark bottom) */
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.85),
+    0 -1px 0 rgba(255,255,255,0.14) !important;
+
+  letter-spacing: 0.1em !important;
+  font-family: "Bank Gothic", sans-serif !important;
+}
+
+/* Momentum = Rust / Copper plate */
+#mcde-trackers .mcde-tracker[data-tracker="momentum"]{
+  background: linear-gradient(
+    to bottom,
+    rgba(150,95,45,0.92),
+    rgba(95,55,25,0.96)
+  ) !important;
+
+  border-color: rgba(230,190,120,0.55) !important;
+
+  color: rgba(255,245,220,0.95) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    0 0 10px rgba(220,140,50,0.20),
+    0 2px 8px rgba(0,0,0,0.25) !important;
+}
+
+/* DSP = Industrial Red plate */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"]{
+  background: linear-gradient(
+    to bottom,
+    rgba(200,40,35,0.70),
+    rgba(80,15,15,0.96)
+  ) !important;
+
+  border-color: rgba(255,210,90,0.22) !important; /* slight brass edge */
+
+  color: rgba(255,235,235,0.96) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.40),
+    0 0 12px rgba(200,40,35,0.22),
+    0 2px 8px rgba(0,0,0,0.25) !important;
+}
+
+/* Ne garder qu'une value dans les box Momentum et DSP */
+#mcde-trackers .mcde-value{
+  display:none !important;
+}
+
+/* Force children to inherit visible colors */
+#mcde-trackers .mcde-tracker *{
+  color: inherit;
+}
+
+/* Inputs inside tracker */
+#mcde-trackers .mcde-tracker input[data-action="set"]{
+  background: rgba(0,0,0,0.30) !important;
+  border: 1px solid rgba(255,255,255,0.25) !important;
+  border-radius: 6px;
+  width: 56px;
+  text-align: center;
+}
+
+@keyframes mcdePulse {
+  0%   { transform: scale(1);   filter: brightness(1); }
+  50%  { transform: scale(1.03); filter: brightness(1.25); }
+  100% { transform: scale(1);   filter: brightness(1); }
+}
+
+/* Level 1 : léger glow */
+.mcde-tracker[data-level="1"]{
+  filter: brightness(1.1);
+}
+
+/* Level 2 : pulse modéré */
+.mcde-tracker[data-level="2"]{
+  animation: mcdePulse 1.4s ease-in-out infinite;
+}
+
+/* Level 3 : pulse rapide + glow */
+.mcde-tracker[data-level="3"]{
+  animation: mcdePulse 0.8s ease-in-out infinite;
+  box-shadow: 0 0 12px currentColor;
+}
+
+/* Dread LED */
+.mcde-dread-led{
+  margin-left:auto;              /* pousse à droite */
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  pointer-events:none;           /* NON cliquable */
+  user-select:none;
+}
+
+.mcde-dread-led::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,0.35);
+  background:rgba(255,255,255,0.25); /* éteinte */
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.35);
+}
+
+.mcde-dread-led.on::before{
+  background:rgba(255,140,0,0.95);   /* allumée */
+  box-shadow:
+    0 0 6px rgba(255,140,0,0.75),
+    inset 0 0 2px rgba(0,0,0,0.25);
+}
+
+.mcde-dread-led-label{
+  font-size:11px;
+  opacity:0.85;
+}
+
+/* Page Stats de la Character Sheet */
+/* ===== Stats blocks layout (2 columns) ===== */
+.mcde-stats-cols{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:8px;
+  align-items:start;
+}
+
+.mcde-stats-col{
+  display:flex;
+  flex-direction:column;
+  gap:8px; /* espace entre cartes */
+}
+
+@media (max-width: 780px){
+  .mcde-stats-cols{ grid-template-columns: 1fr; }
+}
+
+/* ===== Attribute card ===== */
+.mcde-attr-card{
+  border:1px solid rgba(0,0,0,0.18);
+  border-radius:6px;
+  overflow:hidden;
+  background: rgba(0,0,0,0.10);
+}
+
+/* === Attribute Header - Copper Industrial === */
+.mcde-attr-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:4px 8px;
+
+  /* Copper panel base */
+  background: linear-gradient(
+  to right,
+  rgba(105, 60, 20, 0.95),
+  rgba(150, 90, 35, 0.95),
+  rgba(125, 75, 25, 0.95)
+  );
+
+  color: rgba(255,255,255,0.95);
+  font-weight:700;
+  letter-spacing:0.3px;
+  text-transform:uppercase;
+
+  cursor:pointer;
+
+  border-radius:4px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),   /* top highlight */
+    inset 0 -1px 0 rgba(0,0,0,0.35),        /* bottom shadow */
+    0 1px 3px rgba(0,0,0,0.25);             /* subtle lift */
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.mcde-attr-head:hover {
+  background: linear-gradient(
+    to right,
+    rgba(150, 90, 30, 0.6),
+    rgba(210, 150, 70, 0.95),
+    rgba(170, 110, 45, 0.95)
+  );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 0 8px rgba(210, 150, 70, 0.35);
+
+  transform: translateY(-1px);
+}
+
+/* Force layout: label left, value right */
+.mcde-attr-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+/* Ensure the value chip sticks to the right */
+.mcde-attr-head > *:last-child{
+  margin-left:auto;
+}
+
+/* Test Underline */
+.mcde-attr-head::after{
+  content:"";
+  display:block;
+  height:2px;
+  margin-top:4px;
+  border-radius:2px;
+
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  );
+
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.25),
+    0 1px 3px rgba(0,0,0,0.25);
+}
+
+.mcde-attr-title{
+  font-size:12px;
+  line-height:1.1;
+}
+
+.mcde-attr-input{
+  width:46px;
+  height:24px;
+  padding:0;
+  text-align:center;
+  font-weight:800;
+
+  /* ✅ cohérent “dark UI” + lisible */
+  border:1px solid rgba(255,255,255,0.30);
+  border-radius:4px;
+  background: rgba(0,0,0,0.22);
+  color: rgba(255,255,255,0.92);
+}
+
+/* ===== Skills list: tighter ===== */
+.mcde-skill-list{
+  padding:6px 8px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.mcde-skill-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:1px 0;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 4px;
+}
+
+.mcde-skill-row:hover {
+  background: rgba(0,90,60,0.15);
+  box-shadow: inset 0 0 6px rgba(0,120,80,0.25);
+}
+
+.mcde-skill-name{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+
+.mcde-skill-dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+
+  /* ✅ vert au lieu d’orange */
+  border:1px solid rgba(180,120,50,0.75);
+  background: rgba(120,70,20,0.15);
+
+  flex:0 0 auto;
+}
+
+.mcde-skill-label{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:600;
+  opacity:0.92;
+  font-size:12.5px;
+  line-height:1.15;
+}
+
+.mcde-skill-adv{
+  margin-left:6px;
+  font-size:11px;
+  opacity:0.55;
+  font-weight:500;
+}
+
+.mcde-skill-controls{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:0 0 auto;
+}
+
+.mcde-sig-toggle{
+  width:16px;
+  height:16px;
+
+  accent-color: rgba(170,110,45,0.95);
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.25));
+}
+
+.mcde-skill-num{
+  width:40px;
+  height:22px;
+  padding:0;
+  text-align:center;
+  border-radius:4px;
+
+  border:1px solid rgba(120,70,20,0.45);
+
+  background: linear-gradient(
+    to bottom,
+    rgba(150,90,35,0.25),
+    rgba(90,55,20,0.35)
+  );
+
+  color: rgba(255,245,220,0.95);
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.6),
+    0 0 2px rgba(0,0,0,0.4);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 1px 2px rgba(0,0,0,0.25);
+}
+
+.mcde-skill-tn{
+  width:24px;
+  text-align:center;
+  font-weight:800;
+
+  color: rgba(150,90,35,0.98);
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.35),
+    0 0 2px rgba(0,0,0,0.3);
+
+  line-height:1;
+}
+
+/* Empêche les inputs de "voler" le hover visuel */
+.mcde-skill-row input,
+.mcde-attr-head input {
+  cursor: default;
+}
+
+/* Signature feedback stays, but a tad subtler */
+.mcde-skill-row.is-signature .mcde-skill-dot{
+  background: linear-gradient(
+    to bottom,
+    rgba(230,190,120,0.65),
+    rgba(180,120,50,0.9),
+    rgba(120,70,20,0.85)
+  );
+
+  border-color: rgba(120,70,20,0.75);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 0 4px rgba(210,150,70,0.25);
+}
+
+.mcde-sig-hint{
+  margin-top:8px;
+  opacity:0.8;
+  font-size:0.95em;
+}
+
+/* Advanced non entraînée */
+.mcde-skill-row.is-advanced:not(.is-trained) .mcde-skill-label {
+  opacity: 0.55;
+}
+
+/* Advanced entraînée */
+.mcde-skill-row.is-advanced.is-trained .mcde-skill-label {
+  opacity: 1;
+}
+
+/* Tab Couleur */
+/* Remove Foundry red tab highlight */
+.mcde.sheet .tabs .item.active,
+.mcde.sheet .tabs .item:hover {
+  color: inherit;
+  border-color: transparent;
+}
+
+/* === Base Tabs === */
+.mcde.sheet .tabs .item {
+  position: relative;
+  font-family: "Bank Gothic", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  transition: all 0.15s ease;
+}
+
+.mcde.sheet .tabs .item:hover {
+  color: rgba(170,110,45,0.95);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.3),
+    0 0 3px rgba(210,150,70,0.25);
+}
+
+.mcde.sheet .tabs .item.active {
+  background: linear-gradient(
+    to bottom,
+    rgba(160,95,40,0.95),
+    rgba(110,65,25,0.98)
+  );
+
+  color: rgba(255,245,220,1);
+
+  border-radius: 4px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.5),
+    0 2px 4px rgba(0,0,0,0.4);
+
+  transform: translateY(1px);
+}
+
+.mcde.sheet .tabs .item.active {
+  transform: translateY(1px);
+}
+
+/* === TAB BAR BACKGROUND === */
+.mcde.sheet .tabs {
+  background: linear-gradient(
+    to bottom,
+    rgba(70,40,20,0.95),
+    rgba(50,30,15,0.98)
+  );
+
+  padding: 6px 8px;
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -2px 4px rgba(0,0,0,0.6);
+}
+
+.mcde.sheet .tabs .item {
+  color: rgba(255,245,220,0.9);
+  font-family: "Bank Gothic", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mcde.sheet .tabs .item:hover {
+  color: rgba(230,190,120,0.95);
+  text-shadow:
+    0 0 6px rgba(210,150,70,0.4);
+}
+
+.mcde.sheet .tabs::after {
+  content:"";
+  display:block;
+  height:2px;
+  margin-top:6px;
+
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.2),
+    rgba(190,130,60,0.9),
+    rgba(120,70,20,0.2)
+  );
+}
+
+/* =========================================
+   MCDE: Tabs bar — equal width, centered labels
+   ========================================= */
+
+.mcde.sheet .sheet-tabs.tabs {
+  display: flex;
+  justify-content: space-between; /* ou center, mais flex:1 gère tout */
+  align-items: stretch;
+  gap: 0;                          /* pas d'espaces bizarres */
+}
+
+/* chaque onglet prend la même largeur */
+.mcde.sheet .sheet-tabs.tabs > .item {
+  flex: 1 1 0;
+  text-align: center;
+  justify-content: center;         /* au cas où Foundry met display:flex */
+}
+
+/* si Foundry applique display:flex aux items */
+.mcde.sheet .sheet-tabs.tabs > .item {
+  display: flex;
+  align-items: center;
+}
+
+/* optionnel: évite le “shrink” du texte */
+.mcde.sheet .sheet-tabs.tabs > .item {
+  white-space: nowrap;
+}
+
+/* === Damage Bonus === */
+/* === Damage Bonus - Oxidized Copper Panel === */
+.mcde-damage-bonus {
+
+  background: linear-gradient(
+    to bottom,
+    rgba(60, 45, 35, 0.96),
+    rgba(95, 75, 55, 0.95) 40%,
+    rgba(145, 125, 100, 0.65) 60%,
+    rgba(85, 65, 45, 0.95)
+  );
+
+  border: 1px solid rgba(40, 30, 20, 0.85);
+
+  border-radius: 6px;
+  padding: 8px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    0 2px 6px rgba(0,0,0,0.35);
+}
+
+.mcde-damage-bonus h3 {
+  color: rgba(255,245,220,0.95);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.6),
+    0 0 3px rgba(0,0,0,0.3);
+}
+
+/* subtle copper underline vibe without overpowering */
+.mcde-damage-bonus::after{
+  content:"";
+  display:block;
+  height:2px;
+  margin-top:6px;
+  border-radius:2px;
+
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  );
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.18),
+    0 1px 3px rgba(0,0,0,0.22);
+}
+
+.mcde-damage-bonus .mcde-damage-row {
+  background: rgba(235, 225, 210, 0.18);
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+
+.mcde.sheet {
+  --mcde-accent: rgba(170,110,45,0.95);
+}
+
+.mcde-damage-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+
+.mcde-damage-row label {
+  font-weight:600;
+  color:black;
+}
+
+.mcde-damage-input {
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.mcde-dsd-icon {
+  display:inline-flex;
+  align-items:center;
+}
+
+.mcde-dsd-icon img {
+  width: 20px;   /* ajuste si tu veux plus gros */
+  height: 20px;
+  
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+
+  display: block;
+}
+
+.mcde-dsd-icon img {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+}
+
+/* =========================================
+   Hover-only edit/delete controls (global)
+   ========================================= */
+
+.mcde-hover-controls .item {
+  position: relative;
+  padding-right: 44px; /* leaves space for icons */
+}
+
+.mcde-hover-controls .item-controls {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  display: none;
+  gap: 6px;
+  align-items: center;
+}
+
+.mcde-hover-controls .item:hover .item-controls {
+  display: flex;
+}
+
+/* Make the icons match your style a bit */
+.mcde-hover-controls .item-controls .item-control {
+  opacity: 0.85;
+}
+
+.mcde-hover-controls .item-controls .item-control:hover {
+  opacity: 1;
+}
+
+.mcde-talents.mcde-hover-controls details > summary:hover .item-controls {
+  display: inline-flex;
+}
+
+/* 1) Remove default summary indentation/marker weirdness */
+.mcde-talents details > summary {
+  list-style: none;
+}
+
+/* Optional: avoid Foundry marker */
+.mcde-talents details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* 3) Rebuild the inner layout ourselves */
+.mcde-talents details > summary.mcde-acc-summary .mcde-acc-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 4) Pin controls to the exact same right edge */
+.mcde-talents.mcde-hover-controls .item-controls {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: none;
+  gap: 6px;
+  align-items: center;
+}
+.mcde-talents.mcde-hover-controls .item:hover .item-controls {
+  display: inline-flex;
+}
+
+/* 2) Force summary to take full row width */
+.mcde-talents details > summary.mcde-acc-summary {
+  display: block !important;      /* override your inline flex */
+  width: 100%;
+  position: relative;
+  padding-right: 44px;            /* reserve icon space like weapons */
+}
+
+/* Talents / Special Abilities: align controls exactly like weapons */
+.mcde-talents.mcde-hover-controls .item {
+  position: relative;      /* already true via .mcde-hover-controls, but keep explicit */
+  padding-right: 44px;     /* reserve same space */
+}
+
+/* === FIX: align talent hover controls exactly like weapons === */
+
+/* 1) The <li.item> is the positioning reference (same as weapons) */
+.mcde-talents.mcde-hover-controls .item {
+  position: relative;
+  padding-right: 44px;
+}
+
+/* 2) IMPORTANT: do NOT make summary the positioning reference */
+.mcde-talents.mcde-hover-controls details > summary.mcde-acc-summary {
+  position: static !important;   /* overrides earlier "position: relative" */
+  padding-right: 44px;           /* keeps room for icons */
+  display: block;
+  width: 100%;
+}
+
+/* 3) Controls are positioned like weapons (relative to li.item) */
+.mcde-talents.mcde-hover-controls .item-controls {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: none;
+  gap: 6px;
+  align-items: center;
+}
+
+/* 4) Show only on hover of the whole item row */
+.mcde-talents.mcde-hover-controls .item:hover .item-controls {
+  display: inline-flex;
+}
+
+/* Armor auto-soak: table + button side-by-side */
+.mcde-armor-soakbar{
+  display:flex;
+  gap:10px;
+  align-items:center;      /* centre verticalement le bouton */
+}
+
+/* le tableau prend la place dispo */
+.mcde-armor-soakbar .mcde-armor-soak-table{
+  flex:1 1 auto;
+  margin:0;
+}
+
+/* le bouton reste à droite, sans étirer bizarrement */
+.mcde-armor-soakbar .mcde-armor-setsoaks{
+  flex:0 0 auto;
+  white-space:nowrap;
+  height: fit-content;
+}
+
+.mcde-armor-setsoaks{
+  width: auto !important;     /* annule le width:100% Foundry */
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* Armor summary table: center everything */
+.mcde-armor-dropzone table th,
+.mcde-armor-dropzone table td{
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* ===== DS icons inside ProseMirror: force inline behavior ===== */
+.mcde .editor .ProseMirror .ds-pack{
+  display: inline-flex !important;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.mcde .editor .ProseMirror img.ds-icon{
+  display: inline-block !important;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin: 0;              /* laisse le gap faire le taf */
+  max-width: none !important; /* évite les règles globales "img {max-width:100%}" */
+}
+
+/* ===== PAS SUR DE CA DS icons inside ProseMirror: force inline behavior ===== */
+.ds-pack{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  white-space:nowrap;
+}
+
+.ds-icon{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  vertical-align:middle;
+}
+
+.ds-tag{
+  font-weight:600;
+  opacity:0.85;
+}
+
+/* ===== Colonnes Spells Talents ===== */
+.mcde-ts-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:16px;
+}
+
+.mcde-ts-col{
+  border-right:1px solid rgba(0,0,0,0.1);
+  padding-right:12px;
+}
+
+.mcde-ts-col:last-child{
+  border-right:none;
+}
+
+.mcde-ts-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.mcde-ts-item{
+  padding:6px 4px;
+  cursor:pointer;
+}
+
+.mcde-ts-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.mcde-ts-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.mcde-ts-actions .item-controls{
+  display:flex;
+  gap:6px;
+  opacity:0;
+  transition:opacity 0.15s ease;
+}
+
+.mcde-ts-item:hover .item-controls{
+  opacity:1;
+}
+
+.mcde-ts-body{
+  margin-top:6px;
+  display:none;
+  font-size:13px;
+  opacity:0.9;
+}
+
+.mcde-ts-item.open .mcde-ts-body{
+  display:block;
+}
+
+.mcde-ts-toggle{
+  width:16px;
+  text-align:center;
+  opacity:0.8;
+  transition:transform 0.15s ease;
+}
+
+.mcde-ts-item.open .mcde-ts-toggle{
+  transform:rotate(180deg);
+}
+
+
+/* .mcde-ts-item .item-controls{
+  position: static !important;
+  display: flex !important;
+}
+
+/* ==== TS GRID ==== */
+
+.mcde-ts-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:16px;
+}
+
+.mcde-ts-col{
+  border-right:1px solid rgba(0,0,0,0.1);
+  padding-right:12px;
+}
+
+.mcde-ts-col:last-child{
+  border-right:none;
+}
+
+.mcde-ts-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+/* ==== ITEM ==== */
+
+.mcde-ts-item{
+  padding:6px 4px;
+  cursor:pointer;
+}
+
+.mcde-ts-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.mcde-ts-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.mcde-ts-actions .item-controls{
+  display:flex;
+  gap:6px;
+  opacity:0;
+  transition:opacity 0.15s ease;
+}
+
+.mcde-ts-item:hover .item-controls{
+  opacity:1;
+}
+
+.mcde-ts-toggle{
+  width:16px;
+  text-align:center;
+  opacity:0.8;
+  transition:transform 0.15s ease;
+}
+
+.mcde-ts-item.open .mcde-ts-toggle{
+  transform:rotate(180deg);
+}
+
+.mcde-ts-body{
+  margin-top:6px;
+  display:none;
+  font-size:13px;
+  opacity:0.9;
+}
+
+.mcde-ts-item.open .mcde-ts-body{
+  display:block;
+}
+
+/* ==== ITEM ====
+   WEAPONS: stable layout + reload bandolier (single source of truth)
+   ========================= */
+
+.mcde .mcde-weapon-row{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.mcde .mcde-weapon-thumb{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  border:none;
+  box-shadow:none;
+  background:transparent;
+}
+
+.mcde .mcde-weapon-main{
+  min-width:0;
+  flex:1 1 auto;
+}
+
+/* Line 1: name + bandolier on same row */
+.mcde .mcde-weapon .item-name{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  min-width:0;
+}
+
+/* Title must be allowed to shrink */
+.mcde .mcde-weapon .item-name h4{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Bandolier stays at the far right and never wraps */
+.mcde .mcde-weapon .mcde-reload-bandolier{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:2px;
+  margin-left:auto;
+  white-space:nowrap;
+}
+
+/* Bullet icons behave like icons */
+.mcde .mcde-weapon .mcde-reload-bullet{
+  display:block;
+  height:18px;
+  width:auto;
+  margin:0;
+  padding:0;
+  border:none !important;
+  box-shadow:none !important;
+  background:none !important;
+  cursor:pointer;
+}
+
+.mcde .mcde-weapon .mcde-reload-bullet:hover{
+  transform:scale(1.08);
+}
+
+/* Weapon line details: match armor detail font size (armor uses 12px inline) */
+.mcde .mcde-weapon .item-detail{
+  font-size: 12px;
+}
+.mcde-weapon .item-detail .ds-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* ===== Skills column headers (Sig / Exp / Foc / TN) ===== */
+.mcde-skill-colheads{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:8px;
+  padding:0 0 2px 0;
+  margin-bottom:2px;
+  opacity:0.70;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.3px;
+  user-select:none;
+  pointer-events:none; /* no accidental clicks */
+}
+
+.mcde-skill-colheads-left{
+  /* aligns with .mcde-skill-name (left side) */
+  flex:1 1 auto;
+  min-width:0;
+}
+
+.mcde-skill-colheads-right{
+  display:flex;
+  align-items:flex-end;
+  gap:6px; /* match .mcde-skill-controls gap */
+  flex:0 0 auto;
+}
+
+/* widths match existing controls: checkbox 16, exp/foc 40, tn 24 */
+.mcde-skill-colhead.mcde-col-sig{ width:16px; text-align:center; }
+.mcde-skill-colhead.mcde-col-exp{ width:40px; text-align:center; }
+.mcde-skill-colhead.mcde-col-foc{ width:40px; text-align:center; }
+.mcde-skill-colhead.mcde-col-tn { width:24px; text-align:center; }
+
+/* ===== NPC/Nemesis: prevent layout blow-up on Description tab ===== */
+
+/* =========================================
+   NPC + Nemesis: header fixed, tabs scroll
+   and Foundry editor hover/edit stays usable
+   ========================================= */
+
+
+/* 0) Chaîne de hauteur */
+.mcde.sheet.actor.npc .window-content,
+.mcde.sheet.actor.nemesis .window-content,
+.mcde.sheet.actor.npc .window-content form,
+.mcde.sheet.actor.nemesis .window-content form,
+.mcde.sheet.actor.npc form.flexcol,
+.mcde.sheet.actor.nemesis form.flexcol {
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+/* 1) Flex colonne stable */
+.mcde.sheet.actor.npc form.flexcol,
+.mcde.sheet.actor.nemesis form.flexcol {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 2) Header & tabs ne grandissent jamais */
+.mcde.sheet.actor.npc .sheet-header,
+.mcde.sheet.actor.nemesis .sheet-header,
+.mcde.sheet.actor.npc .sheet-tabs,
+.mcde.sheet.actor.nemesis .sheet-tabs {
+  flex: 0 0 auto !important;
+}
+
+/* 3) Body prend le reste ET scrolle */
+.mcde.sheet.actor.npc .sheet-body,
+.mcde.sheet.actor.nemesis .sheet-body{
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: block !important; /* évite les calculs flex chelous avec tabs/editor */
+}
+
+/* 4) Tabs: pas de scroll spécial, elles suivent le flux */
+.mcde.sheet.actor.npc .sheet-body .tab,
+.mcde.sheet.actor.nemesis .sheet-body .tab{
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* 5) ProseMirror: laisse l’éditeur respirer */
+.mcde.sheet.actor.npc .editor,
+.mcde.sheet.actor.nemesis .editor{
+  height: auto !important;
+  min-height: 220px;
+}
+
+.mcde.sheet.actor.npc .editor .editor-content,
+.mcde.sheet.actor.nemesis .editor .editor-content{
+  min-height: 180px;
+}
+
+.mcde.sheet.actor.npc .sheet-body .tab .editor-content,
+.mcde.sheet.actor.nemesis .sheet-body .tab .editor-content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: auto !important; /* <- scroll ici */
+}
+
+/* (optionnel) parfois l’editor a une barre/header */
+.mcde.sheet.actor.npc .sheet-body .tab .editor .editor-toolbar,
+.mcde.sheet.actor.nemesis .sheet-body .tab .editor .editor-toolbar {
+  flex: 0 0 auto !important;
+}
+
+/* ===== Scroll propre dans les onglets (NPC + Nemesis) ===== */
+
+/* 1) Le form doit occuper toute la hauteur de la fenêtre */
+.mcde.sheet.actor.npc form,
+.mcde.sheet.actor.nemesis form {
+  height: 100%;
+}
+
+/* 2) Header + tabs ne doivent pas grandir */
+.mcde.sheet.actor.npc .sheet-header,
+.mcde.sheet.actor.nemesis .sheet-header,
+.mcde.sheet.actor.npc .sheet-tabs,
+.mcde.sheet.actor.nemesis .sheet-tabs {
+  flex: 0 0 auto;
+}
+
+/* 3) La zone "body" prend le reste */
+.mcde.sheet.actor.npc .sheet-body,
+.mcde.sheet.actor.nemesis .sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;      /* ultra important pour autoriser l'overflow */
+  overflow: hidden;   /* le scroll se fera dans l'onglet, pas ici */
+}
+
+/* 4) Le scroll se fait DANS l'onglet actif */
+.mcde.sheet.actor.npc .sheet-body .tab.active,
+.mcde.sheet.actor.nemesis .sheet-body .tab.active {
+  height: 100%;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+
+/* 5) ProseMirror/éditeur : évite qu'il fasse exploser la hauteur */
+.mcde.sheet.actor.npc .editor,
+.mcde.sheet.actor.nemesis .editor {
+  min-height: 200px;
+}
+
+/* =========================================================
+   NPC/Nemesis — ProseMirror editor should fill the tab height
+   and scroll inside (stable)
+   ========================================================= */
+
+/* 1) Make sure the chain can stretch */
+.mcde.sheet.actor.npc .window-content,
+.mcde.sheet.actor.nemesis .window-content,
+.mcde.sheet.actor.npc .window-content form,
+.mcde.sheet.actor.nemesis .window-content form,
+.mcde.sheet.actor.npc form.flexcol,
+.mcde.sheet.actor.nemesis form.flexcol,
+.mcde.sheet.actor.npc .sheet-body,
+.mcde.sheet.actor.nemesis .sheet-body,
+.mcde.sheet.actor.npc .sheet-body .tab.active,
+.mcde.sheet.actor.nemesis .sheet-body .tab.active{
+  min-height: 0 !important;
+}
+
+/* 2) Tab active becomes a flex column so the editor can grow */
+.mcde.sheet.actor.npc .sheet-body .tab.active,
+.mcde.sheet.actor.nemesis .sheet-body .tab.active{
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 3) Body prend le reste ET c'est LUI qui scroll */
+.mcde.sheet.actor.npc .sheet-body,
+.mcde.sheet.actor.nemesis .sheet-body{
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;  /* <-- scroll ici */
+  overflow-x: hidden !important;
+  display: block !important;    /* <-- évite les pièges de flex+tabs */
+}
+
+/* =========================================
+   NPC + Nemesis — SCROLL DANS L’ONGLET (stable)
+   ProseMirror: ne coupe pas le contenu
+   ========================================= */
+
+/* Le body prend le reste et masque le surplus (le scroll est dans la tab) */
+.mcde.sheet.actor.npc .sheet-body,
+.mcde.sheet.actor.nemesis .sheet-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Les tabs prennent la place ; l’onglet actif scroll */
+.mcde.sheet.actor.npc .sheet-body .tab,
+.mcde.sheet.actor.nemesis .sheet-body .tab {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important; /* les inactifs ne scrollent pas */
+}
+
+.mcde.sheet.actor.npc .sheet-body .tab.active,
+.mcde.sheet.actor.nemesis .sheet-body .tab.active {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* ProseMirror: laisser le contenu “vivre”, pas de scroll interne forcé */
+.mcde.sheet.actor.npc .editor,
+.mcde.sheet.actor.nemesis .editor {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 220px !important;
+  overflow: visible !important;
+}
+
+.mcde.sheet.actor.npc .editor .editor-content,
+.mcde.sheet.actor.nemesis .editor .editor-content {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;  /* <- pas de coupe */
+}
+
+/* 6) Editor content: pas de scroll interne */
+.mcde.sheet.actor.npc .sheet-body .editor .editor-content,
+.mcde.sheet.actor.nemesis .sheet-body .editor .editor-content{
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+@font-face{
+  font-family: "Bank Gothic";
+  src: url("/systems/mutant-chronicles-diesel-edition/assets/font/bankgothicmedium.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* === TITRES === */
+.window-title,
+.sheet-header h1,
+.sheet-header h2,
+.sheet-header h3 {
+  font-family: "Bank Gothic", sans-serif !important;
+}
+
+/* === TABS === */
+.sheet-tabs .item,
+.tabs .item {
+  font-family: "Bank Gothic", sans-serif !important;
+}
+
+/* === TRAITS / TAGS RESTENT NORMAUX === */
+.mcde.sheet .trait,
+.mcde.sheet .tag,
+.mcde.sheet .qualities span {
+  font-family: var(--font-primary) !important;
+}
+
+/* === MCDE: Section titles in sheet body === */
+.mcde.sheet .sheet-body h3 {
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mcde.sheet h1 {
+  border-bottom: 1px solid rgba(120, 120, 120, 0.4);
+  padding-bottom: 4px;
+}
+
+/* === Engraved metal effect + copper underline === */
+.mcde.sheet .sheet-body h3 {
+  position: relative;
+  padding-bottom: 6px; /* room for underline */
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.35),   /* highlight edge */
+    0 -1px 0 rgba(0,0,0,0.35),        /* shadow edge */
+    0 2px 3px rgba(0,0,0,0.25);       /* depth */
+}
+
+.mcde.sheet .sheet-body h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 2px;
+  border-radius: 2px;
+
+  /* copper-ish underline with subtle shine */
+  background: linear-gradient(
+    to right,
+    rgba(120, 70, 20, 0.15),
+    rgba(180, 120, 50, 0.75),
+    rgba(230, 190, 120, 0.55),
+    rgba(180, 120, 50, 0.75),
+    rgba(120, 70, 20, 0.15)
+  );
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.25),
+    0 1px 3px rgba(0,0,0,0.25);
+}
+
+/* Section titles only */
+.mcde.sheet .sheet-body h3 {
+  font-family: "Bank Gothic", sans-serif;
+  position: relative;
+  padding-bottom: 6px;
+
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.35),
+    0 -1px 0 rgba(0,0,0,0.35);
+}
+
+/* Copper underline */
+.mcde.sheet .sheet-body h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.2),
+    rgba(190,130,60,0.8),
+    rgba(120,70,20,0.2)
+  );
+}
+
+.mcde.sheet .window-content {
+  background-image: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/backgroundmetal.jpg");
+  background-repeat: repeat;
+  background-size: 600px;
+}
+
+/* =========================================
+   MCDE Dialog Theme (Skill Test, etc.)
+   ========================================= */
+
+.mcde-dialog .window-content{
+  /* texture acier brossé claire */
+  background-image: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/backgroundmetal.jpg");
+  background-repeat: repeat;
+  background-size: 600px;
+  background-color: transparent;
+}
+
+/* Header du Dialog (barre de titre) */
+.mcde-dialog .window-header{
+  background: linear-gradient(
+    to bottom,
+    rgba(70,40,20,0.95),
+    rgba(50,30,15,0.98)
+  );
+  border-bottom: 1px solid rgba(0,0,0,0.35);
+}
+.mcde-dialog .window-title{
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255,245,220,0.95);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+
+/* Contenu du formulaire */
+.mcde-skilltest-dialog .mcde-roll-dialog{
+  font-family: var(--font-primary);
+}
+
+/* Mini-titres dans la fenêtre */
+.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:700"],
+.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:600"]{
+  font-family: "Bank Gothic", sans-serif !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* HR -> cuivre discret */
+.mcde-skilltest-dialog .mcde-roll-dialog hr{
+  border: none;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  );
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.18),
+    0 1px 3px rgba(0,0,0,0.22);
+  margin: 8px 0;
+}
+
+/* Inputs / selects : petite vibe métal */
+.mcde-skilltest-dialog select,
+.mcde-skilltest-dialog input[type="text"],
+.mcde-skilltest-dialog input[type="number"]{
+  border: 1px solid rgba(120,70,20,0.45);
+  background: linear-gradient(
+    to bottom,
+    rgba(150,90,35,0.22),
+    rgba(90,55,20,0.32)
+  );
+  color: rgba(255,245,220,0.95);
+  border-radius: 4px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+/* Checkbox accent cuivre (Chrome/Edge ok) */
+.mcde-skilltest-dialog input[type="checkbox"]{
+  accent-color: rgba(170,110,45,0.95);
+}
+
+/* Boutons : cuivre “plaque” */
+.mcde-dialog .dialog-buttons button{
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  color: rgba(255,245,220,0.95);
+  background: linear-gradient(
+    to bottom,
+    rgba(160,95,40,0.95),
+    rgba(110,65,25,0.98)
+  );
+  border: 1px solid rgba(40,30,20,0.75);
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    0 2px 6px rgba(0,0,0,0.25);
+
+  transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+.mcde-dialog .dialog-buttons button:hover{
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.5),
+    0 0 10px rgba(210,150,70,0.25),
+    0 2px 6px rgba(0,0,0,0.25);
+  transform: translateY(-1px);
+}
+
+.mcde-dialog .dialog-buttons button:active{
+  transform: translateY(0px);
+  filter: brightness(0.98);
+}
+
+/* Kill Foundry translucent dialog content for MCDE dialogs */
+.mcde-dialog .window-content{
+  background-color: rgba(210,210,205,0.98) !important; /* base claire opaque */
+  background-blend-mode: normal !important;
+  backdrop-filter: none !important;
+}
+
+/* === Skill Test Inputs / Selects - Darker & Clear === */
+.mcde-skilltest-dialog select,
+.mcde-skilltest-dialog input[type="number"],
+.mcde-skilltest-dialog input[type="text"]{
+
+  background: linear-gradient(
+    to bottom,
+    rgba(80,55,35,0.95),
+    rgba(55,38,24,0.98)
+  );
+
+  color: rgba(255,245,220,0.95);
+
+  border: 1px solid rgba(120,70,20,0.85);
+
+  border-radius: 5px;
+
+  text-shadow: 0 1px 0 rgba(0,0,0,0.7);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.6),
+    0 1px 3px rgba(0,0,0,0.4);
+
+  padding: 2px 6px;
+}
+
+.mcde-skilltest-dialog select{
+  background-color: rgba(70,45,28,0.98) !important;
+  color: rgba(255,245,220,0.95) !important;
+}
+
+.mcde-skilltest-dialog select option{
+  background-color: rgba(70,45,28,0.98);
+  color: rgba(255,245,220,0.95);
+}
+
+.mcde-skilltest-dialog select option:checked{
+  background: rgba(150,90,35,0.95);
+  color: rgba(255,245,220,1);
+}
+
+/* =====================================================
+   MCDE — GLOBAL DIALOG THEME (applies to all mcde-dialog)
+   ===================================================== */
+
+/* 1) Window content: no transparency + brushed steel */
+.mcde-dialog .window-content{
+  background-image: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/backgroundmetal.jpg") !important;
+  background-repeat: repeat !important;
+  background-size: 600px !important;
+
+  /* opaque base to kill Foundry glass */
+  background-color: rgba(220,220,212,0.98) !important;
+  background-blend-mode: normal !important;
+  backdrop-filter: none !important;
+}
+
+/* 2) Header bar (rusty) + title font */
+.mcde-dialog .window-header{
+  background: linear-gradient(
+    to bottom,
+    rgba(70,40,20,0.95),
+    rgba(50,30,15,0.98)
+  ) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.35) !important;
+}
+
+.mcde-dialog .window-title{
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.65);
+}
+
+/* 3) H1/H2/H3 inside dialogs */
+.mcde-dialog h1,
+.mcde-dialog h2,
+.mcde-dialog h3{
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(30,20,12,0.95);
+}
+
+/* 4) Pretty dividers (copper) */
+.mcde-dialog hr{
+  border: none !important;
+  height: 2px !important;
+  border-radius: 2px !important;
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  ) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.18),
+    0 1px 3px rgba(0,0,0,0.22) !important;
+  margin: 10px 0 !important;
+}
+
+/* 5) Inputs/selects: darker, readable */
+.mcde-dialog select,
+.mcde-dialog input[type="text"],
+.mcde-dialog input[type="number"]{
+  background: linear-gradient(
+    to bottom,
+    rgba(80,55,35,0.95),
+    rgba(55,38,24,0.98)
+  ) !important;
+
+  color: rgba(255,245,220,0.95) !important;
+
+  border: 1px solid rgba(120,70,20,0.85) !important;
+  border-radius: 5px !important;
+
+  text-shadow: 0 1px 0 rgba(0,0,0,0.7) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.6),
+    0 1px 3px rgba(0,0,0,0.35) !important;
+
+  padding: 2px 6px !important;
+}
+
+/* 6) Dropdown list (options) — best-effort across browsers */
+.mcde-dialog select option{
+  background-color: rgba(60,40,25,0.98) !important;
+  color: rgba(255,245,220,0.95) !important;
+}
+.mcde-dialog select option:checked{
+  background-color: rgba(150,90,35,0.95) !important;
+  color: rgba(255,245,220,1) !important;
+}
+
+/* 7) Checkboxes in dialogs: copper accent */
+.mcde-dialog input[type="checkbox"]{
+  accent-color: rgba(170,110,45,0.95);
+}
+
+/* 8) Sexy buttons (copper plates) */
+.mcde-dialog .dialog-buttons button{
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  color: rgba(255,245,220,0.95) !important;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(160,95,40,0.95),
+    rgba(110,65,25,0.98)
+  ) !important;
+
+  border: 1px solid rgba(40,30,20,0.75) !important;
+  border-radius: 6px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    0 2px 6px rgba(0,0,0,0.22) !important;
+
+  transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+.mcde-dialog .dialog-buttons button:hover{
+  filter: brightness(1.06) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.5),
+    0 0 10px rgba(210,150,70,0.22),
+    0 2px 6px rgba(0,0,0,0.22) !important;
+  transform: translateY(-1px);
+}
+
+.mcde-dialog .dialog-buttons button:active{
+  transform: translateY(0px);
+  filter: brightness(0.98) !important;
+}
+
+.mcde-dialog select:focus,
+.mcde-dialog input:focus{
+  outline: none !important;
+  border-color: rgba(210,150,70,0.95) !important;
+  box-shadow:
+    0 0 0 1px rgba(210,150,70,0.55),
+    0 0 8px rgba(210,150,70,0.25) !important;
+}
+
+/* =========================================
+   MCDE Roll Cards (Chat)
+   ========================================= */
+
+/* DSD faces in damage rollcard */
+.mcde-die.mcde-dsd{
+  padding:0;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.mcde-die.mcde-dsd .mcde-dsd-face{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* Borders by meaning */
+.mcde-die.mcde-dsd.is-face-1{ border-color: rgba(180,120,50,0.90); }
+.mcde-die.mcde-dsd.is-face-2{ border-color: rgba(230,190,120,0.92); }
+.mcde-die.mcde-dsd.is-face-6{ border-color: rgba(179,27,27,0.95); }
+
+.mcde-card{
+  background-image: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/backgroundmetal.jpg");
+  background-repeat: repeat;
+  background-size: 600px;
+  background-color: rgba(220,220,212,0.98);
+  border: 1px solid rgba(40,30,20,0.55);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  padding: 10px;
+}
+
+/* Header style (rust) */
+.mcde-card header{
+  font-family: "Bank Gothic", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255,245,220,0.95);
+  background: linear-gradient(to bottom, rgba(70,40,20,0.95), rgba(50,30,15,0.98));
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* Copper divider helper (if you add <hr>) */
+.mcde-card hr{
+  border: none;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  );
+  box-shadow: 0 1px 0 rgba(255,255,255,0.18), 0 1px 3px rgba(0,0,0,0.22);
+  margin: 8px 0;
+}
+
+/* Dice row = INLINE, wrap nicely */
+.mcde-dice-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Base die button */
+.mcde-die{
+  appearance: none;
+  border: 1px solid rgba(40,30,20,0.65);
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: linear-gradient(to bottom, rgba(80,55,35,0.95), rgba(55,38,24,0.98));
+  color: rgba(255,245,220,0.95);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(0,0,0,0.25);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mcde-die:hover{
+  filter: brightness(1.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 0 8px rgba(210,150,70,0.18);
+}
+
+/* --- Color nomenclature ---
+   Success = copper
+   Crit (≤ Focus) = bright copper/gold
+   Complication = rust/red plate (still on-theme)
+*/
+.mcde-die.is-success{
+  border-color: rgba(170,110,45,0.95);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 0 6px rgba(210,150,70,0.20);
+}
+
+.mcde-die.is-crit{
+  border-color: rgba(230,190,120,0.95);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 0 10px rgba(230,190,120,0.22);
+  filter: saturate(1.05);
+}
+
+.mcde-die.is-comp{
+  background: linear-gradient(to bottom, rgba(95,35,25,0.95), rgba(65,22,18,0.98));
+  border-color: rgba(160,60,45,0.85);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 0 8px rgba(160,60,45,0.18);
+}
+
+/* If both crit+comp happen, keep comp background but brighten edge */
+.mcde-die.is-comp.is-crit{
+  border-color: rgba(230,190,120,0.85);
+}
+
+/* AUTO-1 / rerolled subtle markers (optional) */
+.mcde-die.is-auto1{
+  outline: 1px solid rgba(230,190,120,0.35);
+}
+.mcde-die.is-rerolled{
+  opacity: 0.92;
+}
+
+/* DSD face images */
+.mcde-dsd .mcde-dsd-face{
+  width: 16px;
+  height: 16px;
+  image-rendering: auto;
+  display: block;
+}
+
+/* Dice row layout */
+.mcde-card .mcde-dice-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:center;
+}
+
+/* Wrap for tag under/near the die */
+.mcde-card .mcde-die-wrap{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+
+.mcde-card .mcde-die-tag{
+  font-size:10px;
+  opacity:0.75;
+}
+
+/* Base die button */
+.mcde-card .mcde-die{
+  border:1px solid rgba(40,30,20,0.6);
+  border-radius:8px;
+  padding:4px 8px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(110,70,40,0.92),
+    rgba(80,50,28,0.95)
+  );
+
+  color:#fff;
+  font-weight:700;
+  text-shadow:0 1px 0 rgba(0,0,0,0.8);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 2px 6px rgba(0,0,0,0.25);
+}
+
+/* Success */
+.mcde-card .mcde-die.is-success{
+  border-color: rgba(220,140,50,0.95);
+  background: linear-gradient(
+    to bottom,
+    rgba(220,140,50,0.55),
+    rgba(100,60,25,0.95)
+  );
+  box-shadow:
+    0 0 10px rgba(220,140,50,0.35);
+}
+
+/* Strong Success (Focus) */
+.mcde-card .mcde-die.is-crit{
+  border-color: rgba(255,210,90,0.95);
+  background: linear-gradient(
+    to bottom,
+    rgba(255,210,90,0.65),
+    rgba(130,95,35,0.95)
+  );
+  box-shadow:
+    0 0 14px rgba(255,210,90,0.45);
+}
+
+/* Complication / Effect */
+.mcde-card .mcde-die.is-comp{
+  border-color: rgba(200,40,35,0.95);
+  background: linear-gradient(
+    to bottom,
+    rgba(200,40,35,0.65),
+    rgba(80,15,15,0.95)
+  );
+  box-shadow:
+    0 0 14px rgba(200,40,35,0.45);
+}
+
+.mcde-card .mcde-die.is-fail{
+  opacity:0.75;
+}
+
+/* AUTO-1 */
+.mcde-card .mcde-die.is-auto{
+  border-color: rgba(230,190,120,0.55);
+  background: rgba(0,0,0,0.22);
+  color: rgba(230,190,120,0.95);
+  cursor:not-allowed;
+  opacity:0.9;
+}
+
+.mcde-card .mcde-trait{
+  padding:2px 7px;
+  border-radius:10px;
+  font-size:11px;
+  border:1px solid rgba(180,120,50,0.55);
+  background: rgba(0,0,0,0.14);
+}
+
+/* Header: 2 lines, centered kind + full-width title */
+.mcde-card header.mcde-card-header{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  align-items:center;
+  text-align:center;
+}
+
+.mcde-card .mcde-card-kind{
+  font-family:"Bank Gothic", sans-serif;
+  font-weight:700;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color: rgba(255,245,220,0.92);
+  line-height: 1.05;
+}
+
+.mcde-card .mcde-card-title{
+  font-family:"Bank Gothic", sans-serif;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color: rgba(255,245,220,0.95);
+  opacity:0.95;
+  line-height: 1.1;
+}
+
+/* DSD buttons: fill the whole tile */
+.mcde-card .mcde-die.mcde-dsd{
+  width:42px;
+  height:42px;
+  padding:0;
+  border-radius:10px;
+  overflow:hidden;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Crop aggressively to remove DSN side margins */
+.mcde-card .mcde-dsd-face{
+  width:150%;
+  height:160%;
+  object-fit:cover;
+  display:block;
+}
+
+/* =========================================
+   MCDE Rollcard Buttons (pimped)
+   ========================================= */
+
+/* base */
+.mcde-card button{
+  font-family: "Bank Gothic", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  border-radius: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(40,30,20,0.65);
+
+  background: linear-gradient(
+    to bottom,
+    rgba(150,95,45,0.92),
+    rgba(95,55,25,0.95)
+  );
+
+  color: rgba(255,245,220,0.96);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.75);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 2px 6px rgba(0,0,0,0.25);
+
+  cursor: pointer;
+  transition: transform 0.06s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* hover / active */
+.mcde-card button:hover{
+  filter: brightness(1.08) saturate(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 0 14px rgba(220,140,50,0.20),
+    0 2px 6px rgba(0,0,0,0.28);
+}
+
+.mcde-card button:active{
+  transform: translateY(1px);
+  filter: brightness(0.98);
+}
+
+/* focus (keyboard) */
+.mcde-card button:focus{
+  outline: none;
+}
+.mcde-card button:focus-visible{
+  outline: 2px solid rgba(255,210,90,0.65);
+  outline-offset: 2px;
+}
+
+/* subtle “engraved” line */
+.mcde-card button::after{
+  content:"";
+  display:block;
+  height:2px;
+  margin-top:6px;
+  border-radius:2px;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.0),
+    rgba(255,245,220,0.18),
+    rgba(0,0,0,0.0)
+  );
+  opacity:0.85;
+}
+
+/* Do NOT apply big button styling to dice buttons inside rollcards */
+.mcde-card .mcde-die{
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: 4px 8px;
+}
+.mcde-card .mcde-die::after{ display:none; }
+
+/* Danger button (industrial red) */
+.mcde-card .mcde-btn-danger{
+  border-color: rgba(200,40,35,0.9);
+  background: linear-gradient(to bottom, rgba(200,40,35,0.65), rgba(80,15,15,0.95));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 0 14px rgba(200,40,35,0.25);
+}
+.mcde-card .mcde-btn-danger:hover{
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 0 18px rgba(200,40,35,0.35);
+}
+
+/* Neutral steel button */
+.mcde-card .mcde-btn-neutral{
+  border-color: rgba(255,255,255,0.20);
+  background: linear-gradient(to bottom, rgba(70,70,70,0.45), rgba(20,20,20,0.55));
+}
+
+/* Ne pas couvrir les Jets en Rollcard pour pouvoir reroll */
+.mcde-card button::after { pointer-events: none; }
+
+/* MCDE tooltip */
+.mcde-trait{ position: relative; }
+
+.mcde-trait:hover::after{
+  content: attr(data-mcde-tip);
+  position: absolute;
+  left: 0;
+  top: 110%;
+  z-index: 9999;
+
+  min-width: 220px;
+  max-width: 380px;
+  white-space: normal;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: linear-gradient(to bottom, rgba(70,40,20,0.96), rgba(30,18,10,0.98));
+  border: 1px solid rgba(230,190,120,0.35);
+  color: rgba(255,245,220,0.95);
+
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.75);
+}
+
+/* Disable custom brown tooltip for qualities chips (avoid double tooltips) */
+.mcde-card .mcde-trait:hover::before,
+.mcde-card .mcde-trait:hover::after{
+  content: none !important;
+  display: none !important;
+}
+
+/* Foundry native tooltip themed MCDE (rust/copper) */
+#tooltip{
+  background: linear-gradient(to bottom, rgba(70,40,20,0.96), rgba(30,18,10,0.98)) !important;
+  border: 1px solid rgba(230,190,120,0.35) !important;
+  border-radius: 10px !important;
+
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.75) !important;
+
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35) !important;
+  padding: 10px 12px !important;
+  max-width: 380px !important;
+}
+
+#tooltip hr{
+  border: none !important;
+  height: 2px !important;
+  border-radius: 2px !important;
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.15),
+    rgba(180,120,50,0.75),
+    rgba(230,190,120,0.55),
+    rgba(180,120,50,0.75),
+    rgba(120,70,20,0.15)
+  ) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.18), 0 1px 3px rgba(0,0,0,0.22) !important;
+  margin: 8px 0 !important;
+}
+
+/* test prosemirror fix */
+
+/* ProseMirror: never clip editor content (it can "vanish" on edit) */
+.prosemirror .editor-container,
+.prose-mirror .editor-container {
+  flex: 1;
+  position: relative;
+  overflow: visible !important;  /* <-- key */
+  min-height: 0;                 /* keeps flex sane */
+}
+
+.prosemirror .editor-content,
+.prose-mirror .editor-content,
+.prosemirror .ProseMirror,
+.prose-mirror .ProseMirror {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* ===========================
+   MCDE Tabs — unified (ALL actors)
+   =========================== */
+
+.mcde.sheet.actor nav.sheet-tabs.tabs {
+  display: flex;
+  width: 100%;
+  gap: 0;
+  padding: 6px;
+  margin: 10px 0 14px 0;      /* ↑ espace au-dessus / ↓ en-dessous */
+  background: linear-gradient(to bottom, rgba(70,40,20,0.95), rgba(50,30,15,0.98));
+  border: 1px solid rgba(0,0,0,0.35);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Chaque tab */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item {
+  padding: 6px 18px;          /* largeur interne des boutons */
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+/* Tab active */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item.active {
+  background: linear-gradient(
+    to bottom,
+    rgba(150,90,35,0.95),
+    rgba(105,60,20,0.95)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 0 6px rgba(210,150,70,0.25);
+}
+
+/* Hover léger */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item:hover {
+  background: rgba(150,90,35,0.25);
+}
+
+/* Chaque tab prend la même largeur */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  padding: 8px 10px;
+  margin: 0;
+
+  font-family: "Bank Gothic", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  color: rgba(255,245,220,0.90);
+  border: 0;
+  border-right: 1px solid rgba(0,0,0,0.25);
+}
+
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item:last-child {
+  border-right: 0;
+}
+
+/* Tab active */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item.active {
+  background: linear-gradient(to bottom, rgba(150,90,35,0.90), rgba(105,60,20,0.95));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.95);
+}
+
+/* Hover */
+.mcde.sheet.actor nav.sheet-tabs.tabs > a.item:hover {
+  filter: brightness(1.06);
+}
+
+/* ===============================
+   CHARACTER — Header
+   =============================== */
+
+.mcde.sheet.actor.character header.sheet-header.mcde-header {
+  min-height: 170px;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+
+/* Avatar Character only */
+.mcde.sheet.actor.character header.sheet-header.mcde-header img.profile-img.mcde-avatar {
+  width: 170px !important;
+  height: auto !important;
+  align-self: stretch;
+  object-fit: cover !important;
+  max-height: none !important;
+  max-width: none !important;
+  display: block;
+}
+
+/* ===============================
+   CHARACTER (Joueur) — Tabs
+   =============================== */
+
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] {
+  flex: 0 0 auto;
+  height: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  line-height: 32px;
+  padding: 0 14px;
+}

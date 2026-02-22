@@ -1,0 +1,41 @@
+{
+  "id": "mutant-chronicles-diesel-edition",
+  "title": "Mutant Chronicles – Diesel Edition",
+  "description": "A Foundry VTT system for Mutant Chronicles 2D20, Diesel Edition.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "SokK & ChatGPT"
+    }
+  ],
+
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13"
+  },
+
+  "esmodules": [
+    "module/mcde.mjs"
+  ],
+
+  "styles": [
+    "css/mcde.css"
+  ],
+
+  "template": "template.json",
+
+  "documentTypes": {
+    "Actor": ["character", "npc"],
+    "Item": ["quality", "weapon", "armor", "talent", "spell", "vehicle", "equipment"]
+  },
+
+  "gridDistance": 1,
+  "gridUnits": "m",
+
+  "primaryTokenAttribute": "attributes.physique.value",
+  "secondaryTokenAttribute": "attributes.awareness.value",
+
+  "url": "https://raw.githubusercontent.com/zefyriss-glitch/mutant-chronicles-diesel-edition",
+  "manifest": "https://raw.githubusercontent.com/zefyriss-glitch/mutant-chronicles-diesel-edition/main/system.json",
+  "download": "mutant-chronicles-diesel-edition-v0.1.1.zip"
+}
