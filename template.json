@@ -86,7 +86,13 @@
         },
         "seriousWounds": [],
         "criticalWounds": [],
-        "belongings": "",
+        "belongings": {
+          "earnings": 0,
+          "assets": 0,
+          "maintenance": 0,
+          "influence": 0,
+          "lodgings": ""
+        },
         "background": ""
       }
     },
@@ -195,7 +201,7 @@
   "combatmanoeuvrability": 0,
 
   "qualities": [],
-  "fuelLoads": 0,
+  "fuel": { "max": 5, "cur": 5 },
 
   "crew": {
     "pilotUuid": "",
@@ -290,6 +296,7 @@
         "encumbrance": "",
         "restriction": "",
         "cost": "",
+        "reliability": "",
         "description": "",
         "equipped": false
       }

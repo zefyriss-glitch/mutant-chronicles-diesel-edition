@@ -78,28 +78,56 @@
     .mcde-vehicle-root .mcde-box.filled {
       background: rgba(160, 0, 0, 0.75);
     }
+
+    /* Vehicle Tags: avoid Foundry flexrow rule */
+    .mcde.sheet.actor.vehicle .mcde-tagrow > *{
+      flex: 0 0 auto;
+    }
+
+    /* Neutral crew drop styling shared by Pilot & Gunner */
+    .mcde.sheet.actor.vehicle .mcde-crew-drop{
+      border: 1px dashed rgba(0,0,0,0.25);
+      border-radius: 8px;
+      padding: 6px 10px;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+    }
   </style>
 
   <div class="mcde-vehicle-root">
 
-    <header class="sheet-header flexrow" style="gap:12px; align-items:center;">
-      <img class="profile-img" src="{{actor.img}}" data-edit="img" width="64" height="64" />
-      <div class="flexcol" style="flex:1;">
-        <h1 style="margin:0;">
-          <input name="name" type="text" value="{{actor.name}}" />
+    <header class="mcde-vehicle-header">
+      <!-- Full-width hero image -->
+      <div class="mcde-vehicle-hero">
+        <img class="profile-img mcde-vehicle-hero-img"
+             src="{{actor.img}}"
+             data-edit="img"
+             alt="{{actor.name}}" />
+      </div>
+
+      <!-- Name + meta -->
+      <div class="mcde-vehicle-headtext">
+        <h1 class="mcde-vehicle-title">
+          <input name="name" type="text" value="{{actor.name}}" placeholder="Vehicle Name" />
         </h1>
 
-        <div class="flexrow" style="gap:12px; margin-top:6px;">
-          <label style="flex:1; opacity:0.85;">Faction</label>
-          <input name="system.description" type="text" value="{{system.description}}" placeholder="(Faction / Model info)" />
+        <div class="mcde-vehicle-meta">
+          <input class="mcde-vehicle-faction"
+                 name="system.description"
+                 type="text"
+                 value="{{system.description}}"
+                 placeholder="(Faction / Model info)" />
+          <span class="mcde-vehicle-meta-label">Faction</span>
         </div>
       </div>
     </header>
 
+    <!-- TABS (Logistics + Armaments removed) -->
     <nav class="mcde-tabs tabs" data-group="primary">
       <a class="item" data-tab="tactical">Tactical</a>
-      <a class="item" data-tab="logistics">Logistics</a>
-      <a class="item" data-tab="armaments">Armaments</a>
       <a class="item" data-tab="notes">Notes</a>
     </nav>
 
@@ -109,49 +137,86 @@
       <div class="tab" data-group="primary" data-tab="tactical">
 
         <div class="flexrow" style="gap:12px;">
-          <div class="flexcol" style="flex:1;">
+
+          <!-- LEFT COLUMN -->
+          <div class="flexcol" style="flex:1.5; min-width:0;">
             <h3>Mobility</h3>
 
-            <div class="form-group">
-              <label>Cruising Speed</label>
-              <input name="system.cruisingspeed" type="text" value="{{system.cruisingspeed}}" placeholder="e.g. 130 km/h" />
-            </div>
+            <div class="mcde-formgrid mcde-mobility-grid">
+              <div class="mcde-fg-label">Cruising Speed (kph)</div>
+              <div class="mcde-fg-field">
+                <input name="system.cruisingspeed" type="text" value="{{system.cruisingspeed}}" placeholder="130 kph" />
+              </div>
+              <div class="mcde-fg-action" rowspan="2">
+                <button type="button" class="mcde-btn-pilot mcde-btn-dashboard" data-action="pilot-test">PILOT</button>
+              </div>
 
-            <div class="form-group">
-              <label>Manoeuvrability (Combat)</label>
-              <input name="system.combatmanoeuvrability" type="number" value="{{system.combatmanoeuvrability}}" min="0" />
+              <div class="mcde-fg-label">Manoeuvrability</div>
+              <div class="mcde-fg-field">
+                <input name="system.combatmanoeuvrability" type="number" value="{{system.combatmanoeuvrability}}" min="0" />
+              </div>
             </div>
 
             <h3 style="margin-top:10px;">Impact Damage</h3>
 
-            <div class="flexrow" style="gap:8px;">
-              <div class="form-group" style="flex:1;">
-                <label>ating="Base</label>
-                <input name="system.impactdamage.base" type="number" value="{{system.impactdamage.base}}" min="0" />
-              </div>
+            <div class="mcde-impact-rowline">
+              <div class="mcde-impact-label">Base</div>
+              <input class="mcde-impact-input"
+                     name="system.impactdamage.base"
+                     type="number"
+                     value="{{system.impactdamage.base}}"
+                     min="0" />
 
-              <div class="form-group" style="flex:1;">
-                <label>DSD</label>
-                <input name="system.impactdamage.dsy" type="number" value="{{system.impactdamage.dsy}}" min="0" />
+              <img class="mcde-dsd-icon"
+                   src="systems/mutant-chronicles-diesel-edition/assets/sheet/dsd.png"
+                   alt="DSD" />
+
+              <input class="mcde-impact-input"
+                     name="system.impactdamage.dsy"
+                     type="number"
+                     value="{{system.impactdamage.dsy}}"
+                     min="0" />
+
+              <div class="mcde-impact-action">
+                <button type="button"
+                        data-action="roll-impact-damage"
+                        class="mcde-btn-impact mcde-btn-dashboard">
+                  <span class="mcde-btn-impact-text">IMPACT</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="flexcol" style="flex:1;">
+          <!-- RIGHT COLUMN (Crew + Fuel Loads MUST stay here) -->
+          <div class="flexcol" style="flex:1; min-width:0;">
             <h3>Crew</h3>
 
-            <div class="form-group">
-              <label>Pilot</label>
-              <input name="system.crew.pilotName" type="text" value="{{system.crew.pilotName}}" placeholder="Name (link later)" />
+            <!-- Pilot drop zone -->
+            <div class="mcde-pilot-drop mcde-crew-drop" data-drop="pilot">
+              <div class="mcde-pilot-chip mcde-crew-chip">
+                <div class="mcde-pilot-title">Pilot</div>
+
+                {{#if system.crew.pilotUuid}}
+                  <img class="mcde-pilot-img mcde-crew-avatar" src="{{crewPilot.img}}" alt="{{crewPilot.name}}">
+                  <div class="mcde-pilot-name">{{crewPilot.name}}</div>
+
+                  <a class="mcde-pilot-clear mcde-crew-clear" data-action="clear-pilot" title="Clear Pilot">
+                    <i class="fas fa-times"></i>
+                  </a>
+                {{else}}
+                  <div class="mcde-pilot-hint mcde-crew-empty">Drop an Actor here</div>
+                {{/if}}
+              </div>
             </div>
 
-            <div class="flexrow" style="gap:8px;">
-              <div class="form-group" style="flex:1;">
+            <!-- Passengers + Encumbrance side-by-side -->
+            <div class="mcde-crew-stats">
+              <div class="form-group">
                 <label>Passengers</label>
                 <input name="system.crew.passengers" type="number" value="{{system.crew.passengers}}" min="0" />
               </div>
 
-              <div class="form-group" style="flex:1;">
+              <div class="form-group">
                 <label>Encumbrance</label>
                 <input name="system.crew.encumbrance" type="number" value="{{system.crew.encumbrance}}" min="0" />
               </div>
@@ -159,33 +224,219 @@
 
             <h3 style="margin-top:10px;">Fuel Loads</h3>
 
-            <div class="form-group">
-              <label>Fuel</label>
-              <input name="system.fuelLoads" type="number" value="{{system.fuelLoads}}" min="0" />
+            <div class="mcde-fuel-block mcde-fuel-wide">
+              <div class="mcde-fuel-head">
+                <label class="mcde-fuel-label">Fuel</label>
+                <input class="mcde-fuel-max"
+                       name="system.fuel.max"
+                       type="number"
+                       value="{{system.fuel.max}}"
+                       min="0" />
+              </div>
+
+              {{#if (gt system.fuel.max 0)}}
+                <div class="mcde-fuel-gauge">
+                  {{#each (range 1 system.fuel.max) as |i|}}
+                    <span class="mcde-fuel-box {{#if (lte i ../system.fuel.cur)}}filled{{/if}}"
+                          data-idx="{{i}}"></span>
+                  {{/each}}
+                </div>
+              {{/if}}
             </div>
           </div>
+
         </div>
 
         <hr />
 
-        <h3>Damage by Location</h3>
+        <!-- Vehicle Tags -->
+        <section class="mcde-block mcde-vehicle-tags" style="width:100%;">
+          <header class="mcde-block-header flexrow" style="align-items:center; justify-content:space-between;">
+            <h3 style="margin:0;">Vehicle Tags</h3>
+            <div class="hint" style="opacity:.7; font-size:12px;">Drop Qualities here</div>
+          </header>
 
-        <!-- IMPORTANT: the loop MUST be inside this container -->
-        <div class="mcde-location-grid">
-          {{#each locations as |loc locKey|}}
-            <div class="mcde-loc" style="padding:10px; border:1px solid rgba(255,255,255,0.08); border-radius:8px;">
+          <div class="mcde-vehicle-tags-dropzone" style="width:100%; min-height:42px;">
+            <div class="mcde-tagrow" style="display:flex; flex-wrap:wrap; gap:6px;">
+              {{#each vehicleTags as |t idx|}}
+                <span class="mcde-tag"
+      data-mcde-tag="{{idx}}"
+      data-mcde-desc="{{t.description}}">
+  {{t.name}}
+  <a data-action="vehicle-tag-remove" data-index="{{idx}}" title="Remove" class="mcde-tag-x">✕</a>
+</span>
+              {{/each}}
+              {{#unless vehicleTags.length}}
+                <span style="opacity:.6;">(empty)</span>
+              {{/unless}}
+            </div>
+          </div>
+        </section>
 
-              <div class="flexrow" style="align-items:center; gap:10px;">
-                <strong style="text-transform:uppercase;">{{locKey}}</strong>
-                <span style="opacity:0.8;">Soak</span>
-                <input name="system.locations.{{locKey}}.soak" type="number" value="{{loc.soak}}" min="0" style="width:70px;" />
+<!-- Armaments -->
+<section class="mcde-block mcde-veh-armaments" style="width:100%; margin-top:10px;">
+  <header class="mcde-block-header flexrow" style="align-items:center; justify-content:space-between;">
+    <h3 style="margin:0;">Armaments</h3>
+    <div class="hint" style="opacity:.7; font-size:12px;">Drop Weapons here</div>
+  </header>
+
+  <div class="mcde-veh-armaments-dropzone" style="width:100%; min-height:48px;">
+    <ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
+
+      {{#each armaments as |w|}}
+        <li class="item mcde-weapon mcde-hover-controls mcde-veh-weapon"
+            data-item-id="{{w.id}}"
+            style="margin-bottom:6px; position:relative;">
+
+          <div class="mcde-weapon-row">
+            {{#if w.img}}
+              <img class="mcde-weapon-thumb" src="{{w.img}}" alt="{{w.name}}">
+            {{/if}}
+
+            <div class="mcde-weapon-main">
+
+              <!-- TITLE LINE -->
+              <div class="item-name" style="display:flex; align-items:center; gap:8px; width:100%;">
+                <h4 style="margin:0; flex:1 1 auto; min-width:0;">
+                  <strong>
+                    <a class="mcde-roll"
+                       data-action="veh-weapon-attack"
+                       data-item-id="{{w.id}}">
+                      {{w.name}}
+                    </a>
+                    <span style="opacity:0.75; font-weight:normal;">
+                      ({{#if (eq w.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}})
+                    </span>
+                  </strong>
+                </h4>
+
+                {{!-- RELOADS (ranged only) --}}
+                {{#if (eq w.system.weaponType "ranged")}}
+                  <div class="mcde-reload-bandolier"
+                       data-item-id="{{w.id}}"
+                       data-current="{{w.system.reload.current}}"
+                       data-max="{{w.system.reload.max}}">
+                    {{#each (range 1 10) as |i|}}
+                      <img class="mcde-reload-bullet {{#if (lte i w.system.reload.current)}}filled{{else}}empty{{/if}}"
+                           data-value="{{i}}"
+                           src="systems/mutant-chronicles-diesel-edition/assets/sheet/{{#if (lte i w.system.reload.current)}}reloadfull.png{{else}}reloadempty.png{{/if}}">
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+              </div><!-- /item-name -->
+
+              <!-- META LINE -->
+              <div class="item-detail" style="opacity:0.9;">
+                {{#if (eq w.system.weaponType "ranged")}}
+                  Range: <strong>{{w.system.stats.range}}</strong> |
+                  Mode: <strong>{{w.system.stats.mode}}</strong> |
+                {{/if}}
+                Damage: <strong>{{w.system.damage.base}}</strong> + <strong>{{{dsValue w.system.damage.dsy}}}</strong>
               </div>
 
-              <!-- Surface -->
-              <div class="mcde-loc-track" style="margin-top:8px;">
-                <div class="flexrow" style="gap:10px; align-items:center;">
-                  <span style="width:110px; opacity:0.85;">Surface</span>
-                  <input name="system.locations.{{locKey}}.surfaceMax" type="number" value="{{loc.surfaceMax}}" min="0" style="width:70px;" />
+              <!-- TAGS -->
+              {{#if w.system.qualities.length}}
+                <div class="item-detail" style="display:flex; flex-wrap:wrap; gap:4px;">
+                  {{#each w.system.qualities as |q|}}
+                    <span class="mcde-tag" data-tooltip="{{q.description}}">
+                      {{q.name}}
+                    </span>
+                  {{/each}}
+                </div>
+              {{/if}}
+
+            </div><!-- /mcde-weapon-main -->
+
+                    </div><!-- /mcde-weapon-row -->
+
+          <div class="mcde-veh-crewcol">
+            <div class="mcde-gunner-ui">
+              <div class="mcde-gunner-drop mcde-crew-drop"
+                   data-drop="gunner"
+                   data-weapon-id="{{w.id}}">
+                <div class="mcde-crew-chip">
+                  <div class="mcde-pilot-title">GUNNER</div>
+
+                  {{#if w.gunner}}
+                    <img class="mcde-crew-avatar" src="{{w.gunner.img}}" alt="{{w.gunner.name}}">
+                    <div class="mcde-crew-name">{{w.gunner.name}}</div>
+                    <a class="mcde-crew-clear"
+                       data-action="veh-gunner-clear"
+                       data-item-id="{{w.id}}"
+                       title="Clear gunner">
+                      <i class="fas fa-times"></i>
+                    </a>
+                  {{else}}
+                    <div class="mcde-crew-empty">Drop</div>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+
+            <div class="item-controls">
+              <a class="item-control item-edit" data-action="veh-weapon-edit" data-item-id="{{w.id}}" title="Edit">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a class="item-control item-delete" data-action="veh-weapon-delete" data-item-id="{{w.id}}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </a>
+            </div>
+          </div>
+
+        </li>
+      {{/each}}
+
+      {{#unless armaments.length}}
+        <li style="opacity:.6;">(empty)</li>
+      {{/unless}}
+
+    </ul>
+  </div>
+</section>
+        <h3>Damage by Location</h3>
+
+        <div class="mcde-location-grid">
+          {{#each locations as |loc locKey|}}
+
+            <div class="mcde-loc">
+              <div class="mcde-loc-header">
+                <div class="mcde-loc-title">{{locKey}}</div>
+
+                <div class="mcde-soak-plate">
+                  <div class="mcde-soak-label">Soak</div>
+                  <input class="mcde-soak-input"
+                         name="system.locations.{{locKey}}.soak"
+                         type="number"
+                         value="{{loc.soak}}"
+                         min="0" />
+                </div>
+              </div>
+
+              <div class="mcde-loc-tracks">
+
+                <!-- Surface -->
+                <div class="mcde-loc-track">
+                  <div class="mcde-loc-track-row">
+                    <div class="mcde-loc-track-label">Surface</div>
+                    <input class="mcde-loc-max"
+                           name="system.locations.{{locKey}}.surfaceMax"
+                           type="number"
+                           value="{{loc.surfaceMax}}"
+                           min="0" />
+                  </div>
+
+                  {{#if (gt loc.surfaceMax 0)}}
+                    <div class="mcde-stretch-gauge">
+                      {{#each (range 1 loc.surfaceMax) as |i|}}
+                        <span class="mcde-stretch-seg {{#if (lte i loc.surfaceCur)}}filled{{/if}}"
+                              data-loc="{{locKey}}"
+                              data-track="surfaceCur"
+                              data-idx="{{i}}"></span>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
                   <div class="mcde-trackboxes">
                     {{#each (range 1 loc.surfaceMax) as |i|}}
                       <span class="mcde-box {{#if (lte i loc.surfaceCur)}}filled{{/if}}"
@@ -193,13 +444,29 @@
                     {{/each}}
                   </div>
                 </div>
-              </div>
 
-              <!-- System -->
-              <div class="mcde-loc-track" style="margin-top:6px;">
-                <div class="flexrow" style="gap:10px; align-items:center;">
-                  <span style="width:110px; opacity:0.85;">System</span>
-                  <input name="system.locations.{{locKey}}.systemMax" type="number" value="{{loc.systemMax}}" min="0" style="width:70px;" />
+                <!-- System -->
+                <div class="mcde-loc-track">
+                  <div class="mcde-loc-track-row">
+                    <div class="mcde-loc-track-label">System</div>
+                    <input class="mcde-loc-max"
+                           name="system.locations.{{locKey}}.systemMax"
+                           type="number"
+                           value="{{loc.systemMax}}"
+                           min="0" />
+                  </div>
+
+                  {{#if (gt loc.systemMax 0)}}
+                    <div class="mcde-stretch-gauge">
+                      {{#each (range 1 loc.systemMax) as |i|}}
+                        <span class="mcde-stretch-seg {{#if (lte i loc.systemCur)}}filled{{/if}}"
+                              data-loc="{{locKey}}"
+                              data-track="systemCur"
+                              data-idx="{{i}}"></span>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
                   <div class="mcde-trackboxes">
                     {{#each (range 1 loc.systemMax) as |i|}}
                       <span class="mcde-box {{#if (lte i loc.systemCur)}}filled{{/if}}"
@@ -207,13 +474,29 @@
                     {{/each}}
                   </div>
                 </div>
-              </div>
 
-              <!-- Structural -->
-              <div class="mcde-loc-track" style="margin-top:6px;">
-                <div class="flexrow" style="gap:10px; align-items:center;">
-                  <span style="width:110px; opacity:0.85;">Structural</span>
-                  <input name="system.locations.{{locKey}}.structuralMax" type="number" value="{{loc.structuralMax}}" min="0" style="width:70px;" />
+                <!-- Structural -->
+                <div class="mcde-loc-track">
+                  <div class="mcde-loc-track-row">
+                    <div class="mcde-loc-track-label">Structural</div>
+                    <input class="mcde-loc-max"
+                           name="system.locations.{{locKey}}.structuralMax"
+                           type="number"
+                           value="{{loc.structuralMax}}"
+                           min="0" />
+                  </div>
+
+                  {{#if (gt loc.structuralMax 0)}}
+                    <div class="mcde-stretch-gauge">
+                      {{#each (range 1 loc.structuralMax) as |i|}}
+                        <span class="mcde-stretch-seg {{#if (lte i loc.structuralCur)}}filled{{/if}}"
+                              data-loc="{{locKey}}"
+                              data-track="structuralCur"
+                              data-idx="{{i}}"></span>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
                   <div class="mcde-trackboxes">
                     {{#each (range 1 loc.structuralMax) as |i|}}
                       <span class="mcde-box {{#if (lte i loc.structuralCur)}}filled{{/if}}"
@@ -221,55 +504,26 @@
                     {{/each}}
                   </div>
                 </div>
-              </div>
 
+              </div>
             </div>
+
+            {{#if @first}}
+              <div class="mcde-locadoll-wrap">
+                <img class="mcde-locadoll"
+                     src="systems/mutant-chronicles-diesel-edition/assets/sheet/loccardoll.png"
+                     alt="Vehicle location doll">
+              </div>
+            {{/if}}
+
           {{/each}}
         </div>
 
       </div>
 
-      <!-- LOGISTICS -->
-      <div class="tab" data-group="primary" data-tab="logistics">
-        <h3>Price & Availability</h3>
-
-        <div class="flexrow" style="gap:10px;">
-          <div class="form-group" style="flex:1;">
-            <label>Restriction</label>
-            <input name="system.restriction" type="number" value="{{system.restriction}}" min="0" />
-          </div>
-
-          <div class="form-group" style="flex:1;">
-            <label>Cost</label>
-            <input name="system.cost" type="number" value="{{system.cost}}" min="0" />
-          </div>
-
-          <div class="form-group" style="flex:1;">
-            <label>Maintenance</label>
-            <input name="system.maintenance" type="number" value="{{system.maintenance}}" min="0" />
-          </div>
-
-          <div class="form-group" style="flex:1;">
-            <label>Reliability</label>
-            <input name="system.reliability" type="number" value="{{system.reliability}}" min="0" />
-          </div>
-        </div>
-
-        <h3>Tags</h3>
-        <input name="system.tags" type="text" value="{{system.tags}}" placeholder="e.g. Heavy, Tracked, Flyer" />
-
-        <h3 style="margin-top:12px;">Qualities</h3>
-        <input name="system.qualities" type="text" value="{{system.qualities}}" placeholder="e.g. Point Defence, Amphibious" />
-      </div>
-
-      <!-- ARMAMENTS -->
-      <div class="tab" data-group="primary" data-tab="armaments">
-        <p>V1: reuse your Weapon Items mounted on the vehicle (to wire up later).</p>
-      </div>
-
-      <!-- NOTES -->
+      <!-- NOTES (Foundry native editor) -->
       <div class="tab" data-group="primary" data-tab="notes">
-        <textarea name="system.notes" rows="16" style="width:100%;">{{system.notes}}</textarea>
+        {{editor system.notes target="system.notes" button=true owner=owner editable=editable engine="prosemirror"}}
       </div>
 
     </section>

@@ -1,3 +1,19 @@
+<div class="mcde-hitloc-panel">
+{{!-- LOC DOLL BUTTONS (anchored to hitloc-panel, not loc-wrap) --}}
+<div class="mcde-loc-controls">
+  <button type="button"
+          class="mcde-btn mcde-btn--battleworn mcde-btn--rivets mcde-btn--compact"
+          data-action="loc-rest">
+    Rest
+  </button>
+
+  <button type="button"
+          class="mcde-btn mcde-btn--rivets mcde-btn--compact"
+          data-action="loc-set-wounds">
+    Set Wounds
+  </button>
+</div>
+
 <div class="mcde-loc-wrap">
   <div class="mcde-loc-bg"></div>
 
@@ -22,7 +38,7 @@
     </div>
   </div>
 
-  {{!-- TORSO (remonté) --}}
+  {{!-- TORSO --}}
   <div class="mcde-loc" style="top:108px; left:114px;">
     <div class="mcde-loc-frame">
       <div class="mcde-loc-soakrow">
@@ -43,7 +59,7 @@
     </div>
   </div>
 
-  {{!-- LEFT ARM (au bout de la main gauche) --}}
+  {{!-- LEFT ARM --}}
   <div class="mcde-loc" style="top:205px; left:6px;">
     <div class="mcde-loc-frame">
       <div class="mcde-loc-soakrow">
@@ -64,7 +80,7 @@
     </div>
   </div>
 
-  {{!-- RIGHT ARM (au bout de la main droite) --}}
+  {{!-- RIGHT ARM --}}
   <div class="mcde-loc" style="top:205px; left:224px;">
     <div class="mcde-loc-frame">
       <div class="mcde-loc-soakrow">
@@ -85,7 +101,7 @@
     </div>
   </div>
 
-  {{!-- LEFT LEG (côté pied gauche) --}}
+  {{!-- LEFT LEG --}}
   <div class="mcde-loc" style="top:342px; left:34px;">
     <div class="mcde-loc-frame">
       <div class="mcde-loc-soakrow">
@@ -106,7 +122,7 @@
     </div>
   </div>
 
-  {{!-- RIGHT LEG (côté pied droit) --}}
+  {{!-- RIGHT LEG --}}
   <div class="mcde-loc" style="top:342px; left:200px;">
     <div class="mcde-loc-frame">
       <div class="mcde-loc-soakrow">
@@ -127,7 +143,7 @@
     </div>
   </div>
 
-</div>
+</div> {{!-- ✅ end mcde-loc-wrap --}}
 
 <div class="mcde-wound-groups">
 
@@ -157,9 +173,25 @@
 
   <div class="mcde-wound-group" data-track="mentalWounds">
     <div class="mcde-wound-head">
-      <label>Mental Wounds</label>
-      <input class="mcde-wound-max" type="number" min="0" value="{{woundTracks.mental.max}}">
+      <div class="mcde-wound-titleline">
+        <strong>Mental Wounds</strong>
+        <span class="mcde-wound-subtle">/ Tainted</span>
+      </div>
+
+      <div class="mcde-wound-right">
+        <input class="mcde-wound-max"
+               type="number"
+               min="0"
+               value="{{woundTracks.mental.max}}">
+
+        <input class="mcde-tainted-input"
+               type="number"
+               min="0"
+               name="system.combat.tainted"
+               value="{{system.combat.tainted}}">
+      </div>
     </div>
+
     <div class="mcde-wound-track">
       {{#each woundTracks.mental.boxes as |filled i|}}
         <div class="mcde-wound-box {{#if filled}}filled{{/if}}" data-index="{{i}}"></div>
@@ -168,4 +200,6 @@
   </div>
 
 </div>
+
+</div> {{!-- end mcde-hitloc-panel --}}
 

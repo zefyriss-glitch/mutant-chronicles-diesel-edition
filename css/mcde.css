@@ -74,16 +74,6 @@
   border-radius:4px;
 }
 
-.mcde-loc-frame{
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 6px;
-  padding: 4px 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: max-content; /* garde un cadre compact */
-}
-
 .mcde-loc-soakrow{
   display:flex;
   align-items:center;
@@ -117,62 +107,20 @@
 
 /* Hit Locations coloring */
 /* Base style for wound box */
-.mcde-loc-wounds {
+/* =========================================
+   MCDE Hit Locations — Industrial Metal
+   ========================================= */
+
+
+/* Base wounds container */
+.mcde-loc-wounds{
   border: 2px solid rgba(255,255,255,0.15);
   border-radius: 6px;
   padding: 2px 6px;
   font-weight: 700;
-  transition: all 0.15s ease;
-}
-
-.mcde-loc-frame.mcde-wound-ok { border-color:#3f5e54; background:rgba(63,94,84,0.45); box-shadow:0 0 6px rgba(63,94,84,0.6); }
-.mcde-loc-frame.mcde-wound-half { border-color:#a88c2a; background:rgba(168,140,42,0.55); box-shadow:0 0 8px rgba(168,140,42,0.8); }
-.mcde-loc-frame.mcde-wound-crit { border-color:#a52a2a; background:rgba(165,42,42,0.65); box-shadow:0 0 10px rgba(165,42,42,1); }
-
-.mcde-wound-groups{
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mcde-wound-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom: 4px;
-}
-
-.mcde-wound-head label{
-  font-weight: 700;
-}
-
-.mcde-wound-max{
-  width: 60px;
-  text-align:center;
-  font-weight: 800;
-}
-
-.mcde-wound-track{
-  display:flex;
-  gap:4px;
-  width:100%;
-  align-items:stretch;
-}
-
-.mcde-wound-box{
-  flex: 1 1 0;                 /* <- chaque case prend sa part */
-  height: 12px;
-  border: 1px solid rgba(165,42,42,0.85); /* #a52a2a */
-  border-radius: 2px;
-  background: rgba(255,255,255,0.18);
-  cursor: pointer;
-  min-width: 8px;              /* évite les “filaments” si grosse jauge */
-}
-
-.mcde-wound-box.filled{
-  background: rgba(165,42,42,0.75);
+  position: relative;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(1px);
 }
 
 /* Alignement Supernatural Attributes */
@@ -221,19 +169,19 @@
 
 /* Common: metal plate + engraved-ish text */
 #mcde-trackers .mcde-tracker{
-  border-width: 1px !important;
-  border-style: solid !important;
+  border-width: 1px;
+  border-style: solid;
 
   /* subtle metal depth */
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.10),
     inset 0 -1px 0 rgba(0,0,0,0.35),
-    0 2px 8px rgba(0,0,0,0.25) !important;
+    0 2px 8px rgba(0,0,0,0.25);
 
   /* engraved-ish text (light top + dark bottom) */
   text-shadow:
     0 1px 0 rgba(0,0,0,0.85),
-    0 -1px 0 rgba(255,255,255,0.14) !important;
+    0 -1px 0 rgba(255,255,255,0.14);
 
   letter-spacing: 0.1em !important;
   font-family: "Bank Gothic", sans-serif !important;
@@ -245,7 +193,7 @@
     to bottom,
     rgba(150,95,45,0.92),
     rgba(95,55,25,0.96)
-  ) !important;
+  );
 
   border-color: rgba(230,190,120,0.55) !important;
 
@@ -264,17 +212,17 @@
     to bottom,
     rgba(200,40,35,0.70),
     rgba(80,15,15,0.96)
-  ) !important;
+  );
 
-  border-color: rgba(255,210,90,0.22) !important; /* slight brass edge */
+  border-color: rgba(255,210,90,0.22); /* slight brass edge */
 
-  color: rgba(255,235,235,0.96) !important;
+  color: rgba(255,235,235,0.96);
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.10),
     inset 0 -1px 0 rgba(0,0,0,0.40),
     0 0 12px rgba(200,40,35,0.22),
-    0 2px 8px rgba(0,0,0,0.25) !important;
+    0 2px 8px rgba(0,0,0,0.25);
 }
 
 /* Ne garder qu'une value dans les box Momentum et DSP */
@@ -289,8 +237,8 @@
 
 /* Inputs inside tracker */
 #mcde-trackers .mcde-tracker input[data-action="set"]{
-  background: rgba(0,0,0,0.30) !important;
-  border: 1px solid rgba(255,255,255,0.25) !important;
+  background: rgba(0,0,0,0.30);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 6px;
   width: 56px;
   text-align: center;
@@ -1277,6 +1225,13 @@
   height: 12px;
 }
 
+/* Remove border from Let Rip bullets (Attack dialog) */
+.mcde-let-rip-bullet {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* ===== Skills column headers (Sig / Exp / Foc / TN) ===== */
 .mcde-skill-colheads{
   display:flex;
@@ -1659,8 +1614,8 @@
 }
 
 /* Mini-titres dans la fenêtre */
-.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:700"],
-.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:600"]{
+.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:500"],
+.mcde-skilltest-dialog .mcde-roll-dialog div[style*="font-weight:400"]{
   font-family: "Bank Gothic", sans-serif !important;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -2115,7 +2070,7 @@
   );
 
   color:#fff;
-  font-weight:700;
+  font-weight:500;
   text-shadow:0 1px 0 rgba(0,0,0,0.8);
 
   box-shadow:
@@ -2191,7 +2146,7 @@
 
 .mcde-card .mcde-card-kind{
   font-family:"Bank Gothic", sans-serif;
-  font-weight:700;
+  font-weight:500;
   letter-spacing:0.12em;
   text-transform:uppercase;
   color: rgba(255,245,220,0.92);
@@ -2200,7 +2155,7 @@
 
 .mcde-card .mcde-card-title{
   font-family:"Bank Gothic", sans-serif;
-  font-weight:700;
+  font-weight:500;
   letter-spacing:0.06em;
   text-transform:uppercase;
   color: rgba(255,245,220,0.95);
@@ -2496,8 +2451,6 @@
 
 /* Avatar Character only */
 .mcde.sheet.actor.character header.sheet-header.mcde-header img.profile-img.mcde-avatar {
-  width: 170px !important;
-  height: auto !important;
   align-self: stretch;
   object-fit: cover !important;
   max-height: none !important;
@@ -2509,7 +2462,7 @@
    CHARACTER (Joueur) — Tabs
    =============================== */
 
-.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] {
+/*.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] {
   flex: 0 0 auto;
   height: 32px;
   min-height: 32px;
@@ -2527,4 +2480,4728 @@
   white-space: nowrap;
   line-height: 32px;
   padding: 0 14px;
+}*/
+
+/* =========================================
+   Weapon Sheet Header (Hero image)
+   ========================================= */
+
+.mcde.sheet.item.weapon .mcde-weapon-header{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* zone image (505x210 comme ton proto) */
+.mcde.sheet.item.weapon .mcde-weapon-hero{
+  width: 100%;
+  height: 210px;
+  border-radius: 10px;
+  overflow: hidden;
+
+  border: 1px solid rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+/* image elle-même */
+.mcde.sheet.item.weapon .mcde-weapon-hero-img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* bloc titre dessous */
+.mcde.sheet.item.weapon .mcde-weapon-title{
+  margin: 0;
+}
+
+.mcde.sheet.item.weapon .mcde-weapon-title input{
+  width: 96%;
+}
+
+.mcde.sheet.item.weapon .mcde-weapon-sub{
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+/* Weapon sheet — cancel Foundry flex auto-grow */
+.mcde.sheet.item.weapon .flexcol > * {
+  flex: 0 0 auto !important;
+}
+
+/* Weapon sheet — Economy alignment (grid, safe) */
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid{
+  display: grid;
+  grid-template-columns: 1fr 60px; /* ajuste 60px si tu veux */
+  row-gap: 8px;
+  column-gap: 12px;
+  align-items: center;
+}
+
+/* Ignore les flexrow internes, garde juste label+input */
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid .flexrow{
+  display: contents;
+}
+
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid input[type="number"]{
+  width: 60px;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* 1/3 - 2/3 layout */
+.mcde.sheet.item.weapon .mcde-weapon-topcols{
+  display:flex;
+  gap:12px;
+}
+.mcde.sheet.item.weapon .mcde-weapon-topcols > .mcde-weapon-economy{
+  flex: 1 1 0;
+  min-width: 0;
+}
+.mcde.sheet.item.weapon .mcde-weapon-topcols > .mcde-weapon-stats{
+  flex: 2 1 0;
+  min-width: 0;
+}
+
+/* Economy: inputs alignés, même largeur */
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid{
+  display:grid;
+  grid-template-columns: 1fr 56px;
+  row-gap: 0px;
+  column-gap: 12px;
+  align-items:center;
+}
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid .flexrow{
+  display: contents;
+}
+.mcde.sheet.item.weapon .mcde-weapon-economy-grid input[type="number"]{
+  width:56px;
+  text-align:center;
+}
+
+/* NPC + Nemesis: rotate the accordion caret (details/summary) */
+.mcde.sheet.actor.npc .mcde-acc-caret,
+.mcde.sheet.actor.nemesis .mcde-acc-caret {
+  display: inline-block;           /* <- indispensable pour que transform marche */
+  transition: transform 120ms ease;
+  transform: rotate(0deg);
+  transform-origin: 50% 50%;
+}
+
+/* When <details> is open, rotate caret */
+.mcde.sheet.actor.npc details[open] .mcde-acc-caret,
+.mcde.sheet.actor.nemesis details[open] .mcde-acc-caret {
+  transform: rotate(90deg);
+}
+
+/* Optionnel: virer le marqueur natif du summary (sinon parfois double flèche) */
+.mcde.sheet.actor.npc details > summary,
+.mcde.sheet.actor.nemesis details > summary {
+  list-style: none;
+}
+.mcde.sheet.actor.npc details > summary::-webkit-details-marker,
+.mcde.sheet.actor.nemesis details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* =========================================
+   MCDE — Tags / Chips (rust theme)
+   Fix: some sheets use .mcde-tag and were falling back to Foundry green
+   ========================================= */
+.mcde.sheet .mcde-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 2px 7px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(120,70,20,0.55) !important;
+  background: rgba(90,55,20,0.12) !important;
+
+  color: rgba(60,35,15,0.95) !important;
+  font-size: 11px;
+  font-weight: 700;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Optionnel: si certains tags ont aussi la classe Foundry .tag */
+.mcde.sheet .tag.mcde-tag{
+  border-color: rgba(120,70,20,0.55) !important;
+  background: rgba(90,55,20,0.12) !important;
+  color: rgba(60,35,15,0.95) !important;
+}
+
+/* =========================================
+   Character Tabs — button look, no vertical explosion
+   ========================================= */
+
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"]{
+  /* keep it a bar, not a billboard */
+  flex: 0 0 auto !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+
+  padding: 6px !important;
+  margin: 10px 0 14px 0 !important;
+
+  background: linear-gradient(to bottom, rgba(70,40,20,0.95), rgba(50,30,15,0.98)) !important;
+  border: 1px solid rgba(0,0,0,0.35) !important;
+  border-radius: 10px !important;
+
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* each tab is a button with stable height */
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] > a.item{
+  flex: 1 0 0 !important;        /* equal width when there's room */
+  height: 100% !important;       /* exactly the bar height */
+  min-height: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 12px !important;    /* no vertical padding (prevents growth) */
+  margin: 0 !important;
+
+  border-radius: 6px !important;
+  border: 1px solid rgba(0,0,0,0.25) !important;
+
+  color: rgba(255,245,220,0.90) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* active stays "copper plate" */
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] > a.item.active{
+  background: linear-gradient(to bottom, rgba(150,90,35,0.90), rgba(105,60,20,0.95)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18) !important;
+  color: rgba(255,255,255,0.95) !important;
+}
+
+/* hover */
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] > a.item:hover{
+  background: rgba(150,90,35,0.25) !important;
+}
+
+/* =========================================
+   MCDE — Character tabs: remove all borders/separators
+   (kills both: generic border-right + character border)
+   ========================================= */
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"] > a.item{
+  border: 0 !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+}
+
+/* In case the separator is drawn by the container itself */
+.mcde.sheet.actor.character nav.sheet-tabs.tabs[data-group="primary"]{
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* =========================================
+   MCDE Rollcard — Results emphasis
+   ========================================= */
+
+.mcde-card .mcde-results{
+  margin-top: 6px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+/* Successes = rust/copper, bold, slightly bigger */
+.mcde-card .mcde-results-successes{
+  font-weight: 900;
+  font-size: 13.5px;
+  color: rgba(120, 70, 20, 0.95);
+}
+
+/* Complications = red, same weight/size */
+.mcde-card .mcde-results-comp{
+  font-weight: 900;
+  font-size: 13.5px;
+  color: rgba(200, 40, 35, 0.95);
+}
+
+/* Repercussion range: smaller, quieter */
+.mcde-card .mcde-results-rep{
+  margin-left: 6px;
+  font-weight: 700;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* =========================================
+   MCDE — Tags/Chips unified (Sheets + Rollcards)
+   Applies to: .mcde-tag, Foundry .tag/.trait, rollcard .mcde-trait
+   ========================================= */
+
+:root{
+  /* si tu veux centraliser plus tard, mais on reste soft */
+  --mcde-chip-border: rgba(120,70,20,0.55);
+  --mcde-chip-bg: rgba(90,55,20,0.12);
+  --mcde-chip-text: rgba(60,35,15,0.95);
+}
+
+/* Sheets */
+.mcde.sheet .mcde-tag,
+.mcde.sheet .tag,
+.mcde.sheet .trait,
+/* Rollcards */
+.mcde-card .mcde-tag,
+.mcde-card .tag,
+.mcde-card .trait,
+.mcde-card .mcde-trait{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+
+  padding: 2px 7px !important;
+  border-radius: 999px !important;
+
+  border: 1px solid var(--mcde-chip-border) !important;
+  background: var(--mcde-chip-bg) !important;
+
+  color: var(--mcde-chip-text) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 1px 2px rgba(0,0,0,0.15) !important;
+}
+
+/* If any chip contains an <a> or <span> inside, inherit color */
+.mcde.sheet .mcde-tag *,
+.mcde.sheet .tag *,
+.mcde.sheet .trait *,
+.mcde-card .mcde-trait *,
+.mcde-card .mcde-tag *,
+.mcde-card .tag *,
+.mcde-card .trait *{
+  color: inherit !important;
+}
+
+/* Weapon qualities dropzone */
+.mcde.sheet.item.weapon .mcde-quality-dropzone{
+  min-height: 40px;
+  padding: 8px;
+  border: 1px dashed rgba(120,70,20,0.35);
+  border-radius: 6px;
+}
+
+/* container */
+.mcde.sheet.item.weapon .mcde-quality-tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* the chip itself (same as your “beautiful tag”) */
+.mcde.sheet.item.weapon .mcde-quality-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 2px 7px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(120,70,20,0.55);
+  background: rgba(90,55,20,0.12);
+
+  color: rgba(60,35,15,0.95);
+  font-size: 11px;
+  font-weight: 700;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* remove button */
+.mcde.sheet.item.weapon .mcde-quality-tag .mcde-quality-remove{
+  opacity: 0.85;
+  padding: 0 2px;
+}
+.mcde.sheet.item.weapon .mcde-quality-tag .mcde-quality-remove:hover{
+  opacity: 1;
+}
+.mcde.sheet.item.weapon .mcde-quality-empty{
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+/* =========================================
+   MCDE Rollcard — DAMAGE emphasis
+   ========================================= */
+
+.mcde-card .mcde-dmg-mode{
+  margin-bottom: 4px;
+}
+
+.mcde-card .mcde-dmg-summary{
+  margin-top: 6px;
+  margin-bottom: 4px;   /* espace sous Damage/Effects */
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.mcde-card .mcde-dmg-total{
+  font-weight: 900;
+  font-size: 14px;
+  color: rgba(120,70,20,0.95);   /* rouille */
+}
+
+.mcde-card .mcde-dmg-effects{
+  font-weight: 900;
+  font-size: 14px;
+  color: rgba(200,40,35,0.95);   /* rouge */
+}
+.mcde-card .mcde-card small{
+  display: block;
+  margin-top: 8px;      /* espace avant la légende */
+  opacity: 0.75;
+}
+
+/* =========================================
+   MCDE Rollcard — Location line alignment
+   ========================================= */
+
+.mcde-card .mcde-dmg-location{
+  display: flex;
+  align-items: center;     /* centre verticalement */
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.mcde-card .mcde-dmg-location-label{
+  font-weight: 600;
+}
+
+.mcde-card .mcde-dmg-location-result{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* =========================================
+   MCDE Rollcard — compact actions (override)
+   ========================================= */
+
+.mcde-card .mcde-actions{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* Force compact sizing and crisp text */
+.mcde-card .mcde-actions .mcde-btn{
+  width: auto !important;          /* stop full-width buttons */
+  max-width: 100% !important;
+
+  padding: 5px 10px !important;    /* compact */
+  min-height: 0 !important;
+  height: 28px !important;         /* hard cap: avoids “big” feeling */
+  line-height: 1 !important;
+
+  border-radius: 8px !important;
+  border-width: 1px !important;
+
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;  /* less “blurry” than 0.12em */
+  text-transform: uppercase;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 1px 1px rgba(0,0,0,0.16) !important;
+
+  /* Avoid blur from filters/transforms */
+  filter: none !important;
+  transform: none !important;
+
+  /* If Foundry applies text-shadow somewhere, kill it */
+  text-shadow: none !important;
+}
+
+/* Secondary — lighter rust, but calm */
+.mcde-card .mcde-actions .mcde-btn-secondary{
+  background: linear-gradient(
+    to bottom,
+    rgba(175,125,70,0.78),
+    rgba(145,92,45,0.86)
+  ) !important;
+  border-color: rgba(90,50,20,0.40) !important;
+}
+
+/* Primary — stronger rust */
+.mcde-card .mcde-actions .mcde-btn-primary{
+  background: linear-gradient(
+    to bottom,
+    rgba(125,75,25,0.92),
+    rgba(95,55,18,0.98)
+  ) !important;
+}
+
+/* Roll Damage aligned RIGHT (as you requested) */
+.mcde-card .mcde-actions .mcde-btn-roll-damage{
+  align-self: flex-end !important;
+  min-width: 170px !important;     /* slightly smaller than 190 */
+}
+
+/* Hover: brightness without filter (use background shift) */
+.mcde-card .mcde-actions .mcde-btn-secondary:hover{
+  background: linear-gradient(
+    to bottom,
+    rgba(190,135,75,0.82),
+    rgba(155,100,50,0.90)
+  ) !important;
+}
+
+.mcde-card .mcde-actions .mcde-btn-primary:hover{
+  background: linear-gradient(
+    to bottom,
+    rgba(140,85,30,0.95),
+    rgba(105,62,20,0.99)
+  ) !important;
+}
+
+/* =========================================
+   MCDE Rollcards — kill the yellow halo, make text crisp
+   ========================================= */
+
+.mcde-card,
+.mcde-card *{
+  text-shadow: none !important;      /* kill global halo */
+}
+
+/* Re-add a darker, subtle shadow only where it helps */
+.mcde-card .mcde-card-kind,
+.mcde-card .mcde-card-title{
+  text-shadow: 0 1px 0 rgba(0,0,0,0.55) !important;
+}
+
+/* Body text: slightly darker for contrast */
+.mcde-card{
+  color: rgba(35, 20, 10, 0.92) !important;
+}
+
+/* Labels like TN/Focus/Difficulty a bit darker too */
+.mcde-card strong{
+  color: rgba(25, 15, 8, 0.95) !important;
+}
+
+/* =========================================
+   MCDE Rollcards — slimmer secondary buttons
+   ========================================= */
+
+.mcde-card .mcde-actions .mcde-btn-secondary{
+  height: 24px !important;
+  padding: 0 10px !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.06em !important;
+
+  align-self: flex-start !important;
+  width: auto !important;
+  max-width: 100% !important;
+
+  border-radius: 7px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 1px 1px rgba(0,0,0,0.14) !important;
+}
+
+/* =========================================
+   Test Titre Attribut en Bank
+   ========================================= */
+
+.mcde-attr-title{
+  font-family: "Bank Gothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 13px;
+  color: rgba(245, 235, 210, 0.95) !important;  /* ivoire chaud */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.55);        /* contraste net sur fond cuivre */
+}
+
+/* =========================================
+   MCDE Character Header — divider1 under Dread/XP
+   ========================================= */
+
+.mcde.sheet.actor.character header.sheet-header{
+  position: relative; /* anchor for absolute divider */
+}
+
+/* =========================================
+   MCDE Character — Nameplate v3 (matched to divider1 bronze)
+   Keeps: bevel + rivets + rust + Bank Gothic ivory
+   ========================================= */
+
+.mcde.sheet.actor.character header.sheet-header h1{
+  position: relative !important;
+}
+
+/* Rivets tuned to divider bronze (less chrome, more aged brass) */
+.mcde.sheet.actor.character header.sheet-header h1::before,
+.mcde.sheet.actor.character header.sheet-header h1::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 30% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(80,55,30,0.35) 45%,
+      rgba(25,18,10,0.70) 100%
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.10),
+    inset 0 -2px 3px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.35);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet.actor.character header.sheet-header h1::before{ left: 10px; }
+.mcde.sheet.actor.character header.sheet-header h1::after{ right: 10px; }
+
+/* Plate */
+.mcde.sheet.actor.character header.sheet-header h1 > input[name="name"]{
+  width: 100% !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 40px !important;
+  border-radius: 8px !important;
+
+  /* Divider-like bronze plate with grime */
+  background:
+    /* top bevel highlight (subtle) */
+    linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.05) 18%,
+      rgba(0,0,0,0.00) 40%
+    ),
+
+    /* brushed grain */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+
+    /* aged brass/patina tint (very soft) */
+    radial-gradient(120% 90% at 55% 60%,
+      rgba(80,110,95,0.10) 0%,
+      rgba(0,0,0,0) 55%
+    ),
+
+    /* rust / grime like divider bolts */
+    radial-gradient(130% 95% at 18% 12%,
+      rgba(150,85,35,0.28) 0%,
+      rgba(0,0,0,0) 58%
+    ),
+    radial-gradient(110% 90% at 88% 92%,
+      rgba(125,65,25,0.22) 0%,
+      rgba(0,0,0,0) 62%
+    ),
+
+    /* base plate: aged bronze -> darker underside */
+    linear-gradient(180deg,
+      rgba(140,115,80,0.70) 0%,
+      rgba(105,80,55,0.86) 52%,
+      rgba(70,55,40,0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.55) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.48),
+    0 2px 3px rgba(0,0,0,0.28) !important;
+
+  font-family: "Bank Gothic", "BankGothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+
+  /* Ivory from tabs */
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.80) !important;
+}
+
+/* Focus: slightly brass edge (less copper, more divider tone) */
+.mcde.sheet.actor.character header.sheet-header h1 > input[name="name"]:focus{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.52),
+    0 0 0 1px rgba(170,130,80,0.45),
+    0 2px 3px rgba(0,0,0,0.30) !important;
+}
+
+/* =========================================
+   MCDE NPC + Nemesis — Nameplate (bevel + rivets, divider bronze)
+   ========================================= */
+
+.mcde.sheet.actor.npc header.sheet-header h1,
+.mcde.sheet.actor.nemesis header.sheet-header h1{
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
+}
+
+/* Rivets */
+.mcde.sheet.actor.npc header.sheet-header h1::before,
+.mcde.sheet.actor.npc header.sheet-header h1::after,
+.mcde.sheet.actor.nemesis header.sheet-header h1::before,
+.mcde.sheet.actor.nemesis header.sheet-header h1::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 30% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(80,55,30,0.35) 45%,
+      rgba(25,18,10,0.70) 100%
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.10),
+    inset 0 -2px 3px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.35);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet.actor.npc header.sheet-header h1::before,
+.mcde.sheet.actor.nemesis header.sheet-header h1::before{ left: 10px; }
+
+.mcde.sheet.actor.npc header.sheet-header h1::after,
+.mcde.sheet.actor.nemesis header.sheet-header h1::after{ right: 10px; }
+
+/* Plate input */
+.mcde.sheet.actor.npc header.sheet-header h1 > input[name="name"],
+.mcde.sheet.actor.nemesis header.sheet-header h1 > input[name="name"]{
+  width: 100% !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 40px !important;
+  border-radius: 8px !important;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.05) 18%,
+      rgba(0,0,0,0.00) 40%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(120% 90% at 55% 60%,
+      rgba(80,110,95,0.10) 0%,
+      rgba(0,0,0,0) 55%
+    ),
+    radial-gradient(130% 95% at 18% 12%,
+      rgba(150,85,35,0.28) 0%,
+      rgba(0,0,0,0) 58%
+    ),
+    radial-gradient(110% 90% at 88% 92%,
+      rgba(125,65,25,0.22) 0%,
+      rgba(0,0,0,0) 62%
+    ),
+    linear-gradient(180deg,
+      rgba(140,115,80,0.70) 0%,
+      rgba(105,80,55,0.86) 52%,
+      rgba(70,55,40,0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.48),
+    0 2px 3px rgba(0,0,0,0.28) !important;
+
+  font-family: "Bank Gothic", "BankGothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.80) !important;
+}
+
+/* Focus edge */
+.mcde.sheet.actor.npc header.sheet-header h1 > input[name="name"]:focus,
+.mcde.sheet.actor.nemesis header.sheet-header h1 > input[name="name"]:focus{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.52),
+    0 0 0 1px rgba(170,130,80,0.45),
+    0 2px 3px rgba(0,0,0,0.30) !important;
+}
+
+/* =========================================
+   MCDE Weapon Item — Nameplate (bevel + rivets, divider bronze)
+   ========================================= */
+
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title{
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
+}
+
+/* Rivets */
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title::before,
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 30% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(80,55,30,0.35) 45%,
+      rgba(25,18,10,0.70) 100%
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.10),
+    inset 0 -2px 3px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.35);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title::before{ left: 10px; }
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title::after{ right: 10px; }
+
+/* Plate input */
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title > input[name="name"]{
+  width: 100% !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 40px !important;
+  border-radius: 8px !important;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.05) 18%,
+      rgba(0,0,0,0.00) 40%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(120% 90% at 55% 60%,
+      rgba(80,110,95,0.10) 0%,
+      rgba(0,0,0,0) 55%
+    ),
+    radial-gradient(130% 95% at 18% 12%,
+      rgba(150,85,35,0.28) 0%,
+      rgba(0,0,0,0) 58%
+    ),
+    radial-gradient(110% 90% at 88% 92%,
+      rgba(125,65,25,0.22) 0%,
+      rgba(0,0,0,0) 62%
+    ),
+    linear-gradient(180deg,
+      rgba(140,115,80,0.70) 0%,
+      rgba(105,80,55,0.86) 52%,
+      rgba(70,55,40,0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.48),
+    0 2px 3px rgba(0,0,0,0.28) !important;
+
+  font-family: "Bank Gothic", "BankGothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.80) !important;
+}
+
+/* Focus edge */
+.mcde.sheet.item.weapon header.mcde-weapon-header .mcde-weapon-headtext h1.mcde-weapon-title > input[name="name"]:focus{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.52),
+    0 0 0 1px rgba(170,130,80,0.45),
+    0 2px 3px rgba(0,0,0,0.30) !important;
+}
+
+/* =========================================
+   MCDE Vehicle — Nameplate (match Weapon exactly)
+   ========================================= */
+
+.mcde-vehicle-root header.sheet-header h1{
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: normal !important;
+}
+
+/* Rivets */
+.mcde-vehicle-root header.sheet-header h1::before,
+.mcde-vehicle-root header.sheet-header h1::after{
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+
+  background:
+    radial-gradient(circle at 30% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(80,55,30,0.35) 45%,
+      rgba(25,18,10,0.70) 100%
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.10),
+    inset 0 -2px 3px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.35) !important;
+
+  opacity: 0.9 !important;
+}
+
+.mcde-vehicle-root header.sheet-header h1::before{ left: 10px !important; }
+.mcde-vehicle-root header.sheet-header h1::after{ right: 10px !important; }
+
+/* Plate input */
+.mcde-vehicle-root header.sheet-header h1 > input[name="name"]{
+  width: 100% !important;
+  margin: 0 !important;
+
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 40px !important;
+  border-radius: 8px !important;
+
+  /* This is the key: force the plate background */
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.05) 18%,
+      rgba(0,0,0,0.00) 40%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(120% 90% at 55% 60%,
+      rgba(80,110,95,0.10) 0%,
+      rgba(0,0,0,0) 55%
+    ),
+    radial-gradient(130% 95% at 18% 12%,
+      rgba(150,85,35,0.28) 0%,
+      rgba(0,0,0,0) 58%
+    ),
+    radial-gradient(110% 90% at 88% 92%,
+      rgba(125,65,25,0.22) 0%,
+      rgba(0,0,0,0) 62%
+    ),
+    linear-gradient(180deg,
+      rgba(140,115,80,0.70) 0%,
+      rgba(105,80,55,0.86) 52%,
+      rgba(70,55,40,0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.48),
+    0 2px 3px rgba(0,0,0,0.28) !important;
+
+  font-family: "Bank Gothic", "BankGothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.18em !important;
+
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.80) !important;
+}
+
+/* Focus edge */
+.mcde-vehicle-root header.sheet-header h1 > input[name="name"]:focus{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.52),
+    0 0 0 1px rgba(170,130,80,0.45),
+    0 2px 3px rgba(0,0,0,0.30) !important;
+}
+
+/* =========================================
+   MCDE Vehicle Header — weapon-style layout
+   ========================================= */
+
+.mcde-vehicle-root .mcde-vehicle-header{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Hero image full width */
+.mcde-vehicle-root .mcde-vehicle-hero{
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.25);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.mcde-vehicle-root .mcde-vehicle-hero-img{
+  width: 100%;
+  height: 200px;            /* ajuste si tu veux plus/moins */
+  object-fit: cover;
+  object-position: center center; /* 👈 centre horizontal + vertical */
+  display: block;
+  cursor: pointer;
+}
+
+/* Text block under hero */
+.mcde-vehicle-root .mcde-vehicle-headtext{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Title: reuse the same nameplate vibe as others */
+.mcde-vehicle-root h1.mcde-vehicle-title{
+  position: relative;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Rivets */
+.mcde-vehicle-root h1.mcde-vehicle-title::before,
+.mcde-vehicle-root h1.mcde-vehicle-title::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 30% 28%,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(80,55,30,0.35) 45%,
+      rgba(25,18,10,0.70) 100%
+    );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.10),
+    inset 0 -2px 3px rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.35);
+  opacity: 0.9;
+}
+.mcde-vehicle-root h1.mcde-vehicle-title::before{ left: 10px; }
+.mcde-vehicle-root h1.mcde-vehicle-title::after{ right: 10px; }
+
+/* Plate input */
+.mcde-vehicle-root h1.mcde-vehicle-title > input[name="name"]{
+  width: 100% !important;
+  margin: 0 !important;
+
+  border: 0 !important;
+  outline: none !important;
+
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 40px !important;
+  border-radius: 8px !important;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.14) 0%,
+      rgba(255,255,255,0.05) 18%,
+      rgba(0,0,0,0.00) 40%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    radial-gradient(120% 90% at 55% 60%,
+      rgba(80,110,95,0.10) 0%,
+      rgba(0,0,0,0) 55%
+    ),
+    radial-gradient(130% 95% at 18% 12%,
+      rgba(150,85,35,0.28) 0%,
+      rgba(0,0,0,0) 58%
+    ),
+    radial-gradient(110% 90% at 88% 92%,
+      rgba(125,65,25,0.22) 0%,
+      rgba(0,0,0,0) 62%
+    ),
+    linear-gradient(180deg,
+      rgba(140,115,80,0.70) 0%,
+      rgba(105,80,55,0.86) 52%,
+      rgba(70,55,40,0.92) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.48),
+    0 2px 3px rgba(0,0,0,0.28) !important;
+
+  font-family: "Bank Gothic", "BankGothic", sans-serif !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.18em !important;
+
+  color: rgba(255,245,220,0.95) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.80) !important;
+}
+
+/* Meta line: input + label aligned right */
+.mcde-vehicle-root .mcde-vehicle-meta{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mcde-vehicle-root .mcde-vehicle-faction{
+  flex: 1;
+}
+
+.mcde-vehicle-meta-label {
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 13px;
+
+  color: rgba(255, 240, 210, 0.85);
+
+  /* Effet gravé */
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.85),
+    0 -1px 0 rgba(255, 255, 255, 0.06);
+
+  opacity: 0.85;
+}
+
+.mcde-vehicle-header {
+  padding-bottom: 14px;
+}
+
+.mcde-tabs {
+  margin-top: 10px;
+}
+
+.mcde-vehicle-meta {
+  margin-top: 6px;
+  gap: 8px;
+}
+
+/* =========================================
+   Vehicle Hero — Glass Sheen (works)
+   ========================================= */
+
+.mcde-vehicle-root .mcde-vehicle-hero{
+  position: relative;
+  overflow: hidden;
+}
+
+/* the sheen layer */
+.mcde-vehicle-root .mcde-vehicle-hero::after{
+  content: "";
+  position: absolute;
+  top: -140%;
+  left: -60%;
+  width: 70%;
+  height: 360%;
+  pointer-events: none;
+
+  background: linear-gradient(
+    75deg,
+    rgba(255,255,255,0.0) 30%,
+    rgba(255,255,255,0.0) 60%,
+    rgba(255,230,190,0.22) 100%,
+    rgba(255,255,255,0.0) 80%,
+    rgba(255,255,255,0.0) 100%
+  );
+
+  transform: rotate(12deg);
+  opacity: 0.95;
+  transition: top 0.65s ease;
+  z-index: 2; /* above the image */
+}
+
+/* move on hover */
+.mcde-vehicle-root .mcde-vehicle-hero:hover::after{
+  top: 140%;
+}
+
+/* ensure the image stays below */
+.mcde-vehicle-root .mcde-vehicle-hero-img{
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+/* =========================================
+   Vehicle Hero — Industrial Frame
+   ========================================= */
+
+.mcde-vehicle-root .mcde-vehicle-hero{
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+
+  padding: 6px; /* espace pour simuler le cadre */
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 1px,
+      rgba(0,0,0,0.02) 1px,
+      rgba(0,0,0,0.02) 3px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(145,120,90,0.75) 0%,
+      rgba(110,85,60,0.95) 50%,
+      rgba(70,55,40,1) 100%
+    );
+
+  border: 1px solid rgba(0,0,0,0.65);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -3px 6px rgba(0,0,0,0.55),
+    0 3px 6px rgba(0,0,0,0.35);
+}
+
+.mcde-vehicle-root .mcde-vehicle-hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:12px;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 0% 100%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,0.35) 0%, transparent 35%);
+}
+
+.mcde-vehicle-root .mcde-vehicle-hero-img{
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,0.35);
+}
+
+/* =========================================
+   Character Sheet — Avatar industrial frame + glass sheen
+   Targets: header.sheet-header.mcde-header img.profile-img.mcde-avatar
+   ========================================= */
+
+.mcde.sheet.actor.character header.sheet-header.mcde-header{
+  position: relative; /* anchor for pseudo-elements */
+}
+
+/* --- FRAME: make the IMG look "mounted" in metal --- */
+.mcde.sheet.actor.character header.sheet-header.mcde-header img.profile-img.mcde-avatar{
+  /* keep your size rules; we add the frame */
+  border-radius: 12px !important;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 1px,
+      rgba(0,0,0,0.02) 1px,
+      rgba(0,0,0,0.02) 3px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(145,120,90,0.75) 0%,
+      rgba(110,85,60,0.95) 50%,
+      rgba(70,55,40,1) 100%
+    ) !important;
+
+  border: 1px solid rgba(0,0,0,0.65) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -3px 6px rgba(0,0,0,0.55),
+    0 3px 6px rgba(0,0,0,0.35) !important;
+
+  /* important: ensure image itself still fills the inner area */
+  object-fit: cover !important;
+  overflow: hidden;
+}
+
+/* --- CORNER REINFORCEMENTS (Version 2) ---
+   We add them as a pseudo-layer on the IMG using filter-like overlay:
+   pseudo-elements don't work on <img>, so we fake it with an inset shadow layer.
+*/
+.mcde.sheet.actor.character header.sheet-header.mcde-header img.profile-img.mcde-avatar{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -3px 6px rgba(0,0,0,0.55),
+    inset 18px 18px 30px rgba(0,0,0,0.18),
+    inset -18px 18px 30px rgba(0,0,0,0.18),
+    inset 18px -18px 30px rgba(0,0,0,0.18),
+    inset -18px -18px 30px rgba(0,0,0,0.18),
+    0 3px 6px rgba(0,0,0,0.35) !important;
+}
+
+/* =========================================
+   Character Avatar — Frame + Sheen (clipped)
+   ========================================= */
+
+.mcde.sheet.actor.character .mcde-avatar-frame,
+ .mcde.sheet.actor.npc .mcde-avatar-frame,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame{
+  position: relative;
+  overflow: hidden;           /* 👈 CLIP the sheen */
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+/* industrial frame background (on wrapper) */
+.mcde.sheet.actor.character .mcde-avatar-frame,
+ .mcde.sheet.actor.npc .mcde-avatar-frame,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame{
+  padding: 6px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 1px,
+      rgba(0,0,0,0.02) 1px,
+      rgba(0,0,0,0.02) 3px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(145,120,90,0.75) 0%,
+      rgba(110,85,60,0.95) 50%,
+      rgba(70,55,40,1) 100%
+    );
+
+  border: 1px solid rgba(0,0,0,0.65);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -3px 6px rgba(0,0,0,0.55),
+    0 3px 6px rgba(0,0,0,0.35);
+}
+
+/* the image inside */
+.mcde.sheet.actor.character .mcde-avatar-frame img.mcde-avatar,
+ .mcde.sheet.actor.npc .mcde-avatar-frame img.mcde-avatar,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame img.mcde-avatar{
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  object-fit: cover !important;
+  border-radius: 8px; /* inside the frame */
+}
+
+/* corner reinforcements (version 2 vibe) */
+.mcde.sheet.actor.character .mcde-avatar-frame::before,
+ .mcde.sheet.actor.npc .mcde-avatar-frame::before,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:12px;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 0% 100%, rgba(0,0,0,0.35) 0%, transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,0.35) 0%, transparent 35%);
+
+  z-index: 2;
+}
+
+/* sheen confined to the wrapper */
+.mcde.sheet.actor.character .mcde-avatar-frame::after,
+ .mcde.sheet.actor.npc .mcde-avatar-frame::after,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame::after{
+  content:"";
+  position:absolute;
+  top:-140%;
+  left:-60%;
+  width:70%;
+  height:360%;
+  pointer-events:none;
+
+  background: linear-gradient(
+    75deg,
+    rgba(255,255,255,0.0) 0%,
+    rgba(255,255,255,0.0) 42%,
+    rgba(255,230,190,0.22) 50%,
+    rgba(255,255,255,0.0) 58%,
+    rgba(255,255,255,0.0) 100%
+  );
+
+  transform: rotate(12deg);
+  opacity: 0.0;
+  transition: top 0.65s ease, left 0.65s ease, opacity 0.2s ease;
+  z-index: 3;
+}
+
+.mcde.sheet.actor.character .mcde-avatar-frame:hover::after,
+ .mcde.sheet.actor.npc .mcde-avatar-frame:hover::after,
+ .mcde.sheet.actor.nemesis .mcde-avatar-frame:hover::after{
+  top: 140%;
+  left: 40%;
+  opacity: 0.95;
+}
+
+.mcde.sheet.actor.character header.sheet-header.mcde-header{
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  align-items: stretch;
+  min-height: 170px;
+}
+
+/* =========================================
+   Character header — Dread gets space, XP shrinks
+   ========================================= */
+
+/* If the parent is a grid, define the columns explicitly */
+.mcde.sheet.actor.character .mcde-header .mcde-right-grid{
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 0.70fr;
+  column-gap: 16px;
+  align-items: start;
+}
+
+/* Dread row: slightly tighter */
+.mcde.sheet.actor.character .mcde-dread{
+  gap: 4px !important; /* overrides inline gap:6px */
+}
+
+.mcde.sheet.actor.character .mcde-dread-row{
+  gap: 6px !important; /* overrides inline gap:8px */
+}
+
+/* The boxes container: slightly tighter too */
+.mcde.sheet.actor.character .mcde-dread-row > div[style*="flex-wrap:wrap"]{
+  gap: 3px !important; /* overrides inline gap:4px */
+}
+
+/* =========================================
+   MCDE mini headers (Dread / XP) — engraved
+   ========================================= */
+
+.mcde.sheet.actor.character .mcde-minihead{
+  font-family: "Bank Gothic", "BankGothic", sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+
+  font-size: 14px;
+  line-height: 18px;
+
+  text-align: center;
+  margin: 2px 0 8px 0;
+
+  /* Dark engraved vibe */
+  color: rgba(20, 14, 9, 0.72);
+
+  text-shadow:
+    /* faint “metal catchlight” below */
+    0 1px 0 rgba(255, 245, 220, 0.18),
+    /* slight recess shadow above */
+    0 -1px 0 rgba(0, 0, 0, 0.38),
+    /* soft depth */
+    0 2px 2px rgba(0, 0, 0, 0.12);
+}
+
+.mcde.sheet.actor.character .mcde-minihead::after{
+  content: "";
+  display: block;
+  height: 1px;
+  margin: 6px auto 0 auto;
+  width: 70%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0,0,0,0.20),
+    transparent
+  );
+  opacity: 0.8;
+}
+
+/* =========================================
+   Character header — Chronicle Points bar
+   ========================================= */
+
+.mcde.sheet.actor.character .mcde-cpbar{
+  display: grid;
+  grid-template-columns: auto auto 1fr; /* title | total | track */
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  border: 1px solid rgba(0,0,0,0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    inset 0 -6px 14px rgba(0,0,0,0.18),
+    0 2px 3px rgba(0,0,0,0.12);
+
+  /* subtle metal */
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.12) 0%,
+      rgba(255,255,255,0.04) 25%,
+      rgba(0,0,0,0.00) 55%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg,
+      rgba(120,95,70,0.30) 0%,
+      rgba(70,55,40,0.18) 100%
+    );
+}
+
+.mcde.sheet.actor.character .mcde-cpbar-title{
+  font-family: "Bank Gothic", "BankGothic", sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12.5px;
+  color: rgba(20,14,9,0.68);
+
+  text-shadow:
+    0 1px 0 rgba(255,245,220,0.16),
+    0 -1px 0 rgba(0,0,0,0.34);
+}
+
+.mcde.sheet.actor.character .mcde-cpbar-total{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.mcde.sheet.actor.character .mcde-cpbar-total label{
+  opacity: 0.8;
+}
+
+.mcde.sheet.actor.character .mcde-cpbar-total input{
+  width: 70px !important;
+  height: 26px;
+}
+
+/* Track in one line, fills remaining space */
+.mcde.sheet.actor.character .mcde-cpbar-track{
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Boxes: stretched but with a nicer "bevel" */
+.mcde.sheet.actor.character .mcde-cpbar-track .mcde-chronicle-box{
+  flex: 1 1 0;
+  height: 12px;
+  border-radius: 3px;
+
+  border: 1px solid rgba(0,0,0,0.30);
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.16),
+      rgba(255,255,255,0.04)
+    ),
+    rgba(0,0,0,0.08);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -2px 4px rgba(0,0,0,0.18);
+}
+
+/* Filled: rusted copper-ish */
+.mcde.sheet.actor.character .mcde-cpbar-track .mcde-chronicle-box.filled{
+  background:
+    linear-gradient(180deg,
+      rgba(190,120,60,0.90),
+      rgba(120,70,25,0.95)
+    );
+  border-color: rgba(60,30,10,0.40);
+}
+
+.mcde.sheet.actor.character 
+.mcde-cpbar-track 
+.mcde-chronicle-box.filled{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(85,135,95,0.92) 0%,
+      rgba(30,65,45,0.98) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.05) 0px,
+      rgba(255,255,255,0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+
+  border-color: rgba(20,40,30,0.60);
+
+  box-shadow:
+    inset 0 1px 0 rgba(170,230,190,0.22),
+    inset 0 -4px 8px rgba(0,0,0,0.55);
+}
+
+.mcde.sheet.actor.character 
+.mcde-cpbar-track 
+.mcde-chronicle-box{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.12),
+      rgba(255,255,255,0.04)
+    ),
+    rgba(20,30,25,0.12);
+}
+
+/* =========================================
+   Dread LED — OFF vs ON (pulse only on dot)
+   ========================================= */
+
+/* Never animate/move the label container */
+.mcde.sheet.actor.character .mcde-dread-led,
+.mcde.sheet.actor.character .mcde-dread-led.on{
+  animation: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Stable layout */
+.mcde.sheet.actor.character .mcde-dread-led{
+  position: relative;
+  padding-left: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* DOT base = OFF (dim) */
+.mcde.sheet.actor.character .mcde-dread-led::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+
+  /* OFF look */
+  background: radial-gradient(circle at 30% 30%,
+    rgba(255,255,255,0.12) 0%,
+    rgba(255,255,255,0.04) 22%,
+    rgba(40,30,22,0.55) 55%,
+    rgba(10,8,6,0.92) 100%
+  ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -2px 3px rgba(0,0,0,0.35),
+    0 0 0 rgba(0,0,0,0) !important;
+
+  opacity: 0.55;
+}
+
+/* ON state: brighter + pulse */
+@keyframes mcde-led-alert-strong {
+  0% {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 0 8px rgba(255,140,40,0.55),
+      0 0 0 rgba(255,80,0,0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.25);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.55),
+      0 0 18px rgba(255,130,30,0.95),
+      0 0 36px rgba(255,60,0,0.55);
+  }
+
+  100% {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 0 8px rgba(255,140,40,0.55),
+      0 0 0 rgba(255,80,0,0);
+  }
+}
+
+.mcde.sheet.actor.character .mcde-dread-led.on::before{
+  opacity: 1;
+
+  background: radial-gradient(circle at 30% 30%,
+    rgba(255,255,255,0.75) 0%,
+    rgba(255,210,130,0.55) 18%,
+    rgba(255,120,30,1) 45%,
+    rgba(170,40,0,1) 100%
+  ) !important;
+
+  animation: mcde-led-alert-strong 0.9s ease-in-out infinite;
+}
+
+.mcde-vehicle-root .mcde-location-grid{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.mcde-vehicle-root .mcde-locadoll-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.mcde-vehicle-root .mcde-locadoll{
+  display: block;
+  max-width: 120px;   /* ajuste selon ton png */
+  height: auto;
+  opacity: 0.95;
+}
+
+/* Grid à 3 colonnes : HULL | doll | MOTIVE (tu l'as déjà presque) */
+.mcde-vehicle-root .mcde-location-grid{
+  display:grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+/* Card loc : métal discret, mais propre */
+.mcde-vehicle-root .mcde-loc{
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Petit “circuit” en surimpression (bling) */
+.mcde-vehicle-root .mcde-loc::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  opacity: 0.18;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.10) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 18px);
+  mask-image: radial-gradient(circle at 20% 25%, black 0 60%, transparent 75%),
+              radial-gradient(circle at 80% 60%, black 0 55%, transparent 75%);
+  mask-composite: intersect;
+}
+
+/* Header : titre + plaque de soak */
+.mcde-vehicle-root .mcde-loc-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Titre “Bank Gothic incrustée” */
+.mcde-vehicle-root .mcde-loc-title{
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 16px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(255,255,255,0.04));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+/* Plaque “blindage” rivetée pour Soak */
+.mcde-vehicle-root .mcde-soak-plate{
+  position: relative;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(180deg, rgba(0,0,0,0.20), rgba(255,255,255,0.05));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.25);
+}
+
+/* “Rivets” via pseudo-elements */
+.mcde-vehicle-root .mcde-soak-plate::before,
+.mcde-vehicle-root .mcde-soak-plate::after{
+  content:"";
+  position:absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(0,0,0,0.35));
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
+  opacity: 0.85;
+}
+.mcde-vehicle-root .mcde-soak-plate::before{ top: 6px; left: 6px; }
+.mcde-vehicle-root .mcde-soak-plate::after{ bottom: 6px; right: 6px; }
+
+.mcde-vehicle-root .mcde-soak-label{
+  opacity: 0.85;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mcde-soak-input{
+  width: 62px;
+}
+
+/* Tracks : grille alignée (label | max | boxes) */
+.mcde-vehicle-root .mcde-loc-tracks{
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mcde-vehicle-root .mcde-loc-track{
+  display:grid;
+  grid-template-columns: 110px 70px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.08);
+}
+
+.mcde-vehicle-root .mcde-loc-track-label{
+  opacity: 0.88;
+}
+
+.mcde-vehicle-root .mcde-loc-max{
+  width: 70px;
+}
+
+/* Doll : enlever la bordure + centrer */
+.mcde-vehicle-root .mcde-locadoll-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 4px 6px;
+  border: 0 !important;
+  background: transparent !important;
+}
+.mcde-vehicle-root .mcde-locadoll{
+  display:block;
+  height: auto;
+  max-width: 130px; /* ajuste */
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.mcde-vehicle-root .mcde-soak-plate{
+  padding: 6px 16px 6px 10px; /* + à droite = rivet safe zone */
+}
+
+.mcde-vehicle-root .mcde-soak-input{
+  width: 44px;        /* au lieu de 62 */
+  min-width: 44px;
+  text-align: center; /* optionnel mais ça fait “instrument” */
+  padding: 2px 4px;
+}
+
+.mcde-vehicle-root .mcde-loc-track{
+  grid-template-columns: 90px 46px 1fr; /* plus compact + bien aligné */
+}
+
+.mcde-vehicle-root .mcde-loc-track-label{
+  justify-self: start;
+}
+
+.mcde-vehicle-root .mcde-loc-max{
+  width: 46px !important;
+  min-width: 46px;
+  max-width: 46px;
+  text-align: center;
+  margin: 0 !important;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.mcde-vehicle-root .mcde-soak-input,
+.mcde-vehicle-root .mcde-loc-max{
+  height: 24px;
+  line-height: 24px;
+}
+
+.mcde-vehicle-root .mcde-loc-track {
+  display: grid !important;
+  grid-template-columns: 90px 46px 1fr;
+}
+
+/* =========================================
+   MCDE Vehicle — Tabs (match actor tabs)
+   Single source of truth
+   ========================================= */
+
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"]{
+  display: flex !important;
+  width: 100% !important;
+
+  gap: 0 !important;
+  padding: 6px !important;
+  margin: 10px 0 14px 0 !important;
+
+  background: linear-gradient(to bottom, rgba(70,40,20,0.95), rgba(50,30,15,0.98)) !important;
+  border: 1px solid rgba(0,0,0,0.35) !important;
+  border-radius: 10px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -2px 4px rgba(0,0,0,0.6) !important;
+
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* copper underline like other tabs */
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"]::after{
+  content:"" !important;
+  position: absolute !important;
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 0 !important;
+  height: 2px !important;
+
+  background: linear-gradient(
+    to right,
+    rgba(120,70,20,0.2),
+    rgba(190,130,60,0.9),
+    rgba(120,70,20,0.2)
+  ) !important;
+}
+
+/* each tab = equal width button */
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"] > a.item{
+  flex: 1 1 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 44px !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+
+  font-family: "Bank Gothic", sans-serif !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-size: 12px !important;
+
+  color: rgba(255,245,220,0.90) !important;
+
+  background: transparent !important;
+  border: 0 !important;
+
+  transition: filter 0.12s ease, background 0.12s ease !important;
+}
+
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"] > a.item:last-child{
+  border-right: 0 !important;
+}
+
+/* hover */
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"] > a.item:hover{
+  background: rgba(150,90,35,0.25) !important;
+  filter: brightness(1.06) !important;
+}
+
+/* active */
+.mcde-vehicle-root nav.mcde-tabs.tabs[data-group="primary"] > a.item.active{
+  background: linear-gradient(
+    to bottom,
+    rgba(150,90,35,0.90),
+    rgba(105,60,20,0.95)
+  ) !important;
+
+  color: rgba(255,255,255,0.95) !important;
+
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18) !important;
+}
+
+/* Mobility row layout */
+.mcde-vehicle-root .mcde-mobility-row{
+  display: grid;
+  grid-template-columns: 1fr 140px; /* bouton à droite */
+  gap: 12px;
+  align-items: stretch;
+}
+
+.mcde-vehicle-root .mcde-mobility-fields{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mcde-vehicle-root .mcde-mobility-action{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Big red dashboard button */
+.mcde-vehicle-root .mcde-btn-pilot{
+  width: 100%;
+  height: 76px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.45);
+
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 16px;
+
+  color: rgba(255,245,235,0.95);
+
+  background: linear-gradient(to bottom, rgba(170, 45, 35, 0.95), rgba(80, 15, 15, 0.98));
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -2px 5px rgba(0,0,0,0.55),
+    0 2px 10px rgba(0,0,0,0.25);
+
+  position: relative;
+}
+
+/* Rivets */
+.mcde-vehicle-root .mcde-btn-pilot::before,
+.mcde-vehicle-root .mcde-btn-pilot::after{
+  content:"";
+  position:absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(0,0,0,0.35));
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
+  opacity: 0.9;
+}
+.mcde-vehicle-root .mcde-btn-pilot::before{ top: 8px; left: 8px; }
+.mcde-vehicle-root .mcde-btn-pilot::after{ bottom: 8px; right: 8px; }
+
+.mcde-vehicle-root .mcde-btn-pilot:hover{
+  filter: brightness(1.07);
+}
+
+.mcde-vehicle-root .mcde-btn-pilot:active{
+  transform: translateY(1px);
+  filter: brightness(0.98);
+}
+
+.mcde-vehicle-root .mcde-crew-grid{
+  display: grid;
+  grid-template-columns: 1fr 170px;
+  gap: 10px;
+  align-items: start;
+}
+
+.mcde-vehicle-root .mcde-crew-side{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mcde-vehicle-root .mcde-pilot-drop{
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(0,0,0,0.04);
+  min-height: 58px;
+}
+
+.mcde-vehicle-root .mcde-pilot-drop:hover{
+  background: rgba(0,0,0,0.06);
+}
+
+.mcde-vehicle-root .mcde-pilot-empty{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mcde-vehicle-root .mcde-pilot-title{
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  opacity: 0.85;
+}
+
+.mcde-vehicle-root .mcde-pilot-hint{
+  opacity: 0.65;
+  font-size: 12px;
+}
+
+.mcde-vehicle-root .mcde-pilot-chip{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  position: relative;
+}
+
+.mcde-vehicle-root .mcde-pilot-img{
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+
+.mcde-vehicle-root .mcde-pilot-name{
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mcde-vehicle-root .mcde-pilot-clear{
+  color: rgba(0,0,0,0.6);
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.mcde-vehicle-root .mcde-pilot-clear:hover{
+  background: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.8);
+}
+
+.mcde-vehicle-root .mcde-impact-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr 140px;
+  gap: 10px;
+  align-items: end;
+}
+
+.mcde-vehicle-root .mcde-impact-action{
+  display:flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.mcde-vehicle-root .mcde-btn-impact{
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.45);
+
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  font-size: 13px;
+
+  color: rgba(20,20,20,0.95);
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 210, 60, 0.95) 0px,
+      rgba(255, 210, 60, 0.95) 10px,
+      rgba(25, 25, 25, 0.95) 10px,
+      rgba(25, 25, 25, 0.95) 20px
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -2px 4px rgba(0,0,0,0.45),
+    0 2px 8px rgba(0,0,0,0.18);
+}
+
+.mcde-vehicle-root .mcde-btn-impact:hover{
+  filter: brightness(1.05);
+}
+
+.mcde-vehicle-root .mcde-btn-impact:active{
+  transform: translateY(1px);
+  filter: brightness(0.98);
+}
+
+/* =========================
+   FIX: Character hit-locations doll got broken
+   Cause: .mcde-loc is defined twice; the later "card" style overrides the absolute overlay.
+   Solution: force overlay behavior for character, and scope "card" style to vehicle only.
+   ========================= */
+
+/* 1) Character: FORCE overlay pins to stay absolute */
+.mcde.sheet.actor.character .mcde-loc {
+  position: absolute !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+/* 2) Vehicle: keep your "location card" look ONLY inside vehicle root */
+.mcde-vehicle-root .mcde-loc {
+  position: relative;              /* your card behavior */
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  overflow: hidden;
+}
+
+/* keep the fancy overlay grid only in vehicle context too (optional but clean) */
+.mcde-vehicle-root .mcde-loc::before {
+  content:"";
+  position:absolute;
+  inset: 0;
+  opacity: 0.18;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.10) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 18px);
+  mask-image: radial-gradient(circle at 20% 25%, black 0 60%, transparent 75%),
+              radial-gradient(circle at 80% 60%, black 0 55%, transparent 75%);
+  mask-composite: intersect;
+}
+
+/* Fuel gauge (stretched boxes) */
+.mcde-vehicle-root .mcde-fuel-block{
+  margin-top: 6px;
+}
+
+.mcde-vehicle-root .mcde-fuel-row{
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.mcde-vehicle-root .mcde-fuel-label{
+  opacity: 0.85;
+}
+
+.mcde-vehicle-root .mcde-fuel-gauge{
+  margin-top: 8px;
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-fuel-box{
+  flex: 1 1 0;                 /* <= stretched */
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.35);
+  background: rgba(255,255,255,0.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.mcde-vehicle-root .mcde-fuel-box.filled{
+  background: linear-gradient(to bottom,
+    rgba(200,110,40,0.95),
+    rgba(120,55,18,0.98)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -2px 4px rgba(0,0,0,0.35);
+}
+
+/* Layout: split top row (label/max/boxes) and the stretched gauge below */
+.mcde-vehicle-root .mcde-loc-track-top{
+  display: grid;
+  grid-template-columns: 90px 46px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+/* The stretched segmented gauge */
+.mcde-vehicle-root .mcde-stretch-gauge{
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Segments are stretched equally */
+.mcde-vehicle-root .mcde-stretch-seg{
+  flex: 1 1 0;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.35);
+  background: rgba(255,255,255,0.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+/* Filled = industrial hazard stripes (like impact) */
+.mcde-vehicle-root .mcde-stretch-seg.filled{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 210, 60, 0.95) 0px,
+      rgba(255, 210, 60, 0.95) 10px,
+      rgba(25, 25, 25, 0.95) 10px,
+      rgba(25, 25, 25, 0.95) 20px
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -2px 4px rgba(0,0,0,0.35);
+}
+
+/* Vehicle: hide the old red click-boxes (keep only the industrial gauge) */
+.mcde-vehicle-root .mcde-trackboxes {
+  display: none !important;
+}
+
+/* Track header row: label left, max input right */
+.mcde-vehicle-root .mcde-loc-track-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* keep the max input compact */
+.mcde-vehicle-root .mcde-loc-max{
+  width: 56px;
+}
+
+/* Gauge must take full available width */
+.mcde-vehicle-root .mcde-stretch-gauge{
+  margin-top: 8px;
+  display: flex;
+  gap: 3px;
+  width: 100%;
+}
+
+/* Vehicle: make each track a 2-row layout where the gauge spans full width */
+.mcde-vehicle-root .mcde-loc-track{
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Row 1: label left */
+.mcde-vehicle-root .mcde-loc-track-label{
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+/* Row 1: input right */
+.mcde-vehicle-root .mcde-loc-max{
+  grid-column: 2;
+  grid-row: 1;
+  width: 56px;
+  justify-self: end;
+}
+
+/* Row 2: gauge spans full width */
+.mcde-vehicle-root .mcde-stretch-gauge{
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+  margin-top: 0;       /* the grid handles spacing */
+  justify-self: stretch;
+}
+
+/* Optional: if any wrapper exists, ensure it spans too */
+.mcde-vehicle-root .mcde-loc-track-row{
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: contents;   /* let children participate in the parent grid */
+}
+
+/* Hide old click boxes in vehicle context */
+.mcde-vehicle-root .mcde-trackboxes{
+  display: none !important;
+}
+
+/* Pas empêcher le clic */
+.mcde-vehicle-root .mcde-stretch-seg{
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.mcde-vehicle-root .mcde-stretch-gauge{
+  pointer-events: auto;
+}
+
+.mcde-vehicle-root .mcde-fuel-box{
+  cursor: pointer;
+}
+.mcde-vehicle-root .mcde-fuel-box:hover{
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Fuel block: compact dashboard widget */
+.mcde-vehicle-root .mcde-fuel-block{
+  width: 280px;              /* ajuste: 240/260/300 selon ton goût */
+  max-width: 100%;
+}
+
+.mcde-vehicle-root .mcde-fuel-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.mcde-vehicle-root .mcde-fuel-label{
+  opacity: 0.85;
+}
+
+.mcde-vehicle-root .mcde-fuel-max{
+  width: 64px;
+  text-align: center;
+}
+
+.mcde-vehicle-root .mcde-fuel-gauge{
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-crew-block{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The two inputs on one row */
+.mcde-vehicle-root .mcde-crew-stats{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+/* Let the pilot drop take full width */
+.mcde-vehicle-root .mcde-pilot-drop{
+  width: 100%;
+}
+
+/* Fuel: make it span full column width */
+.mcde-vehicle-root .mcde-fuel-wide{
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-fuel-wide .mcde-fuel-head{
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-fuel-wide .mcde-fuel-gauge{
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Keep max input compact but aligned right */
+.mcde-vehicle-root .mcde-fuel-wide .mcde-fuel-head{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.mcde-vehicle-root .mcde-fuel-wide .mcde-fuel-max{
+  width: 64px;
+  text-align: center;
+}
+
+/* Generic form grid */
+.mcde-vehicle-root .mcde-formgrid{
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 8px 10px; /* row / column */
+  align-items: center;
+}
+
+/* Mobility grid adds a 3rd column for the big button */
+.mcde-vehicle-root .mcde-mobility-grid{
+  grid-template-columns: 170px 1fr 160px;
+}
+
+/* Place the action button spanning both rows */
+.mcde-vehicle-root .mcde-mobility-grid .mcde-fg-action{
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label/Field helpers */
+.mcde-vehicle-root .mcde-fg-label{ opacity: 0.9; }
+.mcde-vehicle-root .mcde-fg-field input{ width: 100%; }
+
+/* ===========================
+   Vehicle Sheet – Fix Foundry flex stretch
+   =========================== */
+
+.mcde-vehicle-root.flexcol > *,
+.mcde-vehicle-root .flexcol > * {
+  flex: 0 0 auto !important;
+}
+
+/* Shared large dashboard button style */
+.mcde-vehicle-root .mcde-btn-dashboard{
+  height: 64px;                 /* ajuste si ton Pilot est différent */
+  min-width: 150px;
+  border-radius: 10px;
+  font-family: "Bank Gothic", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* IMPACT text: black with bright outline + dark depth */
+.mcde-vehicle-root .mcde-btn-impact{
+  color: rgba(15,15,15,0.98);
+  -webkit-text-stroke: 1px rgba(255,255,255,0.85);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.55),
+    0 2px 3px rgba(0,0,0,0.85);
+}
+
+.mcde-vehicle-root .mcde-dsd-icon{
+  height: 20px;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  background: transparent;
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.6));
+}
+
+/* Impact: 2 inputs + big button aligned */
+.mcde-vehicle-root .mcde-impact-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 160px; /* colonne bouton = Pilot */
+  gap: 10px;
+  align-items: end; /* aligne bas des inputs et du bouton */
+}
+
+/* Each input cell */
+.mcde-vehicle-root .mcde-impact-cell label{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.mcde-vehicle-root .mcde-impact-cell input{
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-impact-rowline{
+  display: grid;
+  grid-template-columns: auto 110px auto 110px 1fr; /* bouton prend le reste */
+  gap: 10px;
+  align-items: center; /* centre verticalement */
+}
+
+/* inputs petits et constants */
+.mcde-vehicle-root .mcde-impact-input{
+  width: 110px;
+}
+
+/* bouton aligné à droite, même taille que Pilot */
+.mcde-vehicle-root .mcde-impact-action{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mcde-vehicle-root .mcde-impact-action .mcde-btn-impact{
+  width: 220px;   /* mets la même largeur que PILOT si besoin */
+  height: 64px;   /* idem */
+}
+
+/* Button column */
+.mcde-vehicle-root .mcde-impact-action{
+  align-self: stretch;             /* prend la hauteur dispo */
+  display: flex;
+  align-items: flex-end;           /* aligne sur la ligne des inputs */
+  justify-content: flex-end;
+}
+
+.mcde-vehicle-root .mcde-impact-action .mcde-btn-impact{
+  width: 160px;                    /* même largeur que Pilot */
+  height: 64px;                    /* même hauteur que Pilot */
+}
+
+/* Text wrapper inside Impact button */
+.mcde-vehicle-root .mcde-btn-impact-text{
+  padding: 6px 14px;
+  border-radius: 6px;
+
+  /* readable white-ish text with strong outline */
+  color:#000;
+  -webkit-text-stroke: 0.4px #fff;
+}
+
+.mcde-vehicle-root .mcde-btn-dashboard{
+  font-size: 30px;
+  letter-spacing: 0.12em; /* réduit un peu si ça déborde */
+}
+
+.mcde-vehicle-root .mcde-dsd-icon{
+  display: inline-block !important; /* au lieu de flex */
+  height: 22px !important;          /* ajuste 18/20/22 */
+  width: auto !important;
+
+  flex: 0 0 auto !important;        /* évite l’écrasement */
+  align-self: center !important;
+
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.mcde-vehicle-root .mcde-impact-rowline{
+  grid-template-columns: auto 110px 24px 110px 1fr;
+  align-items: center;
+}
+
+/* Vehicle Header Meta Label – Steel Badge */
+.mcde-vehicle-root .mcde-vehicle-meta-label{
+  display: inline-block;
+  padding: 4px 12px;
+
+  font-family: "Bank Gothic", "Eurostile", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: rgba(30,30,30,0.9);
+
+  background: linear-gradient(
+    to bottom,
+    rgba(210,210,210,0.95),
+    rgba(170,170,170,0.95)
+  );
+
+  border: 1px solid rgba(0,0,0,0.35);
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -2px 4px rgba(0,0,0,0.25),
+    0 1px 3px rgba(0,0,0,0.2);
+
+  opacity: 1 !important;
+}
+
+.mcde-vehicle-root .mcde-vehicle-meta-label::before,
+.mcde-vehicle-root .mcde-vehicle-meta-label::after{
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(80,80,80,0.8);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mcde-vehicle-root .mcde-vehicle-meta-label{
+  position: relative;
+}
+
+.mcde-vehicle-root .mcde-vehicle-meta-label::before{
+  left: 4px;
+}
+
+.mcde-vehicle-root .mcde-vehicle-meta-label::after{
+  right: 4px;
+}
+
+/* Faction badge: match HULL style */
+.mcde-vehicle-root .mcde-vehicle-meta-label{
+  font-family: "Bank Gothic", "BankGothic Md BT", "Eurostile", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  /* stop the “strong” feel */
+  font-weight: 500 !important;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+
+  /* same ink vibe as HULL */
+  color: rgba(25,25,25,0.85) !important;
+
+  /* keep the small steel plate */
+  background: linear-gradient(to bottom,
+    rgba(230,230,230,0.95),
+    rgba(190,190,190,0.95)
+  ) !important;
+
+  border: 1px solid rgba(0,0,0,0.35) !important;
+  border-radius: 6px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -2px 4px rgba(0,0,0,0.22),
+    0 1px 2px rgba(0,0,0,0.18) !important;
+
+  padding: 4px 12px !important;
+  opacity: 1 !important;
+}
+
+.mcde-vehicle-root .mcde-vehicle-meta-label{
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.55),
+    0 -1px 0 rgba(0,0,0,0.18) !important;
+}
+
+/* Pilot dropzone: compact + centered */
+.mcde-vehicle-root .mcde-pilot-drop{
+  min-height: 54px;          /* au lieu d’un truc énorme */
+  height: 54px;              /* fixe -> colonne droite ne gonfle plus */
+  padding: 6px 10px;
+
+  display: flex;
+  align-items: center;       /* centre verticalement */
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+/* Chip (quand un pilote est présent) */
+.mcde-vehicle-root .mcde-pilot-chip{
+  width: 100%;
+  display: flex;
+  align-items: center;       /* centre verticalement */
+  gap: 10px;
+}
+
+/* Image pilote : petite et clean */
+.mcde-vehicle-root .mcde-pilot-img{
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* Nom : garde la ligne compacte */
+.mcde-vehicle-root .mcde-pilot-name{
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bouton X : bien centré */
+.mcde-vehicle-root .mcde-pilot-clear{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+/* --- Armaments: hover-only item controls (like the rest of the module) --- */
+.mcde-veh-weapon .item-controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  margin-left: 8px;
+}
+
+.mcde-veh-weapon:hover .item-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Keep Foundry icons consistent sizing */
+.mcde-veh-weapon .item-controls .item-control i {
+  font-size: 13px;
+}
+
+/* =========================================
+   Vehicle Armaments: hard reset gunner ui
+   ========================================= */
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon .mcde-gunner-ui{
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  width: auto !important;
+  display: block !important;
+  flex-direction: initial !important;
+  align-items: initial !important;
+  gap: initial !important;
+}
+
+/* Hover controls: overlay, aligned right, no layout space */
+.mcde.sheet.actor.vehicle .mcde-veh-weapon .item-controls{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon:hover .item-controls{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon .item-controls .item-control i{
+  font-size: 13px;
+}
+
+/* Reserve space for Gunner + hover icons INSIDE the name row */
+.mcde.sheet.actor.vehicle .mcde-veh-weapon .item-name{
+  padding-right: 170px; /* ajuste: ~120 gunner + ~40 controls + marge */
+  box-sizing: border-box;
+}
+
+/* Ensure bandolier behaves like in character weapons */
+.mcde.sheet.actor.vehicle .mcde-veh-weapon .mcde-reload-bandolier{
+  margin-left: auto;     /* pousse à droite dans la zone dispo */
+  position: static;      /* au cas où un autre CSS la mettrait en absolute */
+}
+
+/* Optional: make the ✕ small and consistent */
+.mcde.sheet.actor.vehicle .mcde-gunner-clear{
+  opacity: .7;
+  cursor: pointer;
+}
+.mcde.sheet.actor.vehicle .mcde-gunner-clear:hover{
+  opacity: 1;
+}
+
+/* Vehicle Tags: avoid Foundry flexrow rule (.flexrow > * { flex:1 }) */
+.mcde.sheet.actor.vehicle .mcde-tagrow > *{
+  flex: 0 0 auto;
+}
+
+/* =========================
+   Crew slots (Pilot/Gunner)
+   ========================= */
+
+/* Crew chips: same container always */
+.mcde.sheet.actor.vehicle .mcde-crew-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Make Pilot avatar round (and reuse for Gunner) */
+.mcde.sheet.actor.vehicle .mcde-crew-avatar,
+.mcde.sheet.actor.vehicle .mcde-pilot-img{
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Keep drop zone visible/consistent whether filled or empty */
+.mcde.sheet.actor.vehicle .mcde-pilot-drop{
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Hint */
+.mcde.sheet.actor.vehicle .mcde-crew-empty{
+  opacity: .6;
+}
+
+/* Clear button: consistent + visible */
+.mcde.sheet.actor.vehicle .mcde-crew-clear,
+.mcde.sheet.actor.vehicle .mcde-pilot-clear{
+  margin-left: auto;
+  opacity: .85;
+  padding: 0 4px;
+}
+
+.mcde.sheet.actor.vehicle .mcde-crew-clear:hover,
+.mcde.sheet.actor.vehicle .mcde-pilot-clear:hover{
+  opacity: 1;
+}
+
+/* Neutral crew drop styling shared by Pilot & Gunner */
+.mcde.sheet.actor.vehicle .mcde-crew-drop{
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* =========================
+   Vehicle Crew (Pilot/Gunner)
+   ========================= */
+
+.mcde.sheet.actor.vehicle .mcde-crew-drop{
+  background: rgba(0,0,0,0.06);
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 34px;
+  box-sizing: border-box;
+}
+
+.mcde.sheet.actor.vehicle .mcde-pilot-drop{
+  background: rgba(0,0,0,0.06);
+  border: 1px dashed rgba(0,0,0,0.25);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 34px;
+  box-sizing: border-box;
+}
+
+.mcde.sheet.actor.vehicle .mcde-crew-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.mcde.sheet.actor.vehicle .mcde-crew-name{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 92px;
+}
+
+/* Optional: same height for pilot + gunner */
+.mcde.sheet.actor.vehicle .mcde-pilot-drop,
+.mcde.sheet.actor.vehicle .mcde-gunner-drop{
+  height: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* =========================
+   Armaments hover controls
+   ========================= */
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon{
+  position: relative;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .item-controls{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity .12s ease;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon:hover > .item-controls{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Same height for pilot + gunner blocks */
+.mcde.sheet.actor.vehicle .mcde-pilot-drop,
+.mcde.sheet.actor.vehicle .mcde-gunner-drop{
+  height: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* =========================
+   Armaments row = 2 columns
+   ========================= */
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon{
+  display: grid;
+  grid-template-columns: 1.75fr 1fr; /* même ratio que ton haut (Mobility/Crew) */
+  column-gap: 12px;
+  align-items: start;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .mcde-weapon-row{
+  grid-column: 1;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .mcde-gunner-ui{
+  grid-column: 2;
+  justify-self: stretch;
+  align-self: start;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .mcde-gunner-ui .mcde-gunner-drop{
+  width: 100%;
+}
+
+/* Hover controls live at extreme right of column 2 */
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .item-controls{
+  grid-column: 2;
+  justify-self: end;
+  align-self: start;
+
+  display: flex;
+  gap: 6px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+  z-index: 50;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon:hover > .item-controls{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon{
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  column-gap: 12px;
+  align-items: start;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .mcde-weapon-row{
+  grid-column: 1;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon > .mcde-veh-crewcol{
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon .mcde-gunner-drop{
+  width: 100%;
+}
+
+/* hover icons only on hover */
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon .item-controls{
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon:hover .item-controls{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Gunner clear button must stay inside the crew chip */
+.mcde.sheet.actor.vehicle .mcde-gunner-drop .mcde-crew-clear{
+  position: static !important;
+  margin-left: auto;         /* pousse le X à droite dans la ligne */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Ensure crew chip is a flex row so margin-left:auto works */
+.mcde.sheet.actor.vehicle .mcde-gunner-drop .mcde-crew-chip{
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Hover controls: only visible on hover */
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon .item-controls{
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity .12s ease;
+}
+
+.mcde.sheet.actor.vehicle li.mcde-veh-weapon:hover .item-controls{
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* NPC/Nemesis header: fixed portrait box */
+.mcde.sheet.actor.npc .mcde-avatar-wrap,
+.mcde.sheet.actor.nemesis .mcde-avatar-wrap{
+  flex: 0 0 140px;
+}
+
+.mcde.sheet.actor.npc .mcde-avatar-frame,
+.mcde.sheet.actor.nemesis .mcde-avatar-frame{
+  width: 140px;
+  height: 210px;       /* ou 160px si tu veux plus “portrait” */
+}
+
+/* =========================================
+   NPC / Nemesis — TYPE line upgrade
+   ========================================= */
+
+.mcde.sheet.actor.npc .npc-type,
+.mcde.sheet.actor.nemesis .npc-type{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;              /* <- air */
+  margin: 6px 0 8px 0;
+  background: rgba(0,0,0,0.05);     /* même “petit fond” élégant */
+  border: 1px solid rgba(0,0,0,0.20);
+  border-radius: 8px;
+}
+
+.mcde.sheet.actor.npc .npc-type-label,
+.mcde.sheet.actor.nemesis .npc-type-label{
+  font-family: "Gothic Bank", sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mcde-copper-2);
+}
+
+.mcde.sheet.actor.npc .npc-type-row,
+.mcde.sheet.actor.nemesis .npc-type-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* icon x2+ */
+.mcde.sheet.actor.npc .npc-type-icon,
+.mcde.sheet.actor.nemesis .npc-type-icon{
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+}
+
+.mcde.sheet.actor.npc .npc-type-select,
+.mcde.sheet.actor.nemesis .npc-type-select{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.mcde.sheet.actor.npc .npc-type-select label,
+.mcde.sheet.actor.nemesis .npc-type-select label{
+  margin: 0;
+  opacity: .8;
+}
+
+/* =========================================
+   NPC / NEMESIS — TYPE PLATE (steel + rivets)
+   One-line: left = label+select, right = icon
+   ========================================= */
+
+.mcde.sheet.actor.npc .npc-type,
+.mcde.sheet.actor.nemesis .npc-type{
+  margin: 6px 0 8px 0;
+}
+
+/* The actual plate row */
+.mcde.sheet.actor.npc .npc-type-row,
+.mcde.sheet.actor.nemesis .npc-type-row{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 6px 10px;           /* slimmer */
+  min-height: 44px;            /* keeps it aligned vs avatar bottom */
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.25);
+  box-sizing: border-box;
+
+  /* brushed steel vibe */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.15)),
+    repeating-linear-gradient(90deg,
+      rgba(0,0,0,0.06) 0px,
+      rgba(0,0,0,0.06) 1px,
+      rgba(255,255,255,0.00) 6px,
+      rgba(255,255,255,0.00) 10px
+    );
+}
+
+/* Rivets (4 corners) */
+.mcde.sheet.actor.npc .npc-type-row::before,
+.mcde.sheet.actor.nemesis .npc-type-row::before{
+  content: "";
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0,0,0,0.35) 0 2px, rgba(255,255,255,0.35) 3px, rgba(0,0,0,0.00) 4px),
+    radial-gradient(circle at 100% 0%, rgba(0,0,0,0.35) 0 2px, rgba(255,255,255,0.35) 3px, rgba(0,0,0,0.00) 4px),
+    radial-gradient(circle at 0% 100%, rgba(0,0,0,0.35) 0 2px, rgba(255,255,255,0.35) 3px, rgba(0,0,0,0.00) 4px),
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,0.35) 0 2px, rgba(255,255,255,0.35) 3px, rgba(0,0,0,0.00) 4px);
+  opacity: 0.85;
+}
+
+/* Left block */
+.mcde.sheet.actor.npc .npc-type-left,
+.mcde.sheet.actor.nemesis .npc-type-left{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Engraved TYPE */
+.mcde.sheet.actor.npc .npc-type-label,
+.mcde.sheet.actor.nemesis .npc-type-label{
+  font-family: "Gothic Bank", sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  /* engraved illusion */
+  color: rgba(45,25,10,0.70);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.45),
+    0 -1px 0 rgba(0,0,0,0.35);
+  opacity: 0.95;
+  white-space: nowrap;
+}
+
+/* Select block */
+.mcde.sheet.actor.npc .npc-type-select,
+.mcde.sheet.actor.nemesis .npc-type-select{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.npc .npc-type-select label,
+.mcde.sheet.actor.nemesis .npc-type-select label{
+  margin: 0;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* Icon on the right */
+.mcde.sheet.actor.npc .npc-type-iconwrap,
+.mcde.sheet.actor.nemesis .npc-type-iconwrap{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  padding-left: 6px;
+}
+
+.mcde.sheet.actor.npc .npc-type-icon,
+.mcde.sheet.actor.nemesis .npc-type-icon{
+  width: 40px;                 /* x2 */
+  height: 40px;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.35));
+}
+
+/* =========================================================
+   Rollcard — CRITICAL (data-mcde-card="1")
+   Fix title contrast (ivory)
+   ========================================================= */
+.mcde-card[data-mcde-card="1"] header strong{
+  color: var(--mcde-copper-ink) !important; /* ton ivoire */
+  text-shadow: 0 1px 0 rgba(0,0,0,.65), 0 0 6px rgba(0,0,0,.35);
+}
+
+/* =========================================================
+   Rollcard — CRITICAL Industrial Frame (subtle border)
+   ========================================================= */
+
+.mcde-card[data-mcde-card="1"]{
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Brushed steel outer frame */
+.mcde-card[data-mcde-card="1"]::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:10px;
+
+  /* Fine steel rim */
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.6),
+    inset 0 0 0 2px rgba(120, 90, 50, .35),
+    0 0 0 1px rgba(0,0,0,.4);
+
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.15));
+
+  z-index: 1;
+}
+
+/* Subtle industrial stripe only on the bottom edge */
+.mcde-card[data-mcde-card="1"]::after{
+  content:"";
+  position:absolute;
+  left:6px;
+  right:6px;
+  bottom:4px;
+  height:6px;
+  border-radius:3px;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #d8a600 0px,
+      #d8a600 10px,
+      #1a1a1a 10px,
+      #1a1a1a 20px
+    );
+
+  opacity:.75;
+}
+
+/* =========================================
+   MCDE TRACKERS — DSP (brushed steel) & MOM (rust)
+   Drop this at END of mcde.css
+   ========================================= */
+
+#mcde-trackers .mcde-tracker{
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* ---------- DARK SYMMETRY POOL (DSP) : Brushed steel + industrial stripe ---------- */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"]{
+  /* steel body */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.45)),
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.08) 0px,
+      rgba(255,255,255,.08) 2px,
+      rgba(0,0,0,.00) 6px,
+      rgba(0,0,0,.00) 10px
+    ),
+    linear-gradient(135deg, rgba(95,105,115,.95), rgba(40,45,55,.95));
+  border: 1px solid rgba(255,245,220,.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -10px 18px rgba(0,0,0,.35),
+    0 2px 8px rgba(0,0,0,.25);
+}
+
+/* rivets */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"]::before{
+  content:"";
+  position:absolute;
+  inset: 6px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 10px 10px, rgba(255,255,255,.25) 0 2px, rgba(0,0,0,.45) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at calc(100% - 10px) 10px, rgba(255,255,255,.25) 0 2px, rgba(0,0,0,.45) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at 10px calc(100% - 10px), rgba(255,255,255,.25) 0 2px, rgba(0,0,0,.45) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at calc(100% - 10px) calc(100% - 10px), rgba(255,255,255,.25) 0 2px, rgba(0,0,0,.45) 3px, rgba(0,0,0,0) 4px);
+  opacity:.9;
+}
+
+/* industrial stripe bottom */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"]::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height: 14px;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(20,20,20,.95) 0 10px,
+      rgba(230,190,45,.95) 10px 20px
+    );
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+  opacity:.95;
+}
+
+/* Make DSP text pop (ivory) */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"] *{
+  color: rgba(255,245,220,.92) !important;
+  text-shadow: none;
+}
+
+/* ---------- MOMENTUM : Rust / worn metal ---------- */
+#mcde-trackers .mcde-tracker[data-tracker="momentum"]{
+  background:
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,.10), rgba(0,0,0,0) 45%),
+    radial-gradient(circle at 80% 70%, rgba(0,0,0,.25), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.45)),
+    linear-gradient(135deg, rgba(170,95,35,.96), rgba(75,35,20,.96));
+  border: 1px solid rgba(255,245,220,.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -10px 18px rgba(0,0,0,.35),
+    0 2px 8px rgba(0,0,0,.25);
+}
+
+/* rust speckles + grime */
+#mcde-trackers .mcde-tracker[data-tracker="momentum"]::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 30%, rgba(40,20,10,.35) 0 2px, rgba(0,0,0,0) 3px),
+    radial-gradient(circle at 40% 70%, rgba(255,210,120,.10) 0 2px, rgba(0,0,0,0) 3px),
+    radial-gradient(circle at 72% 40%, rgba(25,10,5,.35) 0 2px, rgba(0,0,0,0) 3px),
+    radial-gradient(circle at 85% 75%, rgba(0,0,0,.25) 0 2px, rgba(0,0,0,0) 3px);
+  opacity:.9;
+}
+
+/* Momentum text: ivory, strong */
+#mcde-trackers .mcde-tracker[data-tracker="momentum"] *{
+  color: rgba(255,245,220,.92) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.55);
+}
+
+/* Optional: tighten padding a hair so it feels less "blocky" */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"],
+#mcde-trackers .mcde-tracker[data-tracker="momentum"]{
+  padding: 6px 8px !important;
+}
+
+/* DSP: make content render above industrial stripe */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"] {
+  position: relative;
+}
+
+/* stripe stays in background layer */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"]::after {
+  z-index: 0;
+}
+
+/* ALL real content above */
+#mcde-trackers .mcde-tracker[data-tracker="dsp"] > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* DSP + Momentum label outline */
+#mcde-trackers .mcde-tracker .gm-only,
+#mcde-trackers .mcde-tracker .tracker-sublabel,
+#mcde-trackers .mcde-tracker small {
+  text-shadow:
+    -10px -10px 0 #000,
+     10px -10px 0 #000,
+    -10px  10px 0 #000,
+     10px  10px 0 #000;
+}
+
+#mcde-trackers .mcde-tracker h3,
+#mcde-trackers .mcde-tracker .tracker-title {
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000;
+}
+
+/* Outline 1px (true readable) for sublabels like GM only / Everyone */
+#mcde-trackers .mcde-tracker .mcde-tracker-sub{
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.85);
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000 !important;
+}
+
+/* Tainted input: less “strong” visually */
+.mcde-tainted-input{
+  width:60px;
+  text-align:center;
+  font-weight:800;
+  opacity:.75;
+}
+
+.mcde-loc-wrap { position: relative; }
+
+.mcde-loc-controls{
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  display:flex;
+  gap:10px;
+  z-index: 10;
+}
+
+.mcde-loc-btn{
+  width: 54px;
+  height: 40px;
+  border: 3px solid #0a57ff;
+  background: rgba(255,255,255,0.08);
+  color: #0a57ff;
+  font-weight: 900;
+  font-size: 22px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.mcde-loc-btn:hover{
+  background: rgba(10,87,255,0.14);
+}
+
+/* ==============================
+   MCDE Buttons — Brushed Steel
+   ============================== */
+
+/* Base button */
+.mcde.sheet .mcde-btn{
+  appearance: none;
+  border: 1px solid rgba(0,0,0,.45);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+
+  /* "Bank Gothic" fallback chain (tu as déjà une police Bank Gothic-like dans le thème) */
+  font-family: var(--mcde-font-title, "Bank Gothic", "Microgramma", "Eurostile", sans-serif);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  color: rgba(20,20,20,.92);
+  background:
+    /* brushed lines */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.10) 0px,
+      rgba(255,255,255,.10) 2px,
+      rgba(0,0,0,.06) 4px,
+      rgba(255,255,255,.05) 7px
+    ),
+    /* steel gradient */
+    linear-gradient(180deg, #d8d8d8 0%, #bcbcbc 45%, #9f9f9f 100%);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(0,0,0,.18),
+    0 2px 6px rgba(0,0,0,.18);
+
+  position: relative;
+  user-select: none;
+}
+
+/* Subtle hover/active */
+.mcde.sheet .mcde-btn:hover{
+  filter: brightness(1.04) contrast(1.02);
+  transform: translateY(-1px);
+}
+.mcde.sheet .mcde-btn:active{
+  transform: translateY(0px);
+  box-shadow:
+    inset 0 1px 0 rgba(0,0,0,.18),
+    inset 0 -1px 0 rgba(255,255,255,.35),
+    0 1px 3px rgba(0,0,0,.16);
+}
+
+/* Rivets (4 corners) */
+.mcde.sheet .mcde-btn.mcde-btn--rivets::before{
+  content:"";
+  position:absolute;
+  inset: 6px;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at 0% 0%, rgba(0,0,0,.35) 0 2px, rgba(255,255,255,.28) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at 100% 0%, rgba(0,0,0,.35) 0 2px, rgba(255,255,255,.28) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at 0% 100%, rgba(0,0,0,.35) 0 2px, rgba(255,255,255,.28) 3px, rgba(0,0,0,0) 4px),
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,.35) 0 2px, rgba(255,255,255,.28) 3px, rgba(0,0,0,0) 4px);
+
+  opacity: .85;
+}
+
+/* Optional: smaller / tighter button variant */
+.mcde.sheet .mcde-btn.mcde-btn--compact{
+  padding: 6px 10px;
+  font-size: 10px;
+  border-radius: 9px;
+}
+
+/* ==============================
+   MCDE Button — Battleworn (Rest)
+   ============================== */
+.mcde.sheet .mcde-btn.mcde-btn--battleworn{
+  color: rgba(245,240,232,.92);
+
+  background:
+    /* scratches */
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,.10) 0px,
+      rgba(255,255,255,.10) 1px,
+      rgba(0,0,0,0) 6px
+    ),
+    /* pitted grime */
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,.18) 0 8px, rgba(0,0,0,0) 10px),
+    radial-gradient(circle at 70% 60%, rgba(0,0,0,.16) 0 10px, rgba(0,0,0,0) 12px),
+    /* worn metal gradient */
+    linear-gradient(180deg, #5b5b5b 0%, #3d3d3d 55%, #2e2e2e 100%);
+
+  border-color: rgba(0,0,0,.65);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.35),
+    0 2px 8px rgba(0,0,0,.25);
+}
+
+.mcde.sheet .mcde-btn.mcde-btn--battleworn:hover{
+  filter: brightness(1.06) contrast(1.03);
+}
+
+/* ==============================
+   Loc Doll Buttons Layout Fix
+   ============================== */
+
+.mcde-loc-wrap{
+  position: relative;
+}
+
+/* Force compact inline buttons */
+.mcde-loc-wrap .mcde-btn{
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 90px;
+  height: 32px;
+  padding: 0 12px;
+  position: absolute;
+  top: 8px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Left / Right placement */
+.mcde-loc-wrap .mcde-btn[data-action="loc-rest"]{
+  left: 8px;
+}
+
+.mcde-loc-wrap .mcde-btn[data-action="loc-set-wounds"]{
+  right: 8px;
+}
+
+/* full-width control bar */
+.mcde-loc-wrap .mcde-loc-controls{
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;              /* <= important : ça force la largeur totale */
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;   /* Rest à gauche, Set Wounds à droite */
+  align-items: center;
+  pointer-events: none;             /* pour ne pas bloquer la loc doll */
+}
+
+/* ==============================
+   Loc Doll: controls wide anchor
+   ============================== */
+
+/* Make the loc-doll wrapper use full panel width */
+.mcde-loc-wrap{
+  position: relative;
+}
+
+/* If your silhouette/background is a fixed-width element, keep it centered */
+.mcde-loc-wrap .mcde-loc-bg{
+  margin: 0 auto;
+}
+
+/* Full-width control bar at the "head box" height */
+.mcde-loc-wrap .mcde-loc-controls{
+  position: absolute;
+  top: 58px;              /* <-- garde ta hauteur actuelle (ajuste si besoin) */
+  left: 0;
+  right: 0;
+  padding: 0 10px;        /* <-- distance aux bords du panneau */
+  z-index: 10;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+.mcde-loc-wrap .mcde-loc-controls .mcde-btn{
+  pointer-events: auto;
+  width: auto !important;
+}
+
+/* Parent wide container (the column/panel) */
+.mcde.sheet .mcde-hitloc-panel{
+  position: relative;
+}
+
+/* Buttons anchored to the panel edges, at the head height */
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls{
+  position: absolute;
+  top: 58px;     /* même hauteur que tu aimais */
+  left: 0;
+  right: 0;
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+  pointer-events: none;
+}
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls .mcde-btn{
+  pointer-events: auto;
+}
+
+/* =========================================
+   Loc Doll: stable positioning coordinate system
+   ========================================= */
+
+.mcde.sheet .mcde-loc-wrap{
+  position: relative;
+  width: 320px;          /* <-- prends la largeur historique de ta doll */
+  height: 420px;         /* <-- pareil : hauteur stable */
+  margin: 0 auto;        /* centre la doll dans la colonne */
+}
+
+/* Background silhouette layer */
+.mcde.sheet .mcde-loc-bg{
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+}
+
+/* Each location box is positioned inside the stable wrap */
+.mcde.sheet .mcde-loc{
+  position: absolute;
+}
+
+/* parent grid column */
+.mcde.sheet .tab[data-tab="combat"] > div { min-width: 0; }
+
+.mcde.sheet .tab[data-tab="combat"] > div > div:first-child {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mcde.sheet .tab[data-tab="combat"] > div {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* Loc Doll container must be the positioning context */
+.mcde.sheet .mcde-loc-wrap{
+  position: relative;
+}
+
+/* Controls overlay: left & right buttons at same height */
+.mcde.sheet .mcde-loc-wrap .mcde-loc-controls{
+  position: absolute;
+  top: 62px;               /* <-- ajuste la hauteur ici */
+  left: -22px;             /* <-- éloigne à gauche */
+  right: -22px;            /* <-- éloigne à droite */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;    /* important: évite de bloquer les clics sur la doll */
+  z-index: 20;
+}
+
+/* J'AI ENVIE DE MOURIR AVEC CE CSS DE MES DEUX */
+/* ===== LOC FRAME BASE (REQUIRED) ===== */
+
+/* =========================
+   LOC FRAME STRUCTURE
+   ========================= */
+
+.mcde.sheet .mcde-loc-wrap .mcde-loc-frame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(125, 75, 30, 0.65),
+      rgba(95, 55, 20, 0.75)
+    );
+
+  border: 1px solid rgba(40,20,5,0.8);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,160,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* =========================
+   BASE — CLEAN BRONZE
+   ========================= */
+
+.mcde.sheet .mcde-loc-wrap .mcde-loc-frame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+
+  background:
+  linear-gradient(
+    145deg,
+    rgba(130, 110, 85, 0.6),
+    rgba(100, 85, 65, 0.7)
+  );
+
+  border: 1px solid rgba(40,20,5,0.7);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,160,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.35),
+    0 2px 6px rgba(0,0,0,0.35);
+}
+
+/* subtle brushed metal texture */
+.mcde.sheet .mcde-loc-wrap .mcde-loc-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+
+  background:
+    /* brushed texture */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.08) 0px,
+      rgba(255,255,255,0.08) 2px,
+      rgba(0,0,0,0.04) 6px,
+      rgba(255,255,255,0.05) 10px
+    ),
+
+    /* rivets */
+    radial-gradient(circle at 6px 6px, rgba(0,0,0,0.6) 0 2px, rgba(255,255,255,0.4) 3px, transparent 5px),
+    radial-gradient(circle at calc(100% - 6px) 6px, rgba(0,0,0,0.6) 0 2px, rgba(255,255,255,0.4) 3px, transparent 5px),
+    radial-gradient(circle at 6px calc(100% - 6px), rgba(0,0,0,0.6) 0 2px, rgba(255,255,255,0.4) 3px, transparent 5px),
+    radial-gradient(circle at calc(100% - 6px) calc(100% - 6px), rgba(0,0,0,0.6) 0 2px, rgba(255,255,255,0.4) 3px, transparent 5px);
+
+  opacity: 0.4;
+}
+
+/* =========================
+   HALF — RUST + IMPACTS
+   ========================= */
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-half {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(185, 105, 35, 0.85),
+      rgba(135, 65, 20, 0.9) 55%,
+      rgba(95, 40, 10, 0.95)
+    );
+
+  border-color: rgba(95, 45, 10, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255,180,90,0.25),
+    inset 0 -2px 4px rgba(0,0,0,0.6);
+}
+
+/* Surface burns / darker impacts */
+.mcde.sheet .mcde-loc-frame.mcde-wound-half::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 30% 60%, rgba(160,40,0,0.45) 0 6px, transparent 18px),
+    radial-gradient(circle at 60% 35%, rgba(0,0,0,0.65) 0 5px, transparent 14px),
+    radial-gradient(circle at 45% 25%, rgba(90,25,0,0.55) 0 10px, transparent 24px);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet .mcde-loc-wrap .mcde-loc-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-half::after {
+  background:
+    radial-gradient(circle at 30% 60%, rgba(120,0,0,0.35) 0 5px, transparent 15px),
+    radial-gradient(circle at 60% 35%, rgba(0,0,0,0.55) 0 4px, transparent 12px);
+
+  opacity: 0.8;
+}
+
+/* =========================
+   CRIT — DARK OXIDIZED BRONZE
+   ========================= */
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-crit {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(110, 45, 20, 0.85),
+      rgba(75, 25, 15, 0.9)
+    );
+
+  border-color: rgba(60,0,0,0.9);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,180,120,0.2),
+    inset 0 -2px 4px rgba(0,0,0,0.6),
+    0 0 12px rgba(120,0,0,0.4);
+}
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-crit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background:
+    linear-gradient(110deg, rgba(120,0,0,0.5), transparent 60%),
+    radial-gradient(circle at 25% 40%, rgba(140,0,0,0.6) 0 14px, transparent 30px),
+    radial-gradient(circle at 70% 70%, rgba(80,0,0,0.6) 0 16px, transparent 35px),
+    radial-gradient(circle at 55% 30%, rgba(0,0,0,0.65) 0 4px, transparent 12px);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-crit {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(110,45,20,0.9),
+      rgba(75,25,15,0.95)
+    );
+}
+
+.mcde.sheet .mcde-loc-frame.mcde-wound-crit::after {
+  background:
+    linear-gradient(110deg, rgba(120,0,0,0.6), transparent 60%),
+    radial-gradient(circle at 25% 40%, rgba(140,0,0,0.7) 0 16px, transparent 35px),
+    radial-gradient(circle at 70% 70%, rgba(80,0,0,0.6) 0 18px, transparent 40px),
+    radial-gradient(circle at 55% 30%, rgba(0,0,0,0.7) 0 4px, transparent 12px);
+
+  opacity: 0.9;
+}
+
+.mcde.sheet .mcde-loc-wrap .mcde-loc-frame > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* =========================================
+   WOUND TRACK BOXES (Serious / Critical / Mental)
+   ========================================= */
+
+.mcde-wound-track {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.mcde-wound-box {
+  flex: 1;
+  height: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(125,75,30,0.35),
+      rgba(95,55,20,0.45)
+    );
+
+  border: 1px solid rgba(40,20,5,0.6);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,160,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3);
+}
+
+/* FILLED STATE */
+
+.mcde-wound-box.filled {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(130,0,0,0.8),
+      rgba(80,0,0,0.9)
+    );
+
+  border-color: rgba(60,0,0,0.9);
+
+  box-shadow:
+    inset 0 0 4px rgba(0,0,0,0.6),
+    0 0 6px rgba(120,0,0,0.4);
+}
+
+.mcde-wound-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.05) 0px,
+      rgba(255,255,255,.05) 2px,
+      rgba(0,0,0,.05) 6px
+    );
+
+  opacity: .4;
+}
+
+/* =========================================
+   WOUND GROUP HEADERS (layout like before)
+   ========================================= */
+
+.mcde-wound-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin: 10px 0 6px;
+}
+
+/* Serious/Critical label left, small input right */
+.mcde-wound-head > label{
+  flex: 1 1 auto;
+  margin: 0;
+  text-align: left;
+  font-weight: 600;
+}
+
+.mcde-wound-group[data-track="seriousWounds"] .mcde-wound-head > label,
+.mcde-wound-group[data-track="criticalWounds"] .mcde-wound-head > label{
+  font-weight: 800; /* bold */
+}
+
+/* Make the max input small and right-aligned (NO full width) */
+.mcde-wound-max{
+  flex: 0 0 auto;
+  width: 56px;
+  max-width: 56px;
+  text-align: right;
+  padding: 2px 6px;
+  height: 22px;
+  line-height: 22px;
+}
+
+/* Mental Wounds: left title line, right inputs */
+.mcde-wound-titleline{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mcde-wound-right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex: 0 0 auto;
+}
+
+/* Grey the '/ Tainted' label + the tainted input */
+/* Mental Wounds: tainted boxes = visually disabled */
+.mcde-wound-group[data-track="mentalWounds"] .mcde-wound-box.mcde-disabled{
+  opacity: .35;
+  filter: grayscale(1);
+  box-shadow: none;
+}
+
+/* Optionnel: si tu veux empêcher le clic sur les tainted */
+.mcde-wound-group[data-track="mentalWounds"] .mcde-wound-box.mcde-disabled{
+  pointer-events: none;
+}
+
+.mcde-wound-subtle{ opacity:.55; }
+.mcde-tainted-input{ opacity:.75; }
+
+/* ===============================
+   Fix halo coupé (wound inputs)
+   =============================== */
+
+/* 1) Le wrapper du panel wounds doit laisser dépasser les focus */
+.mcde.sheet .mcde-wound-groups,
+.mcde.sheet .mcde-wound-group,
+.mcde.sheet .mcde-wound-head,
+.mcde.sheet .mcde-wound-right,
+.mcde.sheet .mcde-wound-track{
+  overflow: visible !important;
+}
+
+/* 2) Le div inline "min-width:0" dans ton layout combat coupe tout.
+   On le neutralise UNIQUEMENT dans l’onglet Combat */
+.mcde.sheet .tab[data-tab="combat"] > div[style*="grid-template-columns"]
+  > div[style*="min-width:0"]{
+  overflow: visible !important;
+}
+
+/* 3) Certains resets mettent overflow: clip sur les inputs -> on force visible */
+.mcde.sheet input.mcde-wound-max,
+.mcde.sheet input.mcde-tainted-input{
+  overflow: visible !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   HIT LOC BUTTON POSITION (FINAL CLEAN)
+   ========================================= */
+
+/* Parent large = le panneau (430px chez toi) */
+.mcde.sheet .mcde-hitloc-panel{
+  position: relative;
+}
+
+/* Barre boutons collée aux bords du panel */
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls{
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 6px;        /* diminue pour coller plus */
+  z-index: 60;
+
+  pointer-events: none;  /* évite de bloquer la doll */
+}
+
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls .mcde-btn{
+  font-size: 11px;
+  padding: 4px 10px;
+  height: 26px;
+  min-height: 26px;
+
+  border-radius: 6px;
+  pointer-events: auto;  /* mais les boutons restent cliquables */
+}
+
+/* Optionnel: encore plus près des bords */
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls{
+  padding: 0 2px;        /* teste 0/2/4 */
+}
+
+/* Empêche toute règle globale de forcer width:100% */
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls .mcde-btn{
+  width: auto !important;
+  flex: 0 0 auto;
+}
+
+/* =========================================
+   HIT LOC BUTTONS – SAME HEIGHT AS SET SOAKS
+   ========================================= */
+
+.mcde.sheet .mcde-hitloc-panel .mcde-loc-controls .mcde-btn{
+  height: 40px;              /* ajuste à la hauteur exacte de Set Soaks */
+  min-height: 28px;
+  padding: 0 12px;           /* important: pas de padding vertical */
+  
+  display: inline-flex;      /* centrage propre */
+  align-items: center;       /* centre vertical */
+  justify-content: center;   /* centre horizontal */
+
+  line-height: 1;            /* évite décalage vertical */
+  font-size: 11px;
+
+  width: auto !important;
+  flex: 0 0 auto;
+}
+
+/* =========================================
+   HIT LOC – SOAK LABEL SPACING
+   ========================================= */
+
+.mcde.sheet .mcde-loc-soaklabel{
+  padding-left: 4px;   /* espace depuis le bord gauche */
+  padding-right: 6px;  /* petit air avant l’input */
+}
+
+/* ================================
+   NEMESIS: hide Rest / Set Wounds
+   ================================ */
+
+.mcde.sheet.actor.nemesis .mcde-loc-controls [data-action="loc-rest"],
+.mcde.sheet.actor.nemesis .mcde-loc-controls [data-action="loc-set-wounds"]{
+  display: none !important;
+}
+
+/* ================================
+   NEMESIS: hide Tainted UI
+   ================================ */
+
+.mcde.sheet.actor.nemesis .mcde-wound-group[data-track="mentalWounds"] .mcde-tainted-input,
+.mcde.sheet.actor.nemesis .mcde-wound-group[data-track="mentalWounds"] .mcde-wound-subtle{
+  display: none !important;
+}
+
+/* optionnel: resserrer la zone à droite si ça laisse un trou */
+.mcde.sheet.actor.nemesis .mcde-wound-group[data-track="mentalWounds"] .mcde-wound-right{
+  gap: 0 !important;
+}
+
+/* =========================================
+   NPC SHEET — Wounds track like "stretch boxes"
+   (Overrides old inline .wound-box 12x12)
+   ========================================= */
+
+.mcde.sheet.actor.npc .wounds .flexrow{
+  align-items:center;
+  gap:8px;
+}
+
+.mcde.sheet.actor.npc .wounds label{
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Keep the number field small (Foundry sometimes makes inputs flex: 1) */
+.mcde.sheet.actor.npc .wounds input[type="number"]{
+  flex: 0 0 60px;
+  width: 60px;
+  max-width: 60px;
+  text-align: right;
+}
+
+/* Push "Suffered: X" to the right */
+.mcde.sheet.actor.npc .wounds small{
+  margin-left: auto;
+  opacity: .75;
+  white-space: nowrap;
+}
+
+/* Track row */
+.mcde.sheet.actor.npc .wound-track{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:6px;
+  align-items:center;
+}
+
+/* Stretch segment (EMPTY) — same family as your other tracks */
+.mcde.sheet.actor.npc .wound-track .wound-box{
+  width: 96px !important;
+  height: 14px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(0,0,0,.45) !important;
+  cursor: pointer;
+
+  background:
+    /* brushed metal */
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,0,0,.18)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.08) 0px,
+      rgba(255,255,255,.08) 2px,
+      rgba(0,0,0,.10) 5px,
+      rgba(255,255,255,.05) 9px
+    ),
+    rgba(170, 125, 70, .36); /* <= was too pale; this is closer to your stretch beige */
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 1px 2px rgba(0,0,0,.20) !important;
+}
+
+/* Stretch segment (FILLED) — rusty/bloody like your serious/critical vibe */
+.mcde.sheet.actor.npc .wound-track .wound-box.filled{
+  background:
+    radial-gradient(circle at 18% 35%, rgba(0,0,0,.22) 0 8px, transparent 12px),
+    radial-gradient(circle at 70% 65%, rgba(0,0,0,.20) 0 10px, transparent 16px),
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.28)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.06) 0px,
+      rgba(255,255,255,.06) 2px,
+      rgba(0,0,0,.12) 5px,
+      rgba(255,255,255,.05) 9px
+    ),
+    rgba(110, 10, 10, .82);  /* <= deeper/more opaque to match Serious/Critical */
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 1px 2px rgba(0,0,0,.25) !important;
+}
+
+/* ================================
+   Talents & Belongings (2/3 - 1/3)
+   ================================ */
+.mcde-talents-belongings-grid{
+  display:grid;
+  grid-template-columns: 2fr 1fr; /* 2/3 - 1/3 */
+  gap:12px;
+  align-items:start;
+}
+
+.mcde-tcol{ min-width:0; }
+
+.mcde-tcol-belongings{
+  border-left:1px solid rgba(0,0,0,0.15);
+  padding-left:12px;
+}
+
+.mcde-belongings-field,
+.mcde-belongings-items{
+  margin-top:10px;
+}
+
+.mcde-assets-input{
+  width:72px !important;   /* 3 chiffres comfy */
+  text-align:center;
+}
+
+.mcde-belongings-h1{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:10px 0 6px 0;
+
+  font-size:18px;          /* H1 mais pas gigantor */
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+/* Make Set Influence compact like Set Wounds */
+.mcde-influence-box .mcde-set-influence{
+  padding:4px 10px !important;
+  height:26px;
+  min-height:26px;
+  line-height:18px;
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+
+  flex:0 0 auto;
+  width:auto;
+}
+
+/* Make Set Damage Bonus compact like Set Soaks */
+.mcde-set-damage-bonus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto !important;
+  width: auto !important;
+
+  height: 28px;
+  padding: 0 14px !important;
+
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  line-height: 1; /* important */
+}
+
+/* =========================================
+   MCDE Dialog Skin — Foundry V13 (DialogV2)
+   Clean version (no conflicting rules)
+   ========================================= */
+
+dialog.mcde-dialog{
+  border: 1px solid rgba(40,30,20,0.65) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+
+  background: linear-gradient(180deg,
+    rgba(235,230,220,0.96),
+    rgba(210,205,195,0.94)
+  ) !important;
+
+  color: rgba(30,22,14,0.95) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.55) !important;
+}
+
+/* Header bar */
+dialog.mcde-dialog > header.window-header{
+  background: linear-gradient(180deg,
+    rgba(75,50,38,0.98),
+    rgba(40,28,20,0.98)
+  ) !important;
+  border-bottom: 1px solid rgba(0,0,0,0.6) !important;
+
+  /* IMPORTANT: do NOT force Bank Gothic here */
+  color: rgba(245,235,220,0.95) !important;
+}
+
+/* Title text ONLY */
+dialog.mcde-dialog > header.window-header .window-title{
+  font-family: "Bank Gothic", sans-serif !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: rgba(245,235,220,0.95) !important;
+  -webkit-text-fill-color: rgba(245,235,220,0.95) !important;
+}
+
+/* Header icon buttons (ellipsis + close): keep Foundry/FA fonts */
+dialog.mcde-dialog > header.window-header button.header-control,
+dialog.mcde-dialog > header.window-header .header-control{
+  font-family: var(--font-awesome), var(--font-sans), sans-serif !important;
+  color: rgba(245,235,220,0.95) !important;
+  -webkit-text-fill-color: rgba(245,235,220,0.95) !important;
+}
+
+/* If the icon is on the button itself via .icon.fa-... */
+dialog.mcde-dialog > header.window-header button.icon{
+  font-family: var(--font-awesome), var(--font-sans), sans-serif !important;
+  font-weight: 900 !important;
+}
+
+/* Content */
+dialog.mcde-dialog > section.window-content{
+  padding: 16px 18px 14px !important;
+  background: transparent !important;
+}
+
+/* Orange divider for <hr/> inside */
+dialog.mcde-dialog hr{
+  border: none !important;
+  height: 2px !important;
+  margin: 12px 0 !important;
+  background: linear-gradient(90deg,
+    rgba(255,150,40,0) 0%,
+    rgba(255,150,40,0.8) 25%,
+    rgba(255,210,110,0.95) 50%,
+    rgba(255,150,40,0.8) 75%,
+    rgba(255,150,40,0) 100%
+  ) !important;
+  opacity: 0.9 !important;
+}
+
+/* Buttons footer (V13) */
+dialog.mcde-dialog footer.form-footer{
+  border-top: 1px solid rgba(0,0,0,0.22) !important;
+  padding-top: 12px !important;
+  margin-top: 10px !important;
+  gap: 10px !important;
+}
+
+dialog.mcde-dialog footer.form-footer > button{
+  font-family: "Bank Gothic", sans-serif !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+
+  background: linear-gradient(180deg,
+    rgba(85,60,45,0.98),
+    rgba(45,30,22,0.98)
+  ) !important;
+
+  border: 1px solid rgba(0,0,0,0.6) !important;
+  border-radius: 6px !important;
+
+  color: rgba(245,235,220,0.95) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,160,0.18),
+    0 2px 6px rgba(0,0,0,0.35) !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+dialog.mcde-dialog footer.form-footer > button:hover{
+  filter: brightness(1.08) !important;
+}
+
+dialog.mcde-dialog footer.form-footer > button[autofocus],
+dialog.mcde-dialog footer.form-footer > button.default{
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,160,0.22),
+    0 0 0 1px rgba(255,150,40,0.55),
+    0 2px 8px rgba(0,0,0,0.45) !important;
+}
+
+/* =========================================
+   Economy box (Belongings) — light rust tone
+   ========================================= */
+
+.mcde.sheet .mcde-econ-box{
+  border: 1px solid rgba(55,35,20,0.55);
+  border-radius: 8px;
+  padding: 10px 10px 8px;
+  background: linear-gradient(180deg,
+    rgba(170, 120, 75, 0.35),
+    rgba(115, 75, 45, 0.28)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255,235,205,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 2px 6px rgba(0,0,0,0.20);
+}
+
+.mcde.sheet .mcde-econ-title{
+  margin: 0 0 8px 0;
+
+  font-family: "Bank Gothic", sans-serif !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: rgba(55,35,22,0.95); /* dark copper text */
+
+  padding-bottom: 6px;
+  position: relative;
+}
+
+/* Copper divider */
+.mcde.sheet .mcde-econ-title::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(90,55,30,0) 0%,
+    rgba(120,75,45,0.85) 25%,
+    rgba(150,95,55,0.95) 50%,
+    rgba(120,75,45,0.85) 75%,
+    rgba(90,55,30,0) 100%
+  );
+
+  opacity: 0.85;
+}
+
+.mcde.sheet .mcde-econ-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.mcde.sheet .mcde-econ-row label{
+  flex: 1 1 auto;
+  opacity: 0.9;
+}
+
+.mcde.sheet .mcde-econ-input{
+  width: 74px;          /* ~3 digits */
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.mcde.sheet .mcde-econ-hint{
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.25;
+  opacity: 0.7;
+}
+
+.mcde.sheet .mcde-items-title{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }

@@ -1,4 +1,4 @@
-<form class="{{cssClass}} flexcol" autocomplete="off">
+<form class="{{cssClass}} flexcol mcde-npc-sheet" autocomplete="off">
 
   <style>
   .mcde-avatar {
@@ -18,16 +18,7 @@
     flex: 1 1 auto;             /* le reste prend l’espace */
     min-width: 0;
   }
-    .wound-track { align-items: center; }
-    .wound-box {
-      width: 12px;
-      height: 12px;
-      border: 1px solid rgba(120, 0, 0, 0.8);
-      border-radius: 2px;
-      background: rgba(255,255,255,0.25);
-      cursor: pointer;
-    }
-    .wound-box.filled { background: rgba(160, 0, 0, 0.75); }
+
 
     /* ============================
    NPC sheet: item hover controls
@@ -72,78 +63,101 @@
 
   </style>
 
-  <!-- ================= HEADER ================= -->
-  <header class="sheet-header flexrow" style="align-items:flex-start; gap:12px;">
+<!-- ================= HEADER ================= -->
+<header class="sheet-header flexrow" style="align-items:flex-start; gap:12px;">
 
-    <div class="mcde-avatar" style="flex:0 0 140px;">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" style="width:140px; height:140px; object-fit:cover;">
+  <div class="mcde-avatar-wrap" style="flex:0 0 140px;">
+    <div class="mcde-avatar-frame">
+      <img class="profile-img mcde-avatar"
+           src="{{actor.img}}"
+           data-edit="img"
+           title="{{actor.name}}"/>
     </div>
+  </div>
 
-    <div class="header-fields flexcol" style="flex:1; min-width:0; margin-left:0;">
-      <h1>
-        <input name="name" type="text" value="{{actor.name}}" placeholder="NPC Name"/>
-      </h1>
+  <div class="header-fields flexcol" style="flex:1; min-width:0; margin-left:0;">
+    <h1>
+      <input name="name" type="text" value="{{actor.name}}" placeholder="NPC Name"/>
+    </h1>
 
-      <!-- NPC Type -->
- <div class="npc-type" style="display:flex; align-items:center; gap:8px;">
-
-   {{#if (eq system.npcType "trooper")}}
-     <img src="systems/mutant-chronicles-diesel-edition/assets/npctypes/trooperslogo.png" style="width:20px; height:20px; object-fit:contain; border:none; box-shadow:none; background:transparent; outline:none;">
-   {{/if}}
-
-   {{#if (eq system.npcType "elite")}}
-     <img src="systems/mutant-chronicles-diesel-edition/assets/npctypes/eliteslogo.png" style="width:20px; height:20px; object-fit:contain; border:none; box-shadow:none; background:transparent; outline:none;">
-   {{/if}}
-
-   {{#if (eq system.npcType "horde_squad")}}
-     <img src="systems/mutant-chronicles-diesel-edition/assets/npctypes/hordessquadslogo.png" style="width:20px; height:20px; object-fit:contain; border:none; box-shadow:none; background:transparent; outline:none;">
-   {{/if}}
-
-   <div>
-     <label>Type</label>
-     <select name="system.npcType">
+<!-- NPC Type -->
+<div class="npc-type">
+  <div class="npc-type-row">
+    <div class="npc-type-left">
+      <div class="npc-type-label">TYPE</div>
+      <div class="npc-type-select">
+        <select name="system.npcType">
           <option value="trooper" {{#if (eq system.npcType "trooper")}}selected{{/if}}>Troopers</option>
           <option value="elite" {{#if (eq system.npcType "elite")}}selected{{/if}}>Elites</option>
-          <option value="horde_squad" {{#if (eq system.npcType "horde_squad")}}selected{{/if}}>Hordes & Squads</option>
+          <option value="horde_squad" {{#if (eq system.npcType "horde_squad")}}selected{{/if}}>Hordes &amp; Squads</option>
         </select>
       </div>
     </div>
 
-      <!-- Soak -->
-      <div class="soak" style="margin-bottom:6px; display:flex; gap:8px; align-items:center;">
-  <label>Soak</label>
-
-  <input type="number"
-         name="system.soak.value"
-         value="{{system.soak.value}}"
-         min="0"
-         step="1"
-         style="width:60px;"/>
-
-  <input type="text"
-         name="system.soak.type"
-         value="{{system.soak.type}}"
-         placeholder="Nature (e.g. Incorporeal)"
-         style="flex:1;"/>
+    <div class="npc-type-iconwrap">
+      {{#if (eq system.npcType "trooper")}}
+        <img class="npc-type-icon" src="systems/mutant-chronicles-diesel-edition/assets/npctypes/trooperslogo.png">
+      {{/if}}
+      {{#if (eq system.npcType "elite")}}
+        <img class="npc-type-icon" src="systems/mutant-chronicles-diesel-edition/assets/npctypes/eliteslogo.png">
+      {{/if}}
+      {{#if (eq system.npcType "horde_squad")}}
+        <img class="npc-type-icon" src="systems/mutant-chronicles-diesel-edition/assets/npctypes/hordessquadslogo.png">
+      {{/if}}
+    </div>
+  </div>
 </div>
 
-      <!-- Wounds -->
-      <div class="wounds flexcol" style="gap:6px;">
-        <div class="flexrow" style="align-items:center; gap:8px;">
-          <label>Wounds</label>
-          <input type="number" name="system.wounds.total" value="{{system.wounds.total}}" min="0" style="width:60px"/>
-          <small style="opacity:0.8;">Suffered: {{system.wounds.current}}</small>
-        </div>
+    <!-- Soak -->
+    <div class="soak" style="margin-bottom:6px; display:flex; gap:8px; align-items:center;">
+      <label>Soak</label>
 
-        <div class="wound-track flexrow" style="gap:4px; flex-wrap:wrap;">
-          {{#each woundBoxes as |box|}}
-            <div class="wound-box {{#if box.filled}}filled{{/if}}" data-index="{{box.index}}"></div>
-          {{/each}}
-        </div>
-      </div>
+      <input type="number"
+             name="system.soak.value"
+             value="{{system.soak.value}}"
+             min="0"
+             step="1"
+             style="width:60px;"/>
 
+      <input type="text"
+             name="system.soak.type"
+             value="{{system.soak.type}}"
+             placeholder="Nature (e.g. Incorporeal)"
+             style="flex:1;"/>
     </div>
-  </header>
+
+    <!-- Wounds -->
+<div class="wounds flexcol mcde-npc-wounds">
+
+  <div class="wounds-row flexrow">
+    <label>Wounds</label>
+
+    <input
+      type="number"
+      name="system.wounds.total"
+      value="{{system.wounds.total}}"
+      min="0"
+      class="wounds-total"
+    />
+
+    <small class="wounds-suffered">
+      Suffered: {{system.wounds.current}}
+    </small>
+  </div>
+
+  <div class="wound-track flexrow">
+    {{#each woundBoxes as |box|}}
+      <div
+        class="wound-box {{#if box.filled}}filled{{/if}}"
+        data-index="{{box.index}}">
+      </div>
+    {{/each}}
+  </div>
+
+</div>
+
+</div><!-- /.header-fields -->
+</header>
 
   <!-- ================= TABS ================= -->
   <nav class="sheet-tabs tabs" data-group="primary">
@@ -333,29 +347,34 @@
             <a class="mcde-weapon-add" title="Add weapon" style="flex:0 0 auto;">+</a>
           </h3>
 
-<ul class="items-list mcde-items" style="list-style:none; padding-left:0; margin-left:0;">
+<ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
   {{#each actor.items as |item|}}
     {{#if (eq item.type "weapon")}}
       <li class="item mcde-weapon" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
         <div class="item-name" style="display:flex; align-items:center; gap:8px;">
           <h4 style="margin:0;">
-              <strong>
-                <a class="mcde-roll" data-roll="weapon" data-item-id="{{item._id}}">{{item.name}}</a>
-                <span style="opacity:0.75; font-weight:normal;">
-                  ({{#if (eq item.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}})
-                </span>
-              </strong>
+            <strong>
+              <a class="mcde-roll" data-roll="weapon" data-item-id="{{item._id}}">{{item.name}}</a>
+              <span style="opacity:0.75; font-weight:normal;">
+                (
+                {{#if (or (eq item.system.weaponType "melee") (eq item.system.weaponType "unarmed"))}}
+                  Melee
+                {{else}}
+                  Ranged
+                {{/if}}
+                )
+              </span>
+            </strong>
           </h4>
         </div>
 
-          <div class="item-detail" style="opacity:0.9;">
-            {{#if (eq item.system.weaponType "ranged")}}
-              Range: <strong>{{item.system.stats.range}}</strong> |
-              Mode: <strong>{{item.system.stats.mode}}</strong> |
-            {{/if}}
-            Damage: <strong>{{item.system.damage.base}}</strong> + <strong>{{{dsValue item.system.damage.dsy}}}</strong>
-          </div>
-
+        <div class="item-detail" style="opacity:0.9;">
+          {{#if (or (eq item.system.weaponType "ranged") (eq item.system.weaponType "heavy") (eq item.system.weaponType "mounted"))}}
+            Range: <strong>{{item.system.stats.range}}</strong> |
+            Mode: <strong>{{item.system.stats.mode}}</strong> |
+          {{/if}}
+          Damage: <strong>{{item.system.damage.base}}</strong> + <strong>{{{dsValue item.system.damage.dsy}}}</strong>
+        </div>
 
         {{#if item.system.qualities.length}}
           <div class="item-detail" style="display:flex; flex-wrap:wrap; gap:4px;">
@@ -375,7 +394,7 @@
       </li>
     {{/if}}
   {{/each}}
-  </ul>
+</ul>
 
           <!-- SPECIAL ABILITIES -->
           <h3 style="display:flex; align-items:center; justify-content:space-between; margin-top:12px;">

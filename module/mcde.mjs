@@ -52,6 +52,53 @@ function mcHitLocation(n) {
   return "LEFT LEG";
 }
 
+ // =========================================
+ // MCDE — Confirm dialog helper (Foundry v13)
+ // Ensures: title is shown + mcde-dialog class + returns boolean
+ // =========================================
+ async function mcdeConfirmV13({ title, content }) {
+   const dlg = new foundry.applications.api.DialogV2({
+     window: { title },
+     content,
+     buttons: [
+       { action: "yes", label: "Yes", icon: "fas fa-check", default: true },
+       { action: "no",  label: "No",  icon: "fas fa-times" }
+     ]
+   });
+
+   await dlg.render(true);
+   dlg.element?.classList.add("mcde-dialog");
+
+   return await new Promise((resolve) => {
+     const el = dlg.element; // <dialog>
+     if (!el) return resolve(false);
+
+     let done = false;
+     const finish = (val) => {
+       if (done) return;
+       done = true;
+       el.removeEventListener("click", onClick, true);
+       el.removeEventListener("close", onClose, true);
+       resolve(val);
+     };
+
+     const onClick = (ev) => {
+       const btn = ev.target?.closest?.("button[data-action]");
+       if (!btn) return;
+       finish(btn.dataset.action === "yes");
+       dlg.close();
+     };
+
+     const onClose = () => finish(false);
+
+     el.addEventListener("click", onClick, true);
+     el.addEventListener("close", onClose, true);
+   });
+ }
+// Alias: keep calls short everywhere
+const mcdeConfirm = mcdeConfirmV13;
+
+
 function computeTestSuccesses(dice, tn, focus, repercussionFrom = 20, autoSuccesses = 0) {
   let total = 0;
   let repercussions = 0;
@@ -276,14 +323,16 @@ function renderTestCard(state) {
   const complications = Number(calc.repercussions) || 0;
 
   const resultsHtml = `
-    <div class="mcde-results" style="margin-top:6px;">
-      Successes: <strong>${total}</strong>
-      | Difficulty: <strong>D${difficulty}</strong>
-      | Net: <strong>${net}</strong>
-      | Complications: <strong>${complications}</strong>
-      <span style="opacity:0.7;">(Repercussion ${repercussionFrom}–20)</span>
-    </div>
-  `;
+  <div class="mcde-results">
+    <span class="mcde-results-successes">Successes: <strong>${total}</strong></span>
+    ${complications > 0 ? `
+      <span class="mcde-results-comp">
+        Complications: <strong>${complications}</strong>
+        <span class="mcde-results-rep">(Repercussion ${repercussionFrom}–20)</span>
+      </span>
+    ` : ""}
+  </div>
+`;
 
   // 3) Boutons (tes blocs existants)
   const actorType = String(state.actorType ?? "");
@@ -293,31 +342,37 @@ function renderTestCard(state) {
 
   const canAddAuto1 = (!state.chronicleUsed) && (isCharacter || isNemesis);
   const add1Label = isNemesis ? "Add a 1 (6 DSP)" : "Add a 1 (2 CP)";
+  // Attack state
+const atk = state.attack ?? null;
+  // 3B) Gain Momentum (PC only, if Net >= 1, only once)
+const isPC = state.actorType === "character";
+const canGainMomentum = isPC && net >= 1 && !state.momentumGranted;
 
-  const add1Html = canAddAuto1
-    ? `<div class="mcde-actions" style="margin-top:6px;">
-         <button type="button" class="mcde-btn" data-action="chronicle-add1">${add1Label}</button>
-       </div>`
-    : "";
+  // 3) Actions (grouped)
+const actionsHtml = (canAddAuto1 || (atk && !atk.damageRolled) || canGainMomentum)
+  ? `<div class="mcde-actions">
+      ${canAddAuto1
+        ? `<button type="button"
+                   class="mcde-btn mcde-btn-secondary"
+                   data-action="chronicle-add1">${add1Label}</button>`
+        : ""}
 
-  const atk = state.attack ?? null;
-  const rollDamageHtml = (atk && !atk.damageRolled)
-    ? `<div class="mcde-actions" style="margin-top:6px;">
-         <button type="button" class="mcde-btn" data-action="roll-damage">Roll Damage</button>
-       </div>`
-    : "";
+      ${canGainMomentum
+        ? `<button type="button"
+                   class="mcde-btn mcde-btn-secondary"
+                   data-action="gain-momentum"
+                   data-amount="${net}">
+             Gain Momentum (+${net})
+           </button>`
+        : ""}
 
-      // 3B) Gain Momentum (PC only, if Net >= 1, only once)
-  const isPC = state.actorType === "character";
-  const canGainMomentum = isPC && net >= 1 && !state.momentumGranted;
-
-  const gainMomentumHtml = canGainMomentum
-    ? `<div class="mcde-actions" style="margin-top:6px;">
-         <button type="button" class="mcde-btn" data-action="gain-momentum" data-amount="${net}">
-           Gain Momentum (+${net})
-         </button>
-       </div>`
-    : "";
+      ${(atk && !atk.damageRolled)
+        ? `<button type="button"
+                   class="mcde-btn mcde-btn-primary mcde-btn-roll-damage"
+                   data-action="roll-damage">Roll Damage</button>`
+        : ""}
+     </div>`
+  : "";
 
 
   // 4) Return à la fin
@@ -337,9 +392,7 @@ function renderTestCard(state) {
 
     <div class="mcde-dice">${diceHtml}</div>
     ${resultsHtml}
-    ${add1Html}
-    ${rollDamageHtml}
-    ${gainMomentumHtml}
+    ${actionsHtml}
     <small>Click a die to reroll (AUTO-1 die cannot be rerolled).</small>
   </div>`;
 }
@@ -428,18 +481,28 @@ function getTargetSoak(actor, locKey) {
   return 0;
 }
 
-async function setDeadStatus(token, active) {
+async function setDeadStatus(token, dead) {
   try {
-    if (token?.document?.toggleStatusEffect) {
-      await token.document.toggleStatusEffect("dead", { active });
+    // Prefer actor-level status (Foundry v12+)
+    const actor = token?.actor ?? token?.document?.actor;
+    if (actor?.toggleStatusEffect) {
+      await actor.toggleStatusEffect("dead", { active: !!dead });
       return;
     }
-  } catch (e) {}
-  try {
-    if (token?.toggleEffect) {
-      await token.toggleEffect("dead", { active });
+
+    // Fallback (older APIs)
+    if (token?.document?.toggleStatusEffect) {
+      await token.document.toggleStatusEffect("dead", { active: !!dead });
+      return;
     }
-  } catch (e) {}
+
+    // Last resort (very old)
+    if (token?.toggleEffect) {
+      await token.toggleEffect("dead", { active: !!dead });
+    }
+  } catch (e) {
+    console.warn("MCDE | setDeadStatus failed", e);
+  }
 }
 
 function _fillBoxes(arr, n) {
@@ -806,14 +869,39 @@ async function renderDamageCard(state) {
   return `
   <div class="mcde-card" data-mcde-card="1">
     <header class="mcde-card-header">
-  <div class="mcde-card-kind">DAMAGE</div>
-  ${weaponName ? `<div class="mcde-card-title">${foundry.utils.escapeHTML(weaponName)}</div>` : ""}
-  </header>
-    <div>Mode: <strong>${mode}</strong> | Damage: <strong>${totalDamage}</strong> | Effects: <strong>${effects}</strong></div>
-    ${qualitiesHtmlFinal}
-    <div>Location: <button type="button" class="mcde-die" data-action="reroll" data-kind="location" data-index="0">${locationD20}</button>${locTag} ⇒ <strong>${locLabel}</strong></div>
-    <div class="mcde-dice">DSD: ${dsdHtml}</div>
+      <div class="mcde-card-kind">DAMAGE</div>
+      ${weaponName ? `<div class="mcde-card-title">${foundry.utils.escapeHTML(weaponName)}</div>` : ""}
+    </header>
+
+    <div class="mcde-dmg-mode">Mode: <strong>${mode}</strong></div>
+
+    <div class="mcde-dmg-location">
+  <span class="mcde-dmg-location-label">Location:</span>
+
+  <button type="button"
+          class="mcde-die"
+          data-action="reroll"
+          data-kind="location"
+          data-index="0">
+    ${locationD20}
+  </button>
+
+  <span class="mcde-dmg-location-result">
+    ⇒ <strong>${locLabel}</strong>
+  </span>
+</div>
+
+    <div class="mcde-dice">Dark Symmetry Dice: ${dsdHtml}</div>
+
+   ${qualitiesHtmlFinal}
+
+    <div class="mcde-dmg-summary">
+      <span class="mcde-dmg-total">Damage: <strong>${totalDamage}</strong></span>
+      <span class="mcde-dmg-effects">Effects: <strong>${effects}</strong></span>
+    </div>
+
     ${applyDamageHtml}
+
     <small>Click a die (DSD or Location) to reroll.</small>
   </div>`;
 }
@@ -1206,7 +1294,7 @@ function ensureTrackersUI() {
   wrap.style.pointerEvents = "auto";
 
   const trackerBoxStyle =
-    "min-width:210px; padding:6px 8px; border:1px solid rgba(255,255,255,0.2); border-radius:6px; background:rgba(0,0,0,0.55);";
+    "min-width:210px; padding:6px 8px; border:1px; border-radius:6px;";
   const rowStyle =
     "margin-top:6px; display:flex; gap:6px; align-items:center; justify-content:flex-end;";
   const btnStyle = "width:32px;";
@@ -1223,7 +1311,7 @@ function ensureTrackersUI() {
         <input type="number" data-action="set" value="0" min="0" style="${inputStyle}">
         <button type="button" data-action="inc" style="${btnStyle}">+</button>
       </div>
-      <div style="margin-top:4px; font-size:11px; color:rgba(255,255,255,0.7);">GM only</div>
+      <div class="mcde-tracker-sub">GM only</div>
     </div>
 
     <div class="mcde-tracker" data-tracker="momentum" style="${trackerBoxStyle}">
@@ -1236,7 +1324,7 @@ function ensureTrackersUI() {
         <input type="number" data-action="set" value="0" min="0" style="${inputStyle}">
         <button type="button" data-action="inc" style="${btnStyle}">+</button>
       </div>
-      <div style="margin-top:4px; font-size:11px; color:rgba(255,255,255,0.7);">Everyone</div>
+      <div class="mcde-tracker-sub">Everyone</div>
     </div>
   `;
 
@@ -1588,11 +1676,32 @@ const autoSoak = {
 };
 
 for (const armor of armorItems) {
-  autoSoak.head      += Number(armor.system?.soak?.head ?? 0);
-  autoSoak.torso     += Number(armor.system?.soak?.torso ?? 0);
-  autoSoak.left_arm  += Number(armor.system?.soak?.left_arm ?? 0);
-  autoSoak.right_arm += Number(armor.system?.soak?.right_arm ?? 0);
-  autoSoak.legs      += Number(armor.system?.soak?.legs ?? 0);
+  const soak = armor.system?.soak ?? {};
+
+  autoSoak.head = Math.max(
+    autoSoak.head,
+    Number(soak.head ?? 0) || 0
+  );
+
+  autoSoak.torso = Math.max(
+    autoSoak.torso,
+    Number(soak.torso ?? 0) || 0
+  );
+
+  autoSoak.left_arm = Math.max(
+    autoSoak.left_arm,
+    Number(soak.left_arm ?? soak.leftArm ?? 0) || 0
+  );
+
+  autoSoak.right_arm = Math.max(
+    autoSoak.right_arm,
+    Number(soak.right_arm ?? soak.rightArm ?? 0) || 0
+  );
+
+  autoSoak.legs = Math.max(
+    autoSoak.legs,
+    Number(soak.legs ?? 0) || 0
+  );
 }
 
 context.autoSoak = autoSoak;
@@ -1604,20 +1713,31 @@ context.autoSoak = autoSoak;
   // -------------------------------------------------
   // Compute armor auto-soak (sum of all embedded armor items)
   // -------------------------------------------------
-  _computeArmorAutoSoak() {
-    const armorItems = this.actor.items.filter(i => i.type === "armor");
-    const autoSoak = { head: 0, torso: 0, left_arm: 0, right_arm: 0, legs: 0 };
+_computeArmorAutoSoak() {
+  const armorItems = this.actor.items.filter(i => i.type === "armor");
+  const autoSoak = { head: 0, torso: 0, left_arm: 0, right_arm: 0, legs: 0 };
 
-    for (const armor of armorItems) {
-      const soak = armor.system?.soak ?? {};
-      autoSoak.head      += Number(soak.head ?? 0) || 0;
-      autoSoak.torso     += Number(soak.torso ?? 0) || 0;
-      autoSoak.left_arm  += Number(soak.left_arm ?? soak.leftArm ?? 0) || 0;
-      autoSoak.right_arm += Number(soak.right_arm ?? soak.rightArm ?? 0) || 0;
-      autoSoak.legs      += Number(soak.legs ?? 0) || 0;
-    }
-    return autoSoak;
+  for (const armor of armorItems) {
+    const soak = armor.system?.soak ?? {};
+
+    autoSoak.head = Math.max(autoSoak.head, Number(soak.head ?? 0) || 0);
+    autoSoak.torso = Math.max(autoSoak.torso, Number(soak.torso ?? 0) || 0);
+
+    autoSoak.left_arm = Math.max(
+      autoSoak.left_arm,
+      Number(soak.left_arm ?? soak.leftArm ?? 0) || 0
+    );
+
+    autoSoak.right_arm = Math.max(
+      autoSoak.right_arm,
+      Number(soak.right_arm ?? soak.rightArm ?? 0) || 0
+    );
+
+    autoSoak.legs = Math.max(autoSoak.legs, Number(soak.legs ?? 0) || 0);
   }
+
+  return autoSoak;
+}
 
   
   activateListeners(html) {
@@ -1726,9 +1846,237 @@ for (let l = 0; l <= 4; l++) {
       await this.actor.update({ [trackPath(track)]: next });
     };
 
+    // ========================================
+    // Set Wounds (from STR + PHY) helper
+    // ========================================
+    const mcdeWoundProfileFromTotal = (total) => {
+      const t = Number(total) || 0;
+
+      // NOTE: tes ranges se chevauchent à 20 (18-20 et 20-21).
+      // On tranche: si t >= 20, on applique le palier 20-21 (plus "haut").
+      if (t >= 30) return { head: 5, torso: 11, rightArm: 7, leftArm: 7, rightLeg: 9, leftLeg: 9, serious: 9, critical: 6 };
+      if (t >= 28) return { head: 5, torso: 10, rightArm: 7, leftArm: 7, rightLeg: 8, leftLeg: 8, serious: 9, critical: 5 };
+      if (t >= 26) return { head: 5, torso: 10, rightArm: 6, leftArm: 6, rightLeg: 8, leftLeg: 8, serious: 8, critical: 5 };
+      if (t >= 24) return { head: 4, torso: 9,  rightArm: 6, leftArm: 6, rightLeg: 7, leftLeg: 7, serious: 8, critical: 5 };
+      if (t >= 22) return { head: 4, torso: 9,  rightArm: 5, leftArm: 5, rightLeg: 7, leftLeg: 7, serious: 7, critical: 4 };
+      if (t >= 20) return { head: 4, torso: 8,  rightArm: 5, leftArm: 5, rightLeg: 6, leftLeg: 6, serious: 7, critical: 4 };
+      if (t >= 18) return { head: 3, torso: 8,  rightArm: 4, leftArm: 4, rightLeg: 6, leftLeg: 6, serious: 6, critical: 4 };
+      if (t >= 16) return { head: 3, torso: 7,  rightArm: 4, leftArm: 4, rightLeg: 5, leftLeg: 5, serious: 6, critical: 3 };
+      if (t >= 14) return { head: 3, torso: 7,  rightArm: 3, leftArm: 3, rightLeg: 5, leftLeg: 5, serious: 5, critical: 3 };
+      if (t >= 12) return { head: 2, torso: 6,  rightArm: 3, leftArm: 3, rightLeg: 4, leftLeg: 4, serious: 5, critical: 3 };
+      if (t >= 10) return { head: 2, torso: 6,  rightArm: 2, leftArm: 2, rightLeg: 4, leftLeg: 4, serious: 4, critical: 2 };
+      return          { head: 2, torso: 5,  rightArm: 2, leftArm: 2, rightLeg: 3, leftLeg: 3, serious: 4, critical: 2 };
+    };
+
+    const mcdeClampLocCurrentToMax = (cur, max) => {
+      const c = Number(cur ?? 0) || 0;
+      const m = Math.max(0, Number(max ?? 0) || 0);
+      return Math.max(0, Math.min(c, m));
+    };
+
+    // ========================================
+    // REST helpers (display-only healing)
+    // ========================================
+    const mcdeHasAnyTrue = (arr) => Array.isArray(arr) && arr.some(Boolean);
+
+    const mcdeGetSkillTNFocus = (actor, skillKey) => {
+      const sys = actor?.system ?? {};
+      const sk = sys.skills?.[skillKey] ?? {};
+      const attrKey = sk.attribute;
+      const attrVal = Number(sys.attributes?.[attrKey]?.value ?? 0) || 0;
+      const exp = Number(sk.expertise ?? 0) || 0;
+      const foc = Number(sk.focus ?? 0) || 0;
+      return { tn: attrVal + exp, focus: foc, attrKey };
+    };
+
+    const mcdeRollRaw = async ({ actor, label, tn, focus, diceCount = 2, difficulty = 1 }) => {
+      const roll = await (new Roll(`${diceCount}d20`)).evaluate({ async: true });
+      const dice = roll?.dice?.[0]?.results?.map(r => Number(r.result))?.filter(n => Number.isFinite(n)) ?? [];
+      const calc = computeTestSuccesses(dice, tn, focus, 20, 0);
+      const html = renderTestCard({
+        label,
+        tn,
+        focus,
+        dice,
+        difficulty,
+        rerolled: false,
+        chronicleIndex: null,
+        repercussionFrom: 20,
+        autoSuccesses: 0
+      });
+      return { roll, dice, calc, html };
+    };
+
+    // =====================================
+// Damage Bonus: Set from attributes
+// =====================================
+
+const calcDamageBonusFromAttribute = (v) => {
+  const val = Number(v ?? 0) || 0;
+
+  if (val <= 8) return 0;
+  if (val === 9) return 1;
+  if (val <= 11) return 2;     // 10-11
+  if (val <= 13) return 3;     // 12-13
+  if (val <= 15) return 4;     // 14-15
+  return 5;                    // 16+
+};
+
+html.on("click", ".mcde-set-damage-bonus", async (ev) => {
+  ev.preventDefault();
+  ev.stopPropagation();
+
+  const actor = this.actor;
+
+  const awareness = Number(actor.system?.attributes?.awareness?.value ?? 0) || 0;
+  const strength  = Number(actor.system?.attributes?.strength?.value ?? 0) || 0;
+
+  const newRanged = calcDamageBonusFromAttribute(awareness);
+  const newMelee  = calcDamageBonusFromAttribute(strength);
+
+  const currentRanged = Number(actor.system?.damage_bonus?.ranged?.value ?? 0) || 0;
+  const currentMelee  = Number(actor.system?.damage_bonus?.melee?.value ?? 0) || 0;
+
+  const content = `
+    <p>This will recalculate <b>Damage Bonuses</b> from attributes.</p>
+    <hr/>
+    <p>
+      <b>Awareness</b>: ${awareness} → 
+      <b>Ranged Bonus</b>: ${newRanged}
+    </p>
+    <p>
+      <b>Strength</b>: ${strength} → 
+      <b>Melee Bonus</b>: ${newMelee}
+    </p>
+    <hr/>
+    <p style="opacity:.8">
+      Current: Ranged ${currentRanged} | Melee ${currentMelee}
+    </p>
+  `;
+
+  const ok = await mcdeConfirm({
+  title: "Set Damage Bonus",
+  content,
+  classes: ["mcde-dialog"]
+});
+
+  if (!ok) return;
+
+  await actor.update({
+    "system.damage_bonus.ranged.value": newRanged,
+    "system.damage_bonus.melee.value": newMelee
+  });
+});
+
+    // =====================================
+// Influence: manual value + "Set Influence"
+// Personality -> bonus mapping
+// =====================================
+const calcInfluenceFromPersonality = (p) => {
+  const v = Number(p ?? 0) || 0;
+  if (v <= 8) return 0;
+  if (v === 9) return 1;
+  if (v <= 11) return 2;     // 10-11
+  if (v <= 13) return 3;     // 12-13
+  if (v <= 15) return 4;     // 14-15
+  return 5;                  // >15
+};
+
+html.on("click", ".mcde-set-influence", async (ev) => {
+  ev.preventDefault();
+  ev.stopPropagation();
+
+  const actor = this.actor;
+
+  // IMPORTANT: adapte la clé si ton attribut s'appelle autrement.
+  const personality = Number(actor.system?.attributes?.personality?.value ?? 0) || 0;
+  const next = calcInfluenceFromPersonality(personality);
+
+  const current = Number(actor.system?.belongings?.influence ?? 0) || 0;
+
+  const content = `
+    <p>This will recalculate <b>Influence</b> from <b>Personality</b>.</p>
+    <p>Personality: <b>${personality}</b> → Influence: <b>${next}</b></p>
+    <p style="opacity:.8">Current stored value: <b>${current}</b></p>
+  `;
+
+  const ok = await mcdeConfirm({
+  title: "Set Influence",
+  content,
+  classes: ["mcde-dialog"]
+});
+
+  if (!ok) return;
+
+  await actor.update({ "system.belongings.influence": next });
+});
+
+html.on("change", "input[name='system.belongings.assets']", async (ev) => {
+  const v = Math.max(0, Math.min(999, Math.floor(Number(ev.currentTarget.value ?? 0) || 0)));
+  if (Number(ev.currentTarget.value) !== v) ev.currentTarget.value = v;
+  await this.actor.update({ "system.belongings.assets": v });
+});
+
+    // Tainted de là
+    const getTainted = () => {
+  const t = Number(this.actor.system.combat?.tainted ?? 0);
+  return Number.isFinite(t) ? Math.max(0, Math.floor(t)) : 0;
+};
+
+const applyTaintedMask = () => {
+  const root = html[0];
+  if (!root) return;
+
+  const group = root.querySelector(`.mcde-wound-group[data-track="mentalWounds"]`);
+  if (!group) return;
+
+  const boxes = Array.from(group.querySelectorAll(".mcde-wound-box"));
+  const tainted = Math.min(getTainted(), boxes.length);
+  const allowed = Math.max(0, boxes.length - tainted);
+
+  boxes.forEach((box, idx) => {
+    box.classList.toggle("mcde-disabled", idx >= allowed);
+  });
+};
+
+const sanitizeMentalWounds = async () => {
+  const cur = Array.isArray(this.actor.system.combat?.mentalWounds)
+    ? [...this.actor.system.combat.mentalWounds]
+    : [];
+
+  const tainted = Math.min(getTainted(), cur.length);
+  const allowed = Math.max(0, cur.length - tainted);
+
+  let changed = false;
+
+  for (let i = allowed; i < cur.length; i++) {
+    if (cur[i]) {
+      cur[i] = false;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    await this.actor.update({
+      "system.combat.mentalWounds": cur
+    });
+  }
+};
+// Tainted jusque là
+
+// Applique le masque une première fois au render
+    applyTaintedMask();
+
     const setProgress = async (track, index) => {
       const cur = Array.isArray(this.actor.system.combat?.[track]) ? [...this.actor.system.combat[track]] : [];
       if (index < 0 || index >= cur.length) return;
+
+      // --- TAINTED blocks the right-most mental boxes ---
+      if (track === "mentalWounds") {
+        const tainted = Math.min(getTainted(), cur.length);
+        const allowed = Math.max(0, cur.length - tainted);
+        if (index >= allowed) return; // click ignored on disabled zone
+      }
 
       const clickedIsFilled = !!cur[index];
       const next = cur.slice();
@@ -1747,6 +2095,7 @@ for (let l = 0; l <= 4; l++) {
       const track = group?.dataset?.track;
       if (!track) return;
       await resizeTrack(track, ev.currentTarget.value);
+      if (track === "mentalWounds") applyTaintedMask();
     });
 
     html.on("click", ".mcde-wound-group .mcde-wound-box", async (ev) => {
@@ -1756,6 +2105,198 @@ for (let l = 0; l <= 4; l++) {
       if (!track) return;
       const index = Number(box.dataset.index);
       await setProgress(track, index);
+    });
+
+html.on("change", ".mcde-tainted-input", async (ev) => {
+  const t = Math.max(0, Math.floor(Number(ev.currentTarget.value ?? 0) || 0));
+  await this.actor.update({ "system.combat.tainted": t });
+
+  await sanitizeMentalWounds();
+  applyTaintedMask();
+});
+
+    // ========================================
+    // Loc Doll: Set Wounds button
+    // ========================================
+    html.off("click.mcdeSetWounds", "[data-action='loc-set-wounds']");
+    html.on("click.mcdeSetWounds", "[data-action='loc-set-wounds']", async (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      if (!this.actor?.isOwner) return;
+
+      const ok = await mcdeConfirm({
+  title: "Set Wounds",
+  content: `<p>Apply wound maximums from <b>Strength + Physique</b> and set <b>Mental Wounds</b> from <b>Mental Strength</b>?</p>`
+});
+if (!ok) return;
+
+      const str = Number(this.actor.system?.attributes?.strength?.value ?? 0) || 0;
+      const phy = Number(this.actor.system?.attributes?.physique?.value ?? 0) || 0;
+      const total = str + phy;
+
+      const ms = Number(this.actor.system?.attributes?.mental_strength?.value ?? 0) || 0;
+      const prof = mcdeWoundProfileFromTotal(total);
+      const mentalMax = Math.max(0, Math.floor(ms));
+
+      const curLocs = this.actor.system?.combat?.locations ?? {};
+      const nextLocs = foundry.utils.duplicate(curLocs);
+      const ensure = (k) => {
+        nextLocs[k] ??= {};
+        nextLocs[k].current = mcdeClampLocCurrentToMax(nextLocs[k].current, nextLocs[k].max);
+      };
+
+      // ensure structure first
+      ensure("head"); ensure("torso"); ensure("leftArm"); ensure("rightArm"); ensure("leftLeg"); ensure("rightLeg");
+
+      // set max + clamp current
+      nextLocs.head.max      = prof.head;      nextLocs.head.current      = mcdeClampLocCurrentToMax(nextLocs.head.current, prof.head);
+      nextLocs.torso.max     = prof.torso;     nextLocs.torso.current     = mcdeClampLocCurrentToMax(nextLocs.torso.current, prof.torso);
+      nextLocs.rightArm.max  = prof.rightArm;  nextLocs.rightArm.current  = mcdeClampLocCurrentToMax(nextLocs.rightArm.current, prof.rightArm);
+      nextLocs.leftArm.max   = prof.leftArm;   nextLocs.leftArm.current   = mcdeClampLocCurrentToMax(nextLocs.leftArm.current, prof.leftArm);
+      nextLocs.rightLeg.max  = prof.rightLeg;  nextLocs.rightLeg.current  = mcdeClampLocCurrentToMax(nextLocs.rightLeg.current, prof.rightLeg);
+      nextLocs.leftLeg.max   = prof.leftLeg;   nextLocs.leftLeg.current   = mcdeClampLocCurrentToMax(nextLocs.leftLeg.current, prof.leftLeg);
+
+      // Update locations first (single update)
+      await this.actor.update({ "system.combat.locations": nextLocs });
+
+      // Resize tracks
+      await resizeTrack("seriousWounds", prof.serious);
+      await resizeTrack("criticalWounds", prof.critical);
+      await resizeTrack("mentalWounds", mentalMax);
+
+      // mental taint safety + UI mask
+      await sanitizeMentalWounds();
+      applyTaintedMask();
+
+      this.render(false);
+      ui.notifications?.info?.("Wounds updated.");
+    });
+
+    // (R = Rest) : on branche juste un placeholder pour l’instant
+    html.off("click.mcdeRest", "[data-action='loc-rest']");
+    html.on("click.mcdeRest", "[data-action='loc-rest']", async (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (!this.actor) return;
+
+      const actor = this.actor;
+      const combat = actor.system?.combat ?? {};
+
+      // Determine worst physical wound level (Critical > Serious > Light)
+      const hasCritical = mcdeHasAnyTrue(combat.criticalWounds);
+      const hasSerious = mcdeHasAnyTrue(combat.seriousWounds);
+
+      let physLevel = "Light";
+      let physDelay = "1 Day";
+      let physDiff = 1; // D1
+      if (hasCritical) { physLevel = "Critical"; physDelay = "1 Month"; physDiff = 3; } // D3
+      else if (hasSerious) { physLevel = "Serious"; physDelay = "1 Week"; physDiff = 2; } // D2
+
+      // Momentum (for display only)
+      const momentum = Number(game.settings.get(SYSTEM_ID, "momentum") ?? 0) || 0;
+
+      // Mental Strength for healing + dread reduction
+      const ms = Number(actor.system?.attributes?.mental_strength?.value ?? 0) || 0;
+      const halfMS = Math.floor(ms / 2);
+      const dreadLost = halfMS;
+
+      // --- Physical Rest roll (Resistance)
+      const resParams = mcdeGetSkillTNFocus(actor, "resistance");
+      const phys = await mcdeRollRaw({
+        actor,
+        label: `Physical Rest — ${physLevel} (${physDelay})`,
+        tn: resParams.tn,
+        focus: resParams.focus,
+        diceCount: 2,
+        difficulty: physDiff
+      });
+
+      const physSucceeded = (phys.calc?.total ?? 0) >= physDiff;
+      let physText = "";
+      if (!physSucceeded) {
+        physText = `<strong>Failure:</strong> no natural healing progress (try again after the required rest).`;
+      } else {
+        if (physLevel === "Light") {
+          const base = Math.floor((Number(actor.system?.attributes?.physique?.value ?? 0) || 0) / 2);
+          physText =
+      `<strong>Success:</strong> recover <b>${base}</b> physical wounds (Physique/2, rounded down) ` +
+      `+ <b>1 per Momentum</b> spent (currently ${momentum}).`;
+        } else if (physLevel === "Serious") {
+          physText =
+      `<strong>Success:</strong> recover <b>1</b> serious wound ` +
+      `+ <b>1 per 2 Momentum</b> spent (currently ${momentum} ⇒ +${Math.floor(momentum/2)} max).`;
+        } else {
+          physText =
+      `<strong>Success:</strong> recover <b>1</b> critical wound and remove <b>1</b> critical wound effect.`;
+        }
+      }
+
+      // --- Mental Rest roll (Willpower, D1)
+      const willParams = mcdeGetSkillTNFocus(actor, "willpower");
+      const mental = await mcdeRollRaw({
+        actor,
+        label: `Mental Rest — Willpower (D1)`,
+        tn: willParams.tn,
+        focus: willParams.focus,
+        diceCount: 2,
+        difficulty: 1
+      });
+
+      const mentalSucceeded = (mental.calc?.total ?? 0) >= 1;
+      let mentalText = "";
+      if (!mentalSucceeded) {
+        mentalText = `<strong>Failure:</strong> no mental healing.`;
+      } else {
+        mentalText =
+    `<strong>Success:</strong> recover <b>${halfMS}</b> mental wounds (Mental Strength/2, rounded down) ` +
+    `+ <b>1 per Momentum</b> spent (currently ${momentum}).`;
+      }
+
+      // Dread reduction is automatic (no roll)
+      const dreadText =
+        `Natural rest: recover <b>${dreadLost}</b> Dread automatically (Mental Strength/2, rounded down).`;
+
+      // --- Build a single rollcard with both rolls + text
+      const content = `
+        <div class="mcde-card-title" style="margin-bottom:6px;">
+      Rest
+    </div>
+
+          <div style="margin-bottom:10px;">
+            ${phys.html}
+            <div style="margin-top:6px; opacity:.95;">${physText}</div>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            ${mental.html}
+            <div style="margin-top:6px; opacity:.95;">${mentalText}</div>
+          </div>
+
+          <div class="mcde-card" data-mcde-card="1">
+    <header class="mcde-card-header">
+      <div class="mcde-card-kind">REST</div>
+      <div class="mcde-card-title">NATURAL REST</div>
+    </header>
+
+    <div>
+      Recover <strong>${dreadLost}</strong> Dread automatically
+      <span style="opacity:.75;">(Mental Strength / 2, rounded down)</span>
+    </div>
+  </div>
+
+          <div style="opacity:.8; font-size:12px; margin-top:8px;">
+            Wounds should be edited manually on the character sheet when the character is healed.
+          </div>
+        </div>
+      `;
+
+      await ChatMessage.create({
+        content,
+        speaker: ChatMessage.getSpeaker({ actor }),
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        rolls: [phys.roll, mental.roll]
+      });
     });
 
 // ========================================
@@ -1822,11 +2363,25 @@ html.on("click.mcdeReload", ".mcde-reload-bullet, .mcde-reload-bandolier img", a
   async function openWeaponAttackDialog(weapon) {
   const actor = this.actor;
   const chronicleCurrent = Number(actor.system?.chronicle_points?.current ?? 0) || 0;
-  const isRanged = (weapon.system?.weaponType === "ranged");
+  const wt = String(weapon.system?.weaponType ?? "ranged").toLowerCase();
 
-  // ---- Which skill is used
-  const attrKey = isRanged ? "coordination" : "agility";
-  const skillKey = isRanged ? "ranged_weapons" : "close_combat";
+  const RULES = {
+    melee:   { attr: "agility",      skill: "close_combat",   dmgBonus: "melee"  },
+    unarmed: { attr: "agility",      skill: "unarmed_combat", dmgBonus: "melee"  },
+
+    ranged:  { attr: "coordination", skill: "ranged_weapons", dmgBonus: "ranged" },
+    heavy:   { attr: "coordination", skill: "heavy_weapons",  dmgBonus: "ranged" },
+    mounted: { attr: "coordination", skill: "gunnery",        dmgBonus: "ranged" }
+  };
+
+const rule = RULES[wt] ?? RULES.ranged;
+  const isRangedGroup = rule.dmgBonus === "ranged";   // ranged/heavy/mounted
+  const isMeleeGroup  = !isRangedGroup;              // melee/unarmed
+  const isRanged = isRangedGroup;                    // compat: legacy variable used below
+
+// ---- Which skill is used
+const attrKey = rule.attr;
+const skillKey = rule.skill;
 
   const attrVal = Number(actor.system?.attributes?.[attrKey]?.value ?? 0) || 0;
   const exp = Number(actor.system?.skills?.[skillKey]?.expertise ?? 0) || 0;
@@ -1846,7 +2401,7 @@ html.on("click.mcdeReload", ".mcde-reload-bullet, .mcde-reload-bandolier img", a
     qualities.some(q => String(q?.name ?? "").toLowerCase() === "unwieldy");
 
   // Let Rip only for ranged + mode != Munition
-  const canLetRip = isRanged && wMode && wMode.toLowerCase() !== "munition";
+  const canLetRip = isRangedGroup && wMode && wMode.toLowerCase() !== "munition";
   const letRipMax =
     !canLetRip ? 0 :
     (wMode.toLowerCase() === "semi-automatic" ? 1 :
@@ -1899,7 +2454,7 @@ html.on("click.mcdeReload", ".mcde-reload-bullet, .mcde-reload-bandolier img", a
     <input type="hidden" name="letRip" value="0"/>
   `;
 
-  const braceHtml = (!isRanged || !hasUnwieldy) ? "" : `
+  const braceHtml = (!isRangedGroup || !hasUnwieldy) ? "" : `
     <hr/>
     <label style="display:flex; align-items:center; gap:8px;">
       <input type="checkbox" name="brace" />
@@ -1993,59 +2548,7 @@ html.on("click.mcdeReload", ".mcde-reload-bullet, .mcde-reload-bandolier img", a
   new Dialog({
     title: `Attack — ${wName}`,
     content,
-    render: (html) => {
-    const root = html[0];
-    const letRipEl = root.querySelector(".mcde-let-rip");
-    if (!letRipEl) return;
-
-    const over = root.querySelector('input[name="overRip"]');
-    const maxLabel = root.querySelector(".mcde-let-rip-max");
-    const hidden = root.querySelector('input[name="letRip"]');
-
-    const baseMax = Number(letRipEl.dataset.baseMax ?? 0) || 0;
-
-    const bullets = Array.from(letRipEl.querySelectorAll(".mcde-let-rip-bullet"));
-
-    const getMax = () => baseMax + (over?.checked ? 1 : 0);
-
-  const paint = () => {
-    const max = getMax();
-    letRipEl.dataset.max = String(max);
-    if (maxLabel) maxLabel.textContent = String(max);
-
-    const selectedRaw = Number(letRipEl.dataset.selected ?? 0) || 0;
-    const selected = Math.min(selectedRaw, max);
-    if (selected !== selectedRaw) {
-      letRipEl.dataset.selected = String(selected);
-      if (hidden) hidden.value = String(selected);
-    }
-
-    for (const b of bullets) {
-      const v = Number(b.dataset.value ?? 0) || 0;
-      b.src = (v <= selected) ? bulletSrcFull : bulletSrcEmpty;
-      b.style.opacity = (v <= max) ? "0.9" : "0.25";
-      b.style.pointerEvents = (v <= max) ? "auto" : "none";
-    }
-  };
-
-  // Some Foundry DOMs are finicky; listen to multiple events
-  over?.addEventListener("change", paint);
-  over?.addEventListener("click", paint);
-
-for (const b of bullets) {
-  b.addEventListener("click", () => {
-    const v = Number(b.dataset.value ?? 0) || 0;
-    const max = Number(letRipEl.dataset.max ?? 0) || 0;
-    if (v > max) return;
-    letRipEl.dataset.selected = String(v);
-    if (hidden) hidden.value = String(v);
-    paint();
-  });
-}
-
-paint();
-  },
-    buttons: {
+      buttons: {
       roll: {
         label: "Roll Attack",
         callback: async (dlgHtml) => {
@@ -2066,7 +2569,7 @@ paint();
           const brace = !!dlgHtml.find("[name='brace']")[0]?.checked;
 
            // ---- Munition mode: consume 1 reload per attack
- if (weapon.system?.stats?.mode === "Munition") {
+ if (isRangedGroup && weapon.system?.stats?.mode === "Munition") {
    const cur = Number(weapon.system?.reload?.current ?? weapon.system?.reloadUsed ?? 0) || 0;
 
    if (cur <= 0) {
@@ -2082,7 +2585,7 @@ paint();
  }
 
           // ---- Ammo spend for Let Rip
-          if (letRip > 0) {
+          if (isRangedGroup && letRip > 0) {
             const cur = Number(weapon.system?.reload?.current ?? weapon.system?.reloadUsed ?? 0) || 0;
             if (cur < letRip) {
               ui.notifications?.warn?.("Not enough ammo for Let Rip.");
@@ -2138,7 +2641,7 @@ paint();
           }
 
 // ---- Damage
-          const mode = isRanged ? "ranged" : "melee";
+          const mode = (rule.dmgBonus === "ranged") ? "ranged" : "melee";
           const dmgBonus = getDamageBonus(actor, mode); // ✅ bonus EN DÉS (DSD)
 
           // Flat damage = weapon base + item flatBonus
@@ -2166,7 +2669,7 @@ paint();
             attackData: {
               weaponId: weapon.id,
               weaponName: wName,
-              mode: isRanged ? "ranged" : "melee",
+              mode: isRangedGroup ? "ranged" : "melee",
               dsdCount: Number(dsd) || 0,
               flatBonus: Number(flatBonus) || 0,
 
@@ -2568,29 +3071,30 @@ html.find("input[name='system.chronicle_points.max']").on("change", async (ev) =
     });
     
     
-    // --------------------------
-    // Armor: "Set Soaks" button (write summed soak into hit locations)
-    // --------------------------
-    html.on("click", ".mcde-armor-setsoaks", async (ev) => {
-      ev.preventDefault();
-      ev.stopPropagation();
+// --------------------------
+// Armor: "Set Soaks" button (write summed soak into hit locations)
+// --------------------------
+html.on("click", ".mcde-armor-setsoaks", async (ev) => {
+  ev.preventDefault();
+  ev.stopPropagation();
 
-      const auto = this._computeArmorAutoSoak();
-      const go = await Dialog.confirm({
-        title: "Set Soaks",
-        content: `<p>This will overwrite the current Hit Locations soaks with the sum of equipped armors.</p>`
-      });
-      if (!go) return;
+  const auto = this._computeArmorAutoSoak();
 
-      await this.actor.update({
-        "system.combat.locations.head.soak": auto.head,
-        "system.combat.locations.torso.soak": auto.torso,
-        "system.combat.locations.leftArm.soak": auto.left_arm,
-        "system.combat.locations.rightArm.soak": auto.right_arm,
-        "system.combat.locations.leftLeg.soak": auto.legs,
-        "system.combat.locations.rightLeg.soak": auto.legs
-      });
-    });
+const go = await mcdeConfirmV13({
+    title: "Set Soaks",
+    content: `<p>This will overwrite the current Hit Locations soaks with the highest soak per location from equipped armors.</p>`
+  });
+  if (!go) return;
+
+  await this.actor.update({
+    "system.combat.locations.head.soak": auto.head,
+    "system.combat.locations.torso.soak": auto.torso,
+    "system.combat.locations.leftArm.soak": auto.left_arm,
+    "system.combat.locations.rightArm.soak": auto.right_arm,
+    "system.combat.locations.leftLeg.soak": auto.legs,
+    "system.combat.locations.rightLeg.soak": auto.legs
+  });
+});
 
     /* ---------------------------------------------------------
        STATS TAB interactions
@@ -2661,8 +3165,11 @@ html.find("input[name='system.chronicle_points.max']").on("change", async (ev) =
 // PLAYER ROLL CLICKS
 // ==============================
 
-// Click on Attribute header
+// Click on Attribute header (label only; ignore input clicks)
 html.find(".mcde-attr-head").on("click", async (ev) => {
+  // If user clicked an editable control inside the header, do not roll
+  if (ev.target.closest("input, select, textarea, button, a, [contenteditable='true']")) return;
+
   const attrKey = ev.currentTarget.dataset.attr;
   if (!attrKey) return;
 
@@ -2974,6 +3481,11 @@ class MCDENpcSheet extends ActorSheet {
     // Click-to-roll labels (attributes / npc skills / weapons)
     // ----------------------
     html.find(".mcde-roll").on("click", async (ev) => {
+
+      // Don't roll when the user clicks an editable field
+      const t = ev.target;
+      if (t.closest("input, select, textarea, [contenteditable='true']")) return;
+
       ev.preventDefault();
       const el = ev.currentTarget;
       const rollType = el.dataset.roll;
@@ -2987,7 +3499,8 @@ class MCDENpcSheet extends ActorSheet {
         await this._rollNpcWithDSP({ skillKey: el.dataset.skill });
         return;
       }
-// Weapon click = open Attack dialog (NPC/Nemesis) -> roll TEST -> Roll Damage button
+
+      // Weapon click = open Attack dialog (NPC/Nemesis) -> roll TEST -> Roll Damage button
       if (rollType === "weapon") {
         const itemId = el.dataset.itemId;
         const weapon = this.actor.items.get(itemId);
@@ -2996,7 +3509,7 @@ class MCDENpcSheet extends ActorSheet {
         return;
       }
     });
-    
+
     // ---------------------------------------------------------
     // NPC/Nemesis Weapon Attack Dialog (like PCs, but NPC dice rules + Let Rip costs DSP)
     // ---------------------------------------------------------
@@ -3017,8 +3530,17 @@ class MCDENpcSheet extends ActorSheet {
 
       const dspCurrent = await getDSP();
 
-      // Weapon info
-      const isRanged = (weapon.system?.weaponType === "ranged");
+       // Weapon info (grouped like PCs: ranged/heavy/mounted vs melee/unarmed)
+      const wt = String(weapon.system?.weaponType ?? "ranged").toLowerCase();
+      const RULES = {
+        melee:   { dmgBonus: "melee"  },
+        unarmed: { dmgBonus: "melee"  },
+        ranged:  { dmgBonus: "ranged" },
+        heavy:   { dmgBonus: "ranged" },
+        mounted: { dmgBonus: "ranged" }
+      };
+      const rule = RULES[wt] ?? RULES.ranged;
+      const isRangedGroup = rule.dmgBonus === "ranged";
       const wName = weapon.name ?? "Weapon";
       const wRange = String(weapon.system?.stats?.range ?? "");
       const wMode = String(weapon.system?.stats?.mode ?? "");
@@ -3037,7 +3559,7 @@ class MCDENpcSheet extends ActorSheet {
         : `<div style="opacity:0.65; margin-top:6px;"><small>No traits.</small></div>`;
 
       // Let Rip rules (same as PCs) — but no reload display, and costs DSP
-      const canLetRip = isRanged && wMode && wMode.toLowerCase() !== "munition";
+      const canLetRip = isRangedGroup && wMode && wMode.toLowerCase() !== "munition";
       const letRipMax =
         !canLetRip ? 0 :
         (wMode.toLowerCase() === "semi-automatic" ? 1 :
@@ -3080,8 +3602,8 @@ class MCDENpcSheet extends ActorSheet {
           <div>
             <div style="font-weight:700; font-size:14px;">${foundry.utils.escapeHTML(wName)}</div>
             <div style="opacity:0.8; font-size:12px;">
-              Attack Type: <strong>${isRanged ? "Ranged" : "Melee"}</strong>
-              ${isRanged ? ` | Range: <strong>${foundry.utils.escapeHTML(wRange)}</strong> | Firing Mode: <strong>${foundry.utils.escapeHTML(wMode)}</strong>` : ``}
+              Attack Type: <strong>${isRangedGroup ? "Ranged" : "Melee"}</strong>
+              ${isRangedGroup ? ` | Range: <strong>${foundry.utils.escapeHTML(wRange)}</strong> | Firing Mode: <strong>${foundry.utils.escapeHTML(wMode)}</strong>` : ``}
             </div>
             ${traitsHtml}
           </div>
@@ -3211,7 +3733,7 @@ class MCDENpcSheet extends ActorSheet {
               diceCount = clampInt(diceCount, 1, capBeforeAuto);
 
               // Damage payload (Let Rip + damage bonus add DSD dice, not flat)
-              const mode = isRanged ? "ranged" : "melee";
+              const mode = isRangedGroup ? "ranged" : "melee";
               const dmgBonus = getDamageBonus(actor, mode); // bonus EN DÉS (DSD)
 
               const flatBonus =
@@ -3431,9 +3953,14 @@ html.find(".mcde-weapon").on("drop", async (ev) => {
     // Dropzone: accept a Talent item drop
     const tz = html.find(".mcde-talent-dropzone")[0];
     if (tz) {
-      tz.addEventListener("dragover", (ev) => ev.preventDefault());
+      tz.addEventListener("dragover", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+          });
       tz.addEventListener("drop", async (ev) => {
         ev.preventDefault();
+        ev.stopPropagation();                 // <-- IMPORTANT
+        ev.stopImmediatePropagation?.();      // <-- encore mieux si dispo
 
         let data;
         try {
@@ -4125,7 +4652,7 @@ class MCDEWeaponSheet extends ItemSheet {
       classes: ["mcde", "sheet", "item", "weapon"],
       template: `systems/${SYSTEM_ID}/templates/item/weapon-sheet.html`,
       width: 520,
-      height: 620
+      height: 820
     });
   }
 
@@ -4199,6 +4726,27 @@ class MCDEWeaponSheet extends ItemSheet {
         await this.item.update({ "system.qualities": qualities });
       });
     }
+    function autoFitNameInput(input){
+  const maxFont = 22;   // taille normale
+  const minFont = 12;   // taille minimale acceptable
+
+  input.style.fontSize = maxFont + "px";
+
+  // Réinitialise pour mesurer correctement
+  while (input.scrollWidth > input.clientWidth && parseFloat(input.style.fontSize) > minFont){
+    input.style.fontSize = (parseFloat(input.style.fontSize) - 1) + "px";
+  }
+}
+
+// Au chargement
+html.find("input[name='name']").each((i, el) => {
+  autoFitNameInput(el);
+});
+
+// Quand on tape dedans
+html.find("input[name='name']").on("input", function(){
+  autoFitNameInput(this);
+});
   }
 }
 
@@ -4335,6 +4883,13 @@ Hooks.on("preCreateToken", (doc, data, options, userId) => {
   // - character => linked
   // - tout le reste (npc, etc.) => unlinked
   doc.updateSource({ actorLink: actor.type === "character" });
+});
+
+Hooks.on("renderDialog", (app, html) => {
+  // tag only our dialogs
+  if (app?.options?.mcdeSkin) {
+    html.closest("dialog, .window-app")?.classList?.add("mcde-dialog");
+  }
 });
 
 
@@ -4631,7 +5186,38 @@ if (foundryStatusImgs.length) {
 });
 
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
+
+  // -----------------------------------------
+  // Default turn marker (world)
+  // -----------------------------------------
+  if (game.user?.isGM) {
+    const markerPath = `systems/${SYSTEM_ID}/assets/initiative/curplaying.png`;
+    const cur = game.settings.get("core", "combatTrackerConfig") ?? {};
+
+    const existing =
+      cur?.turnMarker?.img ??
+      cur?.turnMarker?.texture ??
+      cur?.turnMarker?.image ??
+      null;
+
+    if (!existing) {
+      const next = foundry.utils.mergeObject(cur, {
+        turnMarker: {
+          enabled: true,
+          animation: "spin",
+          img: markerPath,
+          tint: true
+        }
+      }, { inplace: false });
+
+      await game.settings.set("core", "combatTrackerConfig", next);
+      console.log("MCDE | Default turn marker applied");
+    } else {
+      console.log("MCDE | Turn marker already configured, skipping");
+    }
+  }
+
   // Socket: players request momentum change -> GM applies
   game.socket.on(SOCKET_NS, async (payload) => {
     if (!payload?.type) return;
@@ -4683,21 +5269,69 @@ Hooks.once("ready", () => {
   });
 
   html.find(".mcde-card .mcde-trait[data-tooltip]").on("mouseleave", () => {
-    try { ui?.tooltip?.dismiss?.(); } catch (e) {}
-  });
+  try { ui?.tooltip?.deactivate?.(); } catch (e) {}
+  try { ui?.tooltip?.dismiss?.(); } catch (e) {} // fallback selon version
+});
 
   });
 
   ensureTrackersUI();
   renderTrackersUI();
 
-  console.log("MCDE | ready OK");
+// ================================
+  // AUTO DEAD STATUS SYNC
+  // ================================
+
+  function mcdeIsActorDead(actor) {
+    const sys = actor?.system ?? {};
+
+    if (actor?.type === "npc") {
+      const cur = Number(sys?.wounds?.current ?? 0) || 0;
+      const tot = Number(sys?.wounds?.total ?? 0) || 0;
+      return (tot > 0 && cur >= tot);
+    }
+
+    console.log("MCDE | setDeadStatus is", typeof setDeadStatus);
+
+    const crit = sys?.combat?.criticalWounds;
+    if (Array.isArray(crit) && crit.length > 0) {
+      return crit.every(Boolean);
+    }
+
+    return false;
+  }
+
+  async function mcdeSyncDeadStatus(actor) {
+    const dead = mcdeIsActorDead(actor);
+    const tokens = actor?.getActiveTokens?.(true) ?? [];
+    for (const t of tokens) {
+      await setDeadStatus(t, dead);
+    }
+  }
+
+  Hooks.on("updateActor", async (actor, changes) => {
+  if (!game.user.isGM) return;
+
+  console.log("MCDE | updateActor fired", { actor: actor?.name, changes });
+
+  const has = foundry.utils.hasProperty;
+  const relevant =
+    has(changes, "system.wounds") ||
+    has(changes, "system.wounds.current") ||
+    has(changes, "system.wounds.total") ||
+    has(changes, "system.combat.criticalWounds") ||
+    has(changes, "system.combat");
+
+  if (!relevant) return;
+
+  await mcdeSyncDeadStatus(actor);
 });
 
-Hooks.once("ready", () => {
-  const t = ui?.tooltip;
-  if (t?.options) {
-    t.options.delay = 0;
-    t.options.dismissDelay = 0;
-  }
+const t = ui?.tooltip;
+if (t?.options) {
+  t.options.delay = 0;
+  t.options.dismissDelay = 0;
+}
+
+  console.log("MCDE | ready OK");
 });
