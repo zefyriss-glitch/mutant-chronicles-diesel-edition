@@ -43,7 +43,10 @@ export class MCDEVehicleSheet extends ActorSheet {
 
     // --- Armaments (embedded weapons on the vehicle) ---
     const SYSTEM_ID = MCDEVehicleSheet.SYSTEM_ID;
-    const weapons = (this.actor.items ?? []).filter(i => i.type === "weapon");
+    const weapons = (this.actor.items?.contents ?? Array.from(this.actor.items ?? []))
+      .filter(i => i.type === "weapon")
+      .slice()
+      .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
     const armaments = [];
     for (const w of weapons) {
       const gunnerUuid =
@@ -89,6 +92,26 @@ export class MCDEVehicleSheet extends ActorSheet {
   async activateListeners(html) {
     super.activateListeners(html);
     if (!this.isEditable) return;
+    
+  const $root = this.element;      // jQuery du form complet
+  const rootEl = $root?.[0];       // HTMLElement
+
+  const initSorting = () => {
+    const sorter = globalThis.enableMcdeItemSortingNative;
+    if (typeof sorter === "function") {
+      sorter(this.actor, rootEl, "ul.mcde-veh-armaments-list", "li.item[data-item-id]");
+    } else {
+      console.warn("MCDE | VehicleSheet | enableMcdeItemSortingNative not available");
+    }
+  };
+
+  // init now
+  initSorting();
+
+  // re-init on tab click (certaines tabs peuvent swapper le DOM)
+  $root.find(".sheet-tabs [data-tab]").on("click", () => {
+    setTimeout(initSorting, 0);
+  });
 
     // Click location boxes
     html.on("click", ".mcde-box", async (ev) => {

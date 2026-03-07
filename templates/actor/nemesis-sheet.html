@@ -73,8 +73,7 @@
     </h3>
 
     <ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
-  {{#each actor.items as |item|}}
-    {{#if (eq item.type "weapon")}}
+  {{#each weaponsSorted as |item|}}
       <li class="item mcde-weapon" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
         <div class="item-name" style="display:flex; align-items:center; gap:8px;">
           <h4 style="margin:0;">
@@ -117,7 +116,6 @@
           <a class="item-control mcde-weapon-delete" title="Delete"><i class="fas fa-trash"></i></a>
         </div>
       </li>
-    {{/if}}
   {{/each}}
 </ul>
 
@@ -129,8 +127,7 @@
 
     <div class="mcde-talent-dropzone" style="border:none; padding:0; margin:0;">
       <ul class="items-list mcde-talents mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
-        {{#each actor.items as |item|}}
-          {{#if (eq item.type "talent")}}
+        {{#each talentsSorted as |item|}}
             <li class="item mcde-talent" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
               <details>
                 <summary class="mcde-acc-summary">
@@ -148,7 +145,6 @@
                 <div style="margin-top:6px;">{{{dsify item.system.description}}}</div>
               </details>
             </li>
-          {{/if}}
         {{/each}}
       </ul>
     </div>

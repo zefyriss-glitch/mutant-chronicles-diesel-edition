@@ -465,8 +465,7 @@
         </h3>
 
         <ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
-          {{#each actor.items as |item|}}
-            {{#if (eq item.type "weapon")}}
+          {{#each weaponsSorted as |item|}}
 
         <li class="item mcde-weapon mcde-hover-controls"
     data-item-id="{{item._id}}"
@@ -539,8 +538,7 @@
 </li>
 
 
-            {{/if}}
-          {{/each}}
+            {{/each}}
         </ul>
 
       </section>
@@ -579,8 +577,7 @@
 
 
   <ul class="items-list mcde-armors mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
-    {{#each actor.items as |item|}}
-      {{#if (eq item.type "armor")}}
+    {{#each armorsSorted as |item|}}
         <li class="item mcde-armor" data-item-id="{{item._id}}" draggable="true" style="margin-bottom:6px;">
   <div class="item-name" style="display:flex; align-items:center; gap:8px;">
     <h4 style="margin:0; flex:1; min-width:0;">
@@ -602,8 +599,7 @@
   </div>
 </li>
 
-      {{/if}}
-    {{/each}}
+      {{/each}}
   </ul>
 </section>
 
@@ -638,8 +634,7 @@
       </h3>
 
       <ul class="mcde-ts-list">
-        {{#each actor.items as |item|}}
-          {{#if (eq item.type "talent")}}
+        {{#each talentsSorted as |item|}}
 
             <li class="mcde-ts-item open"
                 data-item-id="{{item._id}}"
@@ -681,7 +676,6 @@
 
             </li>
 
-          {{/if}}
         {{/each}}
       </ul>
 
@@ -785,8 +779,7 @@
 </h3>
 
         <ul class="mcde-ts-list mcde-ts-drop">
-          {{#each actor.items as |item|}}
-            {{#if (eq item.type "equipment")}}
+          {{#each equipmentSorted as |item|}}
 
               <li class="mcde-ts-item"
                   data-item-id="{{item._id}}"
@@ -810,7 +803,6 @@
 
               </li>
 
-            {{/if}}
           {{/each}}
         </ul>
 
@@ -831,8 +823,7 @@
     </h3>
 
     <ul class="mcde-ts-list">
-      {{#each actor.items as |item|}}
-        {{#if (eq item.type "spell")}}
+      {{#each spellsSorted as |item|}}
 
           <li class="mcde-ts-item open"
               data-item-id="{{item._id}}"
@@ -866,7 +857,6 @@
 
           </li>
 
-        {{/if}}
       {{/each}}
     </ul>
 

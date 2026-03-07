@@ -52,6 +52,140 @@ function mcHitLocation(n) {
   return "LEFT LEG";
 }
 
+// =========================================
+ // MCDE — Item Sorting
+ // =========================================
+
+function enableMcdeItemSortingNative(actor, root, ulSelector, itemSelector) {
+  const rootEl = root?.jquery ? root[0] : root;
+  if (!(rootEl instanceof HTMLElement)) {
+    console.warn("MCDE | DnD | bad root", root);
+    return;
+  }
+
+  const uls = Array.from(rootEl.querySelectorAll(ulSelector));
+  if (!uls.length) {
+    console.warn("MCDE | DnD | no list found", { ulSelector, itemSelector });
+    return;
+  }
+
+  for (const ul of uls) {
+    // Avoid double-binding (use attribute; per-UL)
+    const boundKey = `bound:${ulSelector}`;
+    if (ul.getAttribute("data-mcde-sort-bound") === boundKey) continue;
+    ul.setAttribute("data-mcde-sort-bound", boundKey);
+
+    console.log("MCDE | DnD | init", { ulSelector, itemSelector, ul });
+
+    let draggingLi = null;
+    let didReorder = false;
+    let didPersistThisDrag = false;
+
+    const isSortDrag = (ev) => {
+      try {
+        const dt = ev.dataTransfer;
+        if (!dt) return false;
+        const types = Array.from(dt.types || []);
+        if (types.includes("text/mcde-sort") || types.includes("application/mcde-sort")) return true;
+        return dt.getData("text/plain") === "mcde-sort";
+      } catch (_) {
+        return false;
+      }
+    };
+
+    const getAfterElement = (container, y) => {
+      const els = Array.from(container.querySelectorAll(`${itemSelector}:not(.mcde-dragging)`));
+      let closest = { offset: Number.NEGATIVE_INFINITY, element: null };
+
+      for (const child of els) {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) closest = { offset, element: child };
+      }
+      return closest.element;
+    };
+
+    const persist = async () => {
+      const ids = Array.from(ul.querySelectorAll(itemSelector))
+        .map(li => li?.dataset?.itemId)
+        .filter(Boolean);
+
+      console.log("MCDE | DnD | persist order", ids);
+
+      const updates = ids.map((id, i) => ({ _id: id, sort: (i + 1) * 10 }));
+      await actor.updateEmbeddedDocuments("Item", updates);
+      console.log("MCDE | DnD | persist OK");
+      try { actor.sheet?.render(false); } catch (_) {}
+    };
+
+    // Ensure items are draggable
+    for (const li of ul.querySelectorAll(itemSelector)) {
+      li.setAttribute("draggable", "true");
+    }
+
+    ul.addEventListener("dragstart", (ev) => {
+      const li = ev.target?.closest?.(itemSelector);
+      if (!li || li.parentElement !== ul) return;
+
+      draggingLi = li;
+      li.classList.add("mcde-dragging");
+      didReorder = false;
+      didPersistThisDrag = false;
+
+      try {
+        ev.dataTransfer.setData("text/mcde-sort", li.dataset.itemId || "");
+        ev.dataTransfer.setData("application/mcde-sort", li.dataset.itemId || "");
+        ev.dataTransfer.setData("text/plain", "mcde-sort");
+        ev.dataTransfer.effectAllowed = "move";
+        ev.dataTransfer.dropEffect = "move";
+      } catch (_) {}
+    }, true);
+
+    ul.addEventListener("dragover", (ev) => {
+      if (!draggingLi) return;
+      if (!isSortDrag(ev)) return;
+
+      ev.preventDefault();
+      ev.stopPropagation();
+      try { ev.stopImmediatePropagation(); } catch (_) {}
+
+      const after = getAfterElement(ul, ev.clientY);
+      if (!after) ul.appendChild(draggingLi);
+      else ul.insertBefore(draggingLi, after);
+
+      didReorder = true;
+    }, true);
+
+    ul.addEventListener("drop", async (ev) => {
+      if (!isSortDrag(ev)) return;
+
+      ev.preventDefault();
+      ev.stopPropagation();
+      try { ev.stopImmediatePropagation(); } catch (_) {}
+
+      await persist();
+      didPersistThisDrag = true;
+    }, true);
+
+    ul.addEventListener("dragend", async () => {
+      if (draggingLi) draggingLi.classList.remove("mcde-dragging");
+      draggingLi = null;
+
+      if (didReorder && !didPersistThisDrag) {
+        await persist();
+      }
+
+      didReorder = false;
+      didPersistThisDrag = false;
+    }, true);
+  }
+}
+
+// Expose for other sheet modules (vehicle-sheet.mjs, etc.) without imports
+try {
+  globalThis.enableMcdeItemSortingNative = enableMcdeItemSortingNative;
+} catch (_) {}
+
  // =========================================
  // MCDE — Confirm dialog helper (Foundry v13)
  // Ensures: title is shown + mcde-dialog class + returns boolean
@@ -1417,12 +1551,23 @@ class MCDECharacterSheet extends ActorSheet {
       template: `systems/${SYSTEM_ID}/templates/actor/character-sheet.html`,
       width: 900,
       height: 800,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "stats" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "stats" }],
+      scrollY: [".sheet-body"]
     });
   }
 
   async getData() {
     const context = await super.getData();
+    const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
+
+    // Sorted copies by Foundry's sort field
+    const bySort = (arr) => arr.slice().sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+    context.weaponsSorted   = bySort(items.filter(i => i.type === "weapon"));
+    context.armorsSorted    = bySort(items.filter(i => i.type === "armor"));
+    context.talentsSorted   = bySort(items.filter(i => i.type === "talent"));
+    context.equipmentSorted = bySort(items.filter(i => i.type === "equipment"));
+    context.spellsSorted    = bySort(items.filter(i => i.type === "spell"));
 
     context.system = this.actor.system;
     context.owner = this.actor.isOwner;
@@ -1740,8 +1885,27 @@ _computeArmorAutoSoak() {
 }
 
   
-  activateListeners(html) {
-    super.activateListeners(html);
+activateListeners(html) {
+  super.activateListeners(html);
+
+  // Root DOM element of the sheet (reliable)
+const $root = this.element;   // jQuery
+const rootEl = $root[0];      // HTMLElement (no optional chaining)
+
+const initSorting = () => {
+  if (!rootEl) return;
+
+  enableMcdeItemSortingNative(this.actor, rootEl, "ul.mcde-items",   "li.item[data-item-id]");
+  enableMcdeItemSortingNative(this.actor, rootEl, "ul.mcde-armors",  "li.item[data-item-id]");
+  enableMcdeItemSortingNative(this.actor, rootEl, "ul.mcde-ts-list", "li.mcde-ts-item[data-item-id]");
+};
+
+initSorting();
+
+// Re-init after tab switches (tabs can be lazy / swapped)
+$root.find(".sheet-tabs [data-tab]").on("click", () => {
+  setTimeout(initSorting, 0);
+});
 
     // --------------------------
     // DREAD clicks
@@ -2935,14 +3099,24 @@ html.on("click", ".mcde-ts-delete", async ev => {
   await this.actor.deleteEmbeddedDocuments("Item", [id]);
 });
 
-
 // --- Armor drop: allow dropping Armor items into this zone ---
 html.find(".mcde-armor-dropzone").on("drop", async (ev) => {
+
+  // --- IMPORTANT: if it's our internal reorder, let the UL handler process it
+  const oe = ev.originalEvent ?? ev;
+  const isSort = (() => {
+    try {
+      if (oe.dataTransfer?.types?.includes("text/mcde-sort")) return true;
+      const plain = oe.dataTransfer?.getData?.("text/plain");
+      return plain === "mcde-sort";
+    } catch (_) { return false; }
+  })();
+  if (isSort) return; // do NOT prevent/stopPropagation here
+
   // 1) Bloquer le drop Foundry "global" (sinon double création)
   ev.preventDefault();
   ev.stopPropagation();
 
-  const oe = ev.originalEvent ?? ev;
   try {
     oe.preventDefault?.();
     oe.stopPropagation?.();
@@ -3384,6 +3558,45 @@ html.find(".mcde-skill-row").on("click", async (ev) => {
 
 class MCDENpcSheet extends ActorSheet {
 
+  // -----------------------------
+  // Scroll preservation (NPC/Nemesis)
+  // We scroll on ".sheet-body .tab.active" in this system.
+  // -----------------------------
+  _mcdeGetActiveTabKey() {
+    try { return this._tabs?.[0]?.active ?? null; } catch (e) { return null; }
+  }
+
+  _mcdeGetScrollEl(rootEl) {
+    const root = rootEl ?? this.element?.[0] ?? null;
+    if (!root) return null;
+
+    // Prefer the active tab by key (stable across renders)
+    const activeKey = this._mcdeGetActiveTabKey();
+    if (activeKey) {
+      const byKey = root.querySelector(`.sheet-body .tab[data-tab="${CSS.escape(activeKey)}"]`);
+      if (byKey) return byKey;
+    }
+
+    // Fallback: whatever Foundry marked active
+    return root.querySelector(".sheet-body .tab.active");
+  }
+
+  _mcdeCaptureScroll() {
+    try {
+      const el = this._mcdeGetScrollEl();
+      if (!el) return;
+      this._mcdeScrollTop = el.scrollTop ?? 0;
+    } catch (_) {}
+  }
+
+  _mcdeRestoreScroll() {
+    try {
+      const el = this._mcdeGetScrollEl();
+      if (!el) return;
+      if (typeof this._mcdeScrollTop === "number") el.scrollTop = this._mcdeScrollTop;
+    } catch (_) {}
+  }
+
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["mcde", "sheet", "actor", "npc"],
@@ -3396,8 +3609,20 @@ class MCDENpcSheet extends ActorSheet {
     });
   }
 
+  async _render(...args) {
+    this._mcdeCaptureScroll();
+    await super._render(...args);
+    this._mcdeRestoreScroll();
+  }
+
   async getData() {
     const context = await super.getData();
+    
+  const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
+  const bySort = (arr) => arr.slice().sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
+  context.weaponsSorted = bySort(items.filter(i => i.type === "weapon"));
+  context.talentsSorted = bySort(items.filter(i => i.type === "talent"));
     context.system = this.actor.system;
     context.owner = this.actor.isOwner;
     context.editable = this.isEditable;
@@ -3445,6 +3670,30 @@ class MCDENpcSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+
+    const $root = this.element;
+  const rootEl = $root?.[0];
+
+  // Track scroll live on active tab
+  const scrollEl = this._mcdeGetScrollEl(rootEl);
+  if (scrollEl) {
+    scrollEl.addEventListener("scroll", () => {
+      this._mcdeScrollTop = scrollEl.scrollTop ?? 0;
+    }, { passive: true });
+  }
+
+  const initSorting = () => {
+    enableMcdeItemSortingNative(this.actor, rootEl, "ul.mcde-items",   "li.item[data-item-id]");
+    enableMcdeItemSortingNative(this.actor, rootEl, "ul.mcde-talents", "li.item[data-item-id]");
+  };
+
+  initSorting();
+
+  $root.find(".sheet-tabs [data-tab]").on("click", () => {
+    setTimeout(initSorting, 0);
+  });
+
+      enableMcdeItemSortingNative(this.actor, html, "ul.mcde-items", "li.item[data-item-id]");
 
     // NOTE: do NOT force activateEditor() manually.
     // The {{editor}} helper handles read/edit toggle correctly when given enriched HTML.
@@ -4381,6 +4630,10 @@ class MCDEArmorSheet extends ItemSheet {
 
   async getData(options = {}) {
     const context = await super.getData(options);
+    const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
+  const bySort = (arr) => arr.slice().sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+  context.weaponsSorted = bySort(items.filter(i => i.type === "weapon"));
+  context.talentsSorted = bySort(items.filter(i => i.type === "talent"));
     context.system = this.item.system ?? {};
 
     // Embedded items: ownership from parent actor

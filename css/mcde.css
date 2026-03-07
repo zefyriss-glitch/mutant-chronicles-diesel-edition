@@ -7205,3 +7205,16 @@ dialog.mcde-dialog footer.form-footer > button.default{
   justify-content: space-between;
   gap: 10px;
 }
+
+.mcde-sort-ghost { opacity: 0.35; }
+.mcde-sort-drag  { opacity: 0.85; }
+
+li.mcde-ts-item,
+li.item[data-item-id]{
+  cursor: grab;
+}
+
+li.mcde-ts-item:active,
+li.item[data-item-id]:active{
+  cursor: grabbing;
+}

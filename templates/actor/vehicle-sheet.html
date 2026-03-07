@@ -281,11 +281,12 @@
   </header>
 
   <div class="mcde-veh-armaments-dropzone" style="width:100%; min-height:48px;">
-    <ul class="items-list mcde-items mcde-hover-controls" style="list-style:none; padding-left:0; margin:0;">
+    <ul class="items-list mcde-items mcde-hover-controls mcde-veh-armaments-list" style="list-style:none; padding-left:0; margin:0;">
 
       {{#each armaments as |w|}}
         <li class="item mcde-weapon mcde-hover-controls mcde-veh-weapon"
             data-item-id="{{w.id}}"
+            draggable="true"
             style="margin-bottom:6px; position:relative;">
 
           <div class="mcde-weapon-row">
