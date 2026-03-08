@@ -1558,9 +1558,14 @@ class MCDECharacterSheet extends ActorSheet {
 
   async getData() {
     const context = await super.getData();
-    const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
 
-    // Sorted copies by Foundry's sort field
+    context.system = this.actor.system ?? {};
+
+context.owner = this.actor.isOwner;
+    
+    context.editable = this.isEditable;
+
+    const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
     const bySort = (arr) => arr.slice().sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
     context.weaponsSorted   = bySort(items.filter(i => i.type === "weapon"));
@@ -1568,10 +1573,6 @@ class MCDECharacterSheet extends ActorSheet {
     context.talentsSorted   = bySort(items.filter(i => i.type === "talent"));
     context.equipmentSorted = bySort(items.filter(i => i.type === "equipment"));
     context.spellsSorted    = bySort(items.filter(i => i.type === "spell"));
-
-    context.system = this.actor.system;
-    context.owner = this.actor.isOwner;
-    context.editable = this.isEditable;
 
     // --------------------------
     // CHRONICLE POINTS (robust: supports legacy keys)
@@ -4630,10 +4631,6 @@ class MCDEArmorSheet extends ItemSheet {
 
   async getData(options = {}) {
     const context = await super.getData(options);
-    const items = this.actor.items?.contents ?? Array.from(this.actor.items ?? []);
-  const bySort = (arr) => arr.slice().sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
-  context.weaponsSorted = bySort(items.filter(i => i.type === "weapon"));
-  context.talentsSorted = bySort(items.filter(i => i.type === "talent"));
     context.system = this.item.system ?? {};
 
     // Embedded items: ownership from parent actor
