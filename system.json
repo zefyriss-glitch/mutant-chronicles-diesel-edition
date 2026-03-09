@@ -25,9 +25,21 @@
   "template": "template.json",
 
   "documentTypes": {
-    "Actor": ["character", "npc"],
-    "Item": ["quality", "weapon", "armor", "talent", "spell", "vehicle", "equipment"]
+  "Actor": {
+    "character": {},
+    "npc": {},
+    "nemesis": {},
+    "vehicle": {}
   },
+  "Item": {
+    "quality": {},
+    "weapon": {},
+    "armor": {},
+    "talent": {},
+    "spell": {},
+    "equipment": {}
+  }
+},
 
   "gridDistance": 1,
   "gridUnits": "m",
@@ -35,7 +47,7 @@
   "primaryTokenAttribute": "attributes.physique.value",
   "secondaryTokenAttribute": "attributes.awareness.value",
 
-  "url": "https://raw.githubusercontent.com/zefyriss-glitch/mutant-chronicles-diesel-edition",
+  "url": "https://github.com/zefyriss-glitch/mutant-chronicles-diesel-edition",
   "manifest": "https://raw.githubusercontent.com/zefyriss-glitch/mutant-chronicles-diesel-edition/main/system.json",
-  "download": "https://github.com/zefyriss-glitch/mutant-chronicles-diesel-edition/releases/download/V0.1.5/mutant-chronicles-diesel-edition-v0.1.5.zip"
+  "download": "https://github.com/zefyriss-glitch/mutant-chronicles-diesel-edition/releases/download/v0.1.5/mutant-chronicles-diesel-edition-v0.1.5.zip"
 }
