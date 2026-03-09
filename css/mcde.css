@@ -7218,3 +7218,186 @@ li.mcde-ts-item:active,
 li.item[data-item-id]:active{
   cursor: grabbing;
 }
+
+/* =========================================
+   Weapons top row — compact single line
+   ========================================= */
+
+.mcde-vehicle-root .mcde-vehweapons-top{
+  width: 100%;
+  margin-bottom: 14px;
+  overflow-x: hidden;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-line{
+  display: grid;
+  grid-template-columns: 110px 96px minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-head{
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 6px 8px;
+  box-sizing: border-box;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-head .mcde-loc-title{
+  margin: 0;
+  white-space: nowrap;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-soak{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.08);
+  box-sizing: border-box;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-track{
+  min-width: 0;
+  width: 100%;
+}
+
+.mcde-vehicle-root .mcde-vehweapons-track .mcde-loc-track-row{
+  grid-template-columns: 1fr 46px !important;
+}
+
+@media (max-width: 900px){
+  .mcde-vehicle-root .mcde-vehweapons-line{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   Armaments section
+   ========================================= */
+
+.mcde.sheet.actor.vehicle .mcde-veh-armaments{
+  width: 100%;
+  margin-top: 10px;
+}
+
+.mcde.sheet.actor.vehicle .mcde-armaments-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(140, 40, 40, 0.8);
+  box-sizing: border-box;
+}
+
+.mcde.sheet.actor.vehicle .mcde-armaments-header h3{
+  margin: 0;
+  border: 0;
+  border-bottom: none;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+}
+
+.mcde.sheet.actor.vehicle .mcde-armaments-hint{
+  margin-top: 4px;
+  opacity: .7;
+  font-size: 12px;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-armaments-dropzone{
+  width: 100%;
+  min-height: 48px;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-armaments-list{
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon{
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon-titleline{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon-titleline h4{
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mcde.sheet.actor.vehicle .mcde-weapon-type{
+  opacity: .75;
+  font-weight: normal;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon-meta{
+  opacity: .9;
+}
+
+.mcde.sheet.actor.vehicle .mcde-veh-weapon-tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mcde.sheet.actor.vehicle .mcde-armaments-empty{
+  opacity: .6;
+}
+
+/* =========================================
+   Pause Screen — dark translucent with gear icon
+     (can be adapted to a custom Dialog skin if needed)
+   ========================================= */
+
+#pause {
+  background: linear-gradient(
+    90deg,
+    rgba(90,45,25,0.35),
+    rgba(120,70,40,0.25),
+    rgba(90,45,25,0.35)
+  );
+}
+
+#pause figcaption {
+  background: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: #3a120b !important;
+  color: #3a120b !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.95),
+    0 0 4px rgba(60,20,10,0.35) !important;
+  font-family: "Bank Gothic", sans-serif;
+  letter-spacing: 0.25em;
+}
+
+#pause img.fa-spin {
+  content: url("/systems/mutant-chronicles-diesel-edition/assets/sheet/pausegear.png") !important;
+  width: 120px !important;
+  height: 120px !important;
+  min-width: 120px !important;
+  min-height: 120px !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  object-fit: contain !important;
+  aspect-ratio: 1 / 1 !important;
+  transform-origin: center center !important;
+}

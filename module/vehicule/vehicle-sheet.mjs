@@ -346,6 +346,48 @@ html.on("click.mcdeVehTagRemove", "[data-action='vehicle-tag-remove']", async (e
       await this._openVehicleWeaponAttackDialog(weapon);
     });
 
+    // Add Weapon To Armaments (+)
+    html.off("click.mcdeVehWeaponCreate", "[data-action='veh-weapon-create']");
+html.on("click.mcdeVehWeaponCreate", "[data-action='veh-weapon-create']", async (ev) => {
+  ev.preventDefault();
+  ev.stopPropagation();
+
+  const created = await this.actor.createEmbeddedDocuments("Item", [{
+    name: "New Weapon",
+    type: "weapon",
+    img: "icons/svg/sword.svg",
+    system: {
+      weaponType: "ranged",
+      restriction: 0,
+      cost: 0,
+      description: "",
+      tags: [],
+      damage: {
+        base: 1,
+        dsy: 1,
+        flatBonus: 0
+      },
+      stats: {
+        range: "Close",
+        mode: "Semi-Automatic",
+        enc: 0,
+        size: "-",
+        reliability: 0
+      },
+      qualities: [],
+      equipped: false,
+      reload: {
+        max: 10,
+        current: 10
+      },
+      reloadUsed: 10
+    }
+  }]);
+
+  const item = created?.[0];
+  if (item) item.sheet?.render(true);
+});
+
   // Fuel Boxes (toggle, and use fuel.cur consistently)
   html.off("click.mcdeFuel", ".mcde-fuel-box");
   html.on("click.mcdeFuel", ".mcde-fuel-box", async (ev) => {

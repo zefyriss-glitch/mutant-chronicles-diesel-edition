@@ -251,10 +251,10 @@
 
         <!-- Vehicle Tags -->
         <section class="mcde-block mcde-vehicle-tags" style="width:100%;">
-          <header class="mcde-block-header flexrow" style="align-items:center; justify-content:space-between;">
-            <h3 style="margin:0;">Vehicle Tags</h3>
-            <div class="hint" style="opacity:.7; font-size:12px;">Drop Qualities here</div>
-          </header>
+  <header class="mcde-block-header flexrow" style="align-items:center; justify-content:space-between;">
+    <h3 style="margin:0;">Vehicle Tags</h3>
+    <div class="hint" style="opacity:.7; font-size:12px;">Drop Qualities here</div>
+  </header>
 
           <div class="mcde-vehicle-tags-dropzone" style="width:100%; min-height:42px;">
             <div class="mcde-tagrow" style="display:flex; flex-wrap:wrap; gap:6px;">
@@ -274,20 +274,29 @@
         </section>
 
 <!-- Armaments -->
-<section class="mcde-block mcde-veh-armaments" style="width:100%; margin-top:10px;">
-  <header class="mcde-block-header flexrow" style="align-items:center; justify-content:space-between;">
-    <h3 style="margin:0;">Armaments</h3>
-    <div class="hint" style="opacity:.7; font-size:12px;">Drop Weapons here</div>
+<section class="mcde-block mcde-veh-armaments">
+
+  <header class="mcde-block-header mcde-armaments-header">
+    <h3>Armaments</h3>
+
+    <a class="item-control"
+       data-action="veh-weapon-create"
+       title="Create Weapon">
+      <i class="fas fa-plus"></i>
+    </a>
   </header>
 
-  <div class="mcde-veh-armaments-dropzone" style="width:100%; min-height:48px;">
-    <ul class="items-list mcde-items mcde-hover-controls mcde-veh-armaments-list" style="list-style:none; padding-left:0; margin:0;">
+  <div class="hint mcde-armaments-hint">
+    Drop Weapons here
+  </div>
+
+  <div class="mcde-veh-armaments-dropzone">
+    <ul class="items-list mcde-items mcde-hover-controls mcde-veh-armaments-list">
 
       {{#each armaments as |w|}}
         <li class="item mcde-weapon mcde-hover-controls mcde-veh-weapon"
             data-item-id="{{w.id}}"
-            draggable="true"
-            style="margin-bottom:6px; position:relative;">
+            draggable="true">
 
           <div class="mcde-weapon-row">
             {{#if w.img}}
@@ -296,23 +305,21 @@
 
             <div class="mcde-weapon-main">
 
-              <!-- TITLE LINE -->
-              <div class="item-name" style="display:flex; align-items:center; gap:8px; width:100%;">
-                <h4 style="margin:0; flex:1 1 auto; min-width:0;">
+              <div class="item-name mcde-veh-weapon-titleline">
+                <h4>
                   <strong>
                     <a class="mcde-roll"
                        data-action="veh-weapon-attack"
                        data-item-id="{{w.id}}">
                       {{w.name}}
                     </a>
-                    <span style="opacity:0.75; font-weight:normal;">
+                    <span class="mcde-weapon-type">
                       ({{#if (eq w.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}})
                     </span>
                   </strong>
                 </h4>
 
-                {{!-- RELOADS (ranged only) --}}
-                {{#if (eq w.system.weaponType "ranged")}}
+                {{#if (or (eq w.system.weaponType "ranged") (eq w.system.weaponType "heavy") (eq w.system.weaponType "mounted"))}}
                   <div class="mcde-reload-bandolier"
                        data-item-id="{{w.id}}"
                        data-current="{{w.system.reload.current}}"
@@ -324,21 +331,18 @@
                     {{/each}}
                   </div>
                 {{/if}}
+              </div>
 
-              </div><!-- /item-name -->
-
-              <!-- META LINE -->
-              <div class="item-detail" style="opacity:0.9;">
-                {{#if (eq w.system.weaponType "ranged")}}
+              <div class="item-detail mcde-veh-weapon-meta">
+                {{#if (or (eq w.system.weaponType "ranged") (eq w.system.weaponType "heavy") (eq w.system.weaponType "mounted"))}}
                   Range: <strong>{{w.system.stats.range}}</strong> |
                   Mode: <strong>{{w.system.stats.mode}}</strong> |
                 {{/if}}
                 Damage: <strong>{{w.system.damage.base}}</strong> + <strong>{{{dsValue w.system.damage.dsy}}}</strong>
               </div>
 
-              <!-- TAGS -->
               {{#if w.system.qualities.length}}
-                <div class="item-detail" style="display:flex; flex-wrap:wrap; gap:4px;">
+                <div class="item-detail mcde-veh-weapon-tags">
                   {{#each w.system.qualities as |q|}}
                     <span class="mcde-tag" data-tooltip="{{q.description}}">
                       {{q.name}}
@@ -347,9 +351,8 @@
                 </div>
               {{/if}}
 
-            </div><!-- /mcde-weapon-main -->
-
-                    </div><!-- /mcde-weapon-row -->
+            </div>
+          </div>
 
           <div class="mcde-veh-crewcol">
             <div class="mcde-gunner-ui">
@@ -389,7 +392,7 @@
       {{/each}}
 
       {{#unless armaments.length}}
-        <li style="opacity:.6;">(empty)</li>
+        <li class="mcde-armaments-empty">(empty)</li>
       {{/unless}}
 
     </ul>
@@ -397,130 +400,342 @@
 </section>
         <h3>Damage by Location</h3>
 
-        <div class="mcde-location-grid">
-          {{#each locations as |loc locKey|}}
+{{!-- TOP ROW : WEAPONS --}}
+<div class="mcde-vehweapons-top">
 
-            <div class="mcde-loc">
-              <div class="mcde-loc-header">
-                <div class="mcde-loc-title">{{locKey}}</div>
+  <div class="mcde-vehweapons-line">
 
-                <div class="mcde-soak-plate">
-                  <div class="mcde-soak-label">Soak</div>
-                  <input class="mcde-soak-input"
-                         name="system.locations.{{locKey}}.soak"
-                         type="number"
-                         value="{{loc.soak}}"
-                         min="0" />
-                </div>
-              </div>
+    <!-- WEAPONS + SOAK -->
+    <div class="mcde-vehweapons-head">
+  <div class="mcde-loc-title">Weapons</div>
+</div>
 
-              <div class="mcde-loc-tracks">
+<div class="mcde-vehweapons-soak">
+  <div class="mcde-soak-label">Soak</div>
+  <input class="mcde-soak-input"
+         name="system.locations.weapons.soak"
+         type="number"
+         value="{{locations.weapons.soak}}"
+         min="0" />
+</div>
 
-                <!-- Surface -->
-                <div class="mcde-loc-track">
-                  <div class="mcde-loc-track-row">
-                    <div class="mcde-loc-track-label">Surface</div>
-                    <input class="mcde-loc-max"
-                           name="system.locations.{{locKey}}.surfaceMax"
-                           type="number"
-                           value="{{loc.surfaceMax}}"
-                           min="0" />
-                  </div>
 
-                  {{#if (gt loc.surfaceMax 0)}}
-                    <div class="mcde-stretch-gauge">
-                      {{#each (range 1 loc.surfaceMax) as |i|}}
-                        <span class="mcde-stretch-seg {{#if (lte i loc.surfaceCur)}}filled{{/if}}"
-                              data-loc="{{locKey}}"
-                              data-track="surfaceCur"
-                              data-idx="{{i}}"></span>
-                      {{/each}}
-                    </div>
-                  {{/if}}
+    <!-- SURFACE -->
+    <div class="mcde-loc-track mcde-vehweapons-track">
 
-                  <div class="mcde-trackboxes">
-                    {{#each (range 1 loc.surfaceMax) as |i|}}
-                      <span class="mcde-box {{#if (lte i loc.surfaceCur)}}filled{{/if}}"
-                            data-loc="{{locKey}}" data-track="surfaceCur" data-idx="{{i}}"></span>
-                    {{/each}}
-                  </div>
-                </div>
+      <div class="mcde-loc-track-row">
+        <div class="mcde-loc-track-label">Surface</div>
 
-                <!-- System -->
-                <div class="mcde-loc-track">
-                  <div class="mcde-loc-track-row">
-                    <div class="mcde-loc-track-label">System</div>
-                    <input class="mcde-loc-max"
-                           name="system.locations.{{locKey}}.systemMax"
-                           type="number"
-                           value="{{loc.systemMax}}"
-                           min="0" />
-                  </div>
+        <input class="mcde-loc-max"
+               name="system.locations.weapons.surfaceMax"
+               type="number"
+               value="{{locations.weapons.surfaceMax}}"
+               min="0" />
+      </div>
 
-                  {{#if (gt loc.systemMax 0)}}
-                    <div class="mcde-stretch-gauge">
-                      {{#each (range 1 loc.systemMax) as |i|}}
-                        <span class="mcde-stretch-seg {{#if (lte i loc.systemCur)}}filled{{/if}}"
-                              data-loc="{{locKey}}"
-                              data-track="systemCur"
-                              data-idx="{{i}}"></span>
-                      {{/each}}
-                    </div>
-                  {{/if}}
+      {{#if (gt locations.weapons.surfaceMax 0)}}
+      <div class="mcde-stretch-gauge">
+        {{#each (range 1 locations.weapons.surfaceMax) as |i|}}
+          <span class="mcde-stretch-seg {{#if (lte i ../locations.weapons.surfaceCur)}}filled{{/if}}"
+                data-loc="weapons"
+                data-track="surfaceCur"
+                data-idx="{{i}}"></span>
+        {{/each}}
+      </div>
+      {{/if}}
 
-                  <div class="mcde-trackboxes">
-                    {{#each (range 1 loc.systemMax) as |i|}}
-                      <span class="mcde-box {{#if (lte i loc.systemCur)}}filled{{/if}}"
-                            data-loc="{{locKey}}" data-track="systemCur" data-idx="{{i}}"></span>
-                    {{/each}}
-                  </div>
-                </div>
+    </div>
 
-                <!-- Structural -->
-                <div class="mcde-loc-track">
-                  <div class="mcde-loc-track-row">
-                    <div class="mcde-loc-track-label">Structural</div>
-                    <input class="mcde-loc-max"
-                           name="system.locations.{{locKey}}.structuralMax"
-                           type="number"
-                           value="{{loc.structuralMax}}"
-                           min="0" />
-                  </div>
 
-                  {{#if (gt loc.structuralMax 0)}}
-                    <div class="mcde-stretch-gauge">
-                      {{#each (range 1 loc.structuralMax) as |i|}}
-                        <span class="mcde-stretch-seg {{#if (lte i loc.structuralCur)}}filled{{/if}}"
-                              data-loc="{{locKey}}"
-                              data-track="structuralCur"
-                              data-idx="{{i}}"></span>
-                      {{/each}}
-                    </div>
-                  {{/if}}
+    <!-- SYSTEM -->
+    <div class="mcde-loc-track mcde-vehweapons-track">
 
-                  <div class="mcde-trackboxes">
-                    {{#each (range 1 loc.structuralMax) as |i|}}
-                      <span class="mcde-box {{#if (lte i loc.structuralCur)}}filled{{/if}}"
-                            data-loc="{{locKey}}" data-track="structuralCur" data-idx="{{i}}"></span>
-                    {{/each}}
-                  </div>
-                </div>
+      <div class="mcde-loc-track-row">
+        <div class="mcde-loc-track-label">System</div>
 
-              </div>
-            </div>
+        <input class="mcde-loc-max"
+               name="system.locations.weapons.systemMax"
+               type="number"
+               value="{{locations.weapons.systemMax}}"
+               min="0" />
+      </div>
 
-            {{#if @first}}
-              <div class="mcde-locadoll-wrap">
-                <img class="mcde-locadoll"
-                     src="systems/mutant-chronicles-diesel-edition/assets/sheet/loccardoll.png"
-                     alt="Vehicle location doll">
-              </div>
-            {{/if}}
+      {{#if (gt locations.weapons.systemMax 0)}}
+      <div class="mcde-stretch-gauge">
+        {{#each (range 1 locations.weapons.systemMax) as |i|}}
+          <span class="mcde-stretch-seg {{#if (lte i ../locations.weapons.systemCur)}}filled{{/if}}"
+                data-loc="weapons"
+                data-track="systemCur"
+                data-idx="{{i}}"></span>
+        {{/each}}
+      </div>
+      {{/if}}
 
-          {{/each}}
+    </div>
+
+
+    <!-- STRUCTURAL -->
+    <div class="mcde-loc-track mcde-vehweapons-track">
+
+      <div class="mcde-loc-track-row">
+        <div class="mcde-loc-track-label">Structural</div>
+
+        <input class="mcde-loc-max"
+               name="system.locations.weapons.structuralMax"
+               type="number"
+               value="{{locations.weapons.structuralMax}}"
+               min="0" />
+      </div>
+
+      {{#if (gt locations.weapons.structuralMax 0)}}
+      <div class="mcde-stretch-gauge">
+        {{#each (range 1 locations.weapons.structuralMax) as |i|}}
+          <span class="mcde-stretch-seg {{#if (lte i ../locations.weapons.structuralCur)}}filled{{/if}}"
+                data-loc="weapons"
+                data-track="structuralCur"
+                data-idx="{{i}}"></span>
+        {{/each}}
+      </div>
+      {{/if}}
+
+    </div>
+
+  </div>
+
+</div>
+
+{{!-- OLD LAYOUT RESTORED : HULL / DOLL / MOTIVE --}}
+<div class="mcde-location-grid">
+
+  {{!-- HULL --}}
+  <div class="mcde-loc">
+    <div class="mcde-loc-header">
+      <div class="mcde-loc-title">Hull</div>
+
+      <div class="mcde-soak-plate">
+        <div class="mcde-soak-label">Soak</div>
+        <input class="mcde-soak-input"
+               name="system.locations.hull.soak"
+               type="number"
+               value="{{locations.hull.soak}}"
+               min="0" />
+      </div>
+    </div>
+
+    <div class="mcde-loc-tracks">
+
+      <!-- Surface -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">Surface</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.hull.surfaceMax"
+                 type="number"
+                 value="{{locations.hull.surfaceMax}}"
+                 min="0" />
         </div>
 
+        {{#if (gt locations.hull.surfaceMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.hull.surfaceMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.hull.surfaceCur)}}filled{{/if}}"
+                    data-loc="hull"
+                    data-track="surfaceCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.hull.surfaceMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.hull.surfaceCur)}}filled{{/if}}"
+                  data-loc="hull" data-track="surfaceCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
       </div>
+
+      <!-- System -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">System</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.hull.systemMax"
+                 type="number"
+                 value="{{locations.hull.systemMax}}"
+                 min="0" />
+        </div>
+
+        {{#if (gt locations.hull.systemMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.hull.systemMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.hull.systemCur)}}filled{{/if}}"
+                    data-loc="hull"
+                    data-track="systemCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.hull.systemMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.hull.systemCur)}}filled{{/if}}"
+                  data-loc="hull" data-track="systemCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
+      </div>
+
+      <!-- Structural -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">Structural</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.hull.structuralMax"
+                 type="number"
+                 value="{{locations.hull.structuralMax}}"
+                 min="0" />
+        </div>
+
+        {{#if (gt locations.hull.structuralMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.hull.structuralMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.hull.structuralCur)}}filled{{/if}}"
+                    data-loc="hull"
+                    data-track="structuralCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.hull.structuralMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.hull.structuralCur)}}filled{{/if}}"
+                  data-loc="hull" data-track="structuralCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{!-- MIDDLE DOLL --}}
+  <div class="mcde-locadoll-wrap">
+    <img class="mcde-locadoll"
+         src="systems/mutant-chronicles-diesel-edition/assets/sheet/loccardoll.png"
+         alt="Vehicle location doll">
+  </div>
+
+  {{!-- MOTIVE --}}
+  <div class="mcde-loc">
+    <div class="mcde-loc-header">
+      <div class="mcde-loc-title">Motive</div>
+
+      <div class="mcde-soak-plate">
+        <div class="mcde-soak-label">Soak</div>
+        <input class="mcde-soak-input"
+               name="system.locations.motive.soak"
+               type="number"
+               value="{{locations.motive.soak}}"
+               min="0" />
+      </div>
+    </div>
+
+    <div class="mcde-loc-tracks">
+
+      <!-- Surface -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">Surface</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.motive.surfaceMax"
+                 type="number"
+                 value="{{locations.motive.surfaceMax}}"
+                 min="0" />
+        </div>
+
+        {{#if (gt locations.motive.surfaceMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.motive.surfaceMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.motive.surfaceCur)}}filled{{/if}}"
+                    data-loc="motive"
+                    data-track="surfaceCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.motive.surfaceMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.motive.surfaceCur)}}filled{{/if}}"
+                  data-loc="motive" data-track="surfaceCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
+      </div>
+
+      <!-- System -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">System</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.motive.systemMax"
+                 type="number"
+                 value="{{locations.motive.systemMax}}"
+                 min="0" />
+        </div>
+
+        {{#if (gt locations.motive.systemMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.motive.systemMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.motive.systemCur)}}filled{{/if}}"
+                    data-loc="motive"
+                    data-track="systemCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.motive.systemMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.motive.systemCur)}}filled{{/if}}"
+                  data-loc="motive" data-track="systemCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
+      </div>
+
+      <!-- Structural -->
+      <div class="mcde-loc-track">
+        <div class="mcde-loc-track-row">
+          <div class="mcde-loc-track-label">Structural</div>
+          <input class="mcde-loc-max"
+                 name="system.locations.motive.structuralMax"
+                 type="number"
+                 value="{{locations.motive.structuralMax}}"
+                 min="0" />
+        </div>
+
+        {{#if (gt locations.motive.structuralMax 0)}}
+          <div class="mcde-stretch-gauge">
+            {{#each (range 1 locations.motive.structuralMax) as |i|}}
+              <span class="mcde-stretch-seg {{#if (lte i ../locations.motive.structuralCur)}}filled{{/if}}"
+                    data-loc="motive"
+                    data-track="structuralCur"
+                    data-idx="{{i}}"></span>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        <div class="mcde-trackboxes">
+          {{#each (range 1 locations.motive.structuralMax) as |i|}}
+            <span class="mcde-box {{#if (lte i ../locations.motive.structuralCur)}}filled{{/if}}"
+                  data-loc="motive" data-track="structuralCur" data-idx="{{i}}"></span>
+          {{/each}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
 
       <!-- NOTES (Foundry native editor) -->
       <div class="tab" data-group="primary" data-tab="notes">

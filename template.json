@@ -229,7 +229,16 @@
       "surfaceCur": 0,
       "systemCur": 0,
       "structuralCur": 0
-    }
+    },
+    "weapons": {
+      "soak": 0,
+      "surfaceMax": 0,
+      "systemMax": 0,
+      "structuralMax": 0,
+      "surfaceCur": 0,
+      "systemCur": 0,
+      "structuralCur": 0
+}
   },
 
   "impactdamage": { "base": 1, "dsy": 1 },
@@ -277,6 +286,10 @@
 
         "qualities": [],
         "equipped": false,
+        "reload": {
+          "max": 10,
+          "current": 0
+        },
         "reloadUsed": 0
       }
     },
