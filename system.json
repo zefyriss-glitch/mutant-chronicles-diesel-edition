@@ -51,25 +51,25 @@
     {
       "name": "critical-injuries",
       "label": "[Important] Critical Injuries Table",
-      "path": "packs/critical-injuries",
+      "path": "packs/important-critical-injuries-table",
       "type": "RollTable"
     },
     {
       "name": "armors-equipment",
       "label": "Armors & Equipment",
-      "path": "packs/armors-equipment",
+      "path": "packs/armors-and-equipment",
       "type": "Item"
     },
     {
       "name": "dark-symmetry-pregen",
       "label": "Dark Symmetry Pre-Generated Characters",
-      "path": "packs/dark-symmetry-pregen",
+      "path": "packs/dark-symmetry-pre-generated-characters",
       "type": "Actor"
     },
     {
       "name": "macros",
       "label": "Mutant Chronicles Macros",
-      "path": "packs/macros",
+      "path": "packs/mutant-chronicles-macros",
       "type": "Macro"
     },
     {
@@ -87,13 +87,13 @@
     {
       "name": "talents-spells",
       "label": "Talents & Spells",
-      "path": "packs/talents-spells",
+      "path": "packs/talents-and-spells",
       "type": "Item"
     },
     {
       "name": "vehicle-qualities-weapons",
       "label": "Vehicle Qualities & Weapons",
-      "path": "packs/vehicle-qualities-weapons",
+      "path": "packs/vehicle-qualities-and-weapons",
       "type": "Item"
     },
     {
@@ -105,7 +105,7 @@
     {
       "name": "weapons-qualities",
       "label": "Weapons & Weapons Qualities",
-      "path": "packs/weapons-qualities",
+      "path": "packs/weapons-and-weapons-qualities",
       "type": "Item"
     }
   ],
