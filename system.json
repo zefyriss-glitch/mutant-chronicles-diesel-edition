@@ -107,6 +107,12 @@
       "label": "Weapons & Weapons Qualities",
       "path": "packs/weapons-and-weapons-qualities",
       "type": "Item"
+    },
+    {
+      "name": "scenes",
+      "label": "Scenes",
+      "path": "packs/scenes",
+      "type": "Scene"
     }
   ],
 
